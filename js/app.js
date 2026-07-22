@@ -200,10 +200,9 @@ qsa('a[href*="wa.me/966537933514"]').forEach((link) => {
             })
             .filter(Boolean);
 
-        const pageSource = `الصفحة: ${window.location.pathname || "/"}`;
         const fullMessage = campaignData.length
-            ? `${originalMessage}\n\n${pageSource}\nمصدر الزيارة:\n${campaignData.join("\n")}`
-            : `${originalMessage}\n\n${pageSource}`;
+    ? `${originalMessage}\n\nمصدر الزيارة:\n${campaignData.join("\n")}`
+    : originalMessage;
 
         whatsappUrl.searchParams.set("text", fullMessage);
         link.href = whatsappUrl.toString();
