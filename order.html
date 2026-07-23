@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>طلب دعوة جديدة | ليقورا</title>
+    <meta name="description" content="أرسلي تفاصيل مناسبتك واختاري باقة ليقورا المناسبة، ثم أرسلي الطلب عبر واتساب.">
+    <meta name="theme-color" content="#2c190d">
+    <link rel="icon" type="image/png" href="images/liqora-logo.png">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/order.css">
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <a class="logo-link" href="index.html" aria-label="العودة إلى الصفحة الرئيسية">
+                <img class="logo-image" src="images/liqora-logo.png" alt="شعار ليقورا" width="72" height="72">
+            </a>
+            <a class="secondary-button order-back-button" href="index.html">العودة للرئيسية</a>
+        </div>
+    </header>
+
+    <main class="order-page">
+        <section class="order-hero">
+            <div class="container">
+                <p class="section-label">طلب جديد</p>
+                <h1>أرسلي تفاصيل مناسبتك</h1>
+                <p>املئي البيانات التالية، ثم سنجهّز رسالة واتساب تحتوي على الطلب كاملًا لتأكيده مع فريق ليقورا.</p>
+                <div class="order-steps" aria-label="مراحل إرسال الطلب">
+                    <span class="is-active">1. تعبئة البيانات</span>
+                    <span>2. مراجعة الطلب</span>
+                    <span>3. الإرسال عبر واتساب</span>
+                </div>
+            </div>
+        </section>
+
+        <section class="order-content">
+            <div class="container order-layout">
+                <form class="order-form" id="order-form" novalidate>
+
+                    <section class="form-section">
+                        <div class="form-section-heading">
+                            <span class="form-section-number">1</span>
+                            <div>
+                                <h2>بيانات التواصل</h2>
+                                <p>حتى نستطيع التواصل معك بخصوص الطلب.</p>
+                            </div>
+                        </div>
+
+                        <div class="form-grid">
+                            <div class="form-field form-field-wide">
+                                <label for="full-name">الاسم الكامل <span>*</span></label>
+                                <input id="full-name" name="fullName" type="text" autocomplete="name" placeholder="مثال: سارة محمد" required minlength="3">
+                            </div>
+
+                            <div class="form-field">
+                                <label for="phone">رقم الجوال <span>*</span></label>
+                                <input id="phone" name="phone" type="tel" inputmode="tel" autocomplete="tel" dir="ltr" placeholder="05XXXXXXXX" required>
+                                <small>سيظهر رقمك ضمن الطلب حتى نتواصل معك.</small>
+                            </div>
+
+                            <div class="form-field">
+                                <label for="city">المدينة</label>
+                                <input id="city" name="city" type="text" autocomplete="address-level2" placeholder="مثال: الرياض">
+                            </div>
+
+                            <div class="form-field form-field-wide">
+                                <label for="preferred-contact-time">الوقت المناسب للتواصل</label>
+                                <select id="preferred-contact-time" name="preferredContactTime">
+                                    <option value="">لا يوجد وقت محدد</option>
+                                    <option value="صباحًا">صباحًا</option>
+                                    <option value="ظهرًا">ظهرًا</option>
+                                    <option value="مساءً">مساءً</option>
+                                    <option value="في أي وقت">في أي وقت</option>
+                                </select>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section class="form-section">
+                        <div class="form-section-heading">
+                            <span class="form-section-number">2</span>
+                            <div>
+                                <h2>تفاصيل المناسبة</h2>
+                                <p>ساعدينا على فهم نوع المناسبة وموعدها.</p>
+                            </div>
+                        </div>
+
+                        <div class="form-grid">
+                            <div class="form-field">
+                                <label for="occasion">نوع المناسبة <span>*</span></label>
+                                <select id="occasion" name="occasion" required>
+                                    <option value="">اختاري نوع المناسبة</option>
+                                    <option value="زفاف">زفاف</option>
+                                    <option value="ملكة أو عقد قران">ملكة أو عقد قران</option>
+                                    <option value="خطوبة">خطوبة</option>
+                                    <option value="تخرج">تخرج</option>
+                                    <option value="مولود جديد">مولود جديد</option>
+                                    <option value="عيد ميلاد">عيد ميلاد</option>
+                                    <option value="مناسبة عائلية">مناسبة عائلية</option>
+                                    <option value="افتتاح أو فعالية">افتتاح أو فعالية</option>
+                                    <option value="أخرى">أخرى</option>
+                                </select>
+                            </div>
+
+                            <div class="form-field">
+                                <label for="occasion-other">نوع المناسبة إن كانت أخرى</label>
+                                <input id="occasion-other" name="occasionOther" type="text" placeholder="اكتبي نوع المناسبة" disabled>
+                            </div>
+
+                            <div class="form-field form-field-wide">
+                                <label for="names-on-invitation">الأسماء التي ستظهر في الدعوة</label>
+                                <input id="names-on-invitation" name="namesOnInvitation" type="text" placeholder="مثال: سارة وعبدالله">
+                            </div>
+
+                            <div class="form-field">
+                                <label for="event-date">تاريخ المناسبة <span>*</span></label>
+                                <input id="event-date" name="eventDate" type="date" required>
+                            </div>
+
+                            <div class="form-field">
+                                <label for="event-time">وقت المناسبة</label>
+                                <input id="event-time" name="eventTime" type="time">
+                            </div>
+
+                            <div class="form-field">
+                                <label for="guest-count">العدد المتوقع للضيوف <span>*</span></label>
+                                <input id="guest-count" name="guestCount" type="number" inputmode="numeric" min="1" max="10000" placeholder="مثال: 150" required>
+                            </div>
+
+                            <div class="form-field">
+                                <label for="invitation-language">لغة الدعوة</label>
+                                <select id="invitation-language" name="invitationLanguage">
+                                    <option value="العربية">العربية</option>
+                                    <option value="الإنجليزية">الإنجليزية</option>
+                                    <option value="العربية والإنجليزية">العربية والإنجليزية</option>
+                                </select>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section class="form-section">
+                        <div class="form-section-heading">
+                            <span class="form-section-number">3</span>
+                            <div>
+                                <h2>الباقة والخدمات</h2>
+                                <p>يمكن تغيير الباقة قبل إرسال الطلب.</p>
+                            </div>
+                        </div>
+
+                        <div class="form-grid">
+                            <div class="form-field form-field-wide">
+                                <label for="package">الباقة المطلوبة <span>*</span></label>
+                                <select id="package" name="package" required>
+                                    <option value="">اختاري الباقة</option>
+                                    <option value="basic">الباقة الأساسية — ابتداءً من 199 ر.س</option>
+                                    <option value="advanced">الباقة المتقدمة — ابتداءً من 399 ر.س</option>
+                                    <option value="premium">الباقة المميزة — ابتداءً من 699 ر.س</option>
+                                    <option value="custom">باقة مخصصة — السعر بعد مراجعة الطلب</option>
+                                </select>
+                            </div>
+
+                            <fieldset class="form-field form-field-wide services-field">
+                                <legend>خدمات إضافية قد تحتاجينها</legend>
+                                <div class="checkbox-grid">
+                                    <label class="choice-card"><input type="checkbox" name="extraServices" value="إدارة تأكيد الحضور"><span>إدارة تأكيد الحضور</span></label>
+                                    <label class="choice-card"><input type="checkbox" name="extraServices" value="باركود أو رمز دخول للضيوف"><span>باركود أو رمز دخول</span></label>
+                                    <label class="choice-card"><input type="checkbox" name="extraServices" value="إضافة رابط خرائط Google"><span>رابط خرائط Google</span></label>
+                                    <label class="choice-card"><input type="checkbox" name="extraServices" value="عداد تنازلي للمناسبة"><span>عداد تنازلي</span></label>
+                                    <label class="choice-card"><input type="checkbox" name="extraServices" value="موسيقى أو مؤثر صوتي"><span>موسيقى أو مؤثر صوتي</span></label>
+                                    <label class="choice-card"><input type="checkbox" name="extraServices" value="نسخة خاصة للنشر في منصات التواصل"><span>نسخة لمنصات التواصل</span></label>
+                                </div>
+                            </fieldset>
+                        </div>
+                    </section>
+
+                    <section class="form-section">
+                        <div class="form-section-heading">
+                            <span class="form-section-number">4</span>
+                            <div>
+                                <h2>الموقع والتصميم</h2>
+                                <p>هذه المعلومات تساعدنا في تقديم تصور أدق.</p>
+                            </div>
+                        </div>
+
+                        <div class="form-grid">
+                            <div class="form-field">
+                                <label for="venue-name">اسم مكان المناسبة</label>
+                                <input id="venue-name" name="venueName" type="text" placeholder="مثال: قاعة...">
+                            </div>
+
+                            <div class="form-field">
+                                <label for="map-link">رابط الموقع على الخرائط</label>
+                                <input id="map-link" name="mapLink" type="url" inputmode="url" dir="ltr" placeholder="https://maps.google.com/...">
+                            </div>
+
+                            <div class="form-field">
+                                <label for="design-style">الطابع المفضل للتصميم</label>
+                                <select id="design-style" name="designStyle">
+                                    <option value="">اتركي الاختيار لنا</option>
+                                    <option value="فاخر وكلاسيكي">فاخر وكلاسيكي</option>
+                                    <option value="عصري وبسيط">عصري وبسيط</option>
+                                    <option value="ناعم ورومانسي">ناعم ورومانسي</option>
+                                    <option value="ملكي">ملكي</option>
+                                    <option value="مرح وملون">مرح وملون</option>
+                                    <option value="حسب هوية المناسبة">حسب هوية المناسبة</option>
+                                </select>
+                            </div>
+
+                            <div class="form-field">
+                                <label for="preferred-colors">الألوان المفضلة</label>
+                                <input id="preferred-colors" name="preferredColors" type="text" placeholder="مثال: بني وذهبي">
+                            </div>
+
+                            <div class="form-field">
+                                <label for="delivery-date">التاريخ المفضل لاستلام الدعوة</label>
+                                <input id="delivery-date" name="deliveryDate" type="date">
+                            </div>
+
+                            <div class="form-field">
+                                <label for="reference-link">رابط تصميم أعجبك</label>
+                                <input id="reference-link" name="referenceLink" type="url" inputmode="url" dir="ltr" placeholder="رابط Pinterest أو Instagram...">
+                            </div>
+
+                            <div class="form-field form-field-wide">
+                                <label for="notes">تفاصيل أو ملاحظات إضافية</label>
+                                <textarea id="notes" name="notes" rows="5" maxlength="1000" placeholder="اكتبي أي تفاصيل مهمة أو متطلبات خاصة..."></textarea>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section class="form-section confirmation-section">
+                        <label class="confirmation-checkbox">
+                            <input id="consent" name="consent" type="checkbox" required>
+                            <span>أؤكد أن البيانات المدخلة صحيحة، وأوافق على التواصل معي عبر الجوال أو واتساب بخصوص هذا الطلب.</span>
+                        </label>
+
+                        <div class="form-message" id="form-message" role="status" aria-live="polite" hidden></div>
+
+                        <button class="primary-button submit-order-button" id="submit-order" type="submit">
+                            تأكيد وإرسال الطلب عبر واتساب
+                        </button>
+
+                        <p class="submit-note">
+                            بعد الضغط سيفتح واتساب برسالة جاهزة. يجب الضغط على «إرسال» داخل واتساب لإكمال رفع الطلب.
+                        </p>
+                    </section>
+                </form>
+
+                <aside class="order-summary" aria-label="ملخص الطلب">
+                    <div class="summary-logo-wrap">
+                        <img src="images/liqora-logo.png" alt="" width="76" height="76">
+                    </div>
+                    <p class="summary-label">ملخص الباقة</p>
+                    <h2 id="summary-package-name">لم يتم اختيار باقة بعد</h2>
+                    <p class="summary-price" id="summary-package-price">اختاري الباقة لعرض السعر المبدئي.</p>
+                    <ul id="summary-package-features">
+                        <li>تعبئة البيانات لا تلزمك بالدفع.</li>
+                        <li>سنراجع التفاصيل قبل تأكيد السعر النهائي.</li>
+                        <li>يمكن تعديل الطلب أثناء التواصل.</li>
+                    </ul>
+                    <div class="summary-security">
+                        <strong>ماذا يحدث بعد الإرسال؟</strong>
+                        <p>تصلنا رسالة واتساب تشمل رقم الطلب وبياناتك وتفاصيل المناسبة والباقة المختارة.</p>
+                    </div>
+                </aside>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="container footer-content">
+            <p class="copyright">جميع الحقوق محفوظة <span id="current-year"></span> © ليقورا</p>
+        </div>
+    </footer>
+
+    <script src="js/order.js"></script>
+</body>
+</html>
