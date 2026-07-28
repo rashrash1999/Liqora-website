@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>دعوة زفاف | إيجي وإيرين</title>
+    
+    <!-- خطوط عربية ولاتينية فاخرة للثيم -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Cinzel:wght@400;600;700&family=Tajawal:wght@300;400;500;700&display=swap" rel="stylesheet">
+    
+    <!-- أيقونات FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- ملف التنسيق الخاص بالطراز القوسي والنباتي -->
+    <link rel="stylesheet" href="css/invitation.css">
+</head>
+<body>
+
+    <!-- زر التحكم بالصوت المستقل -->
+    <button id="musicToggle" class="music-btn" aria-label="الصوت">
+        <i class="fa-solid fa-music"></i>
+    </button>
+    <audio id="bgMusic" loop src="audio/wedding-song.mp3"></audio>
+
+    <!-- شاشة الغلاف الرئيسية -->
+    <div id="coverScreen" class="cover-screen">
+        <div class="cover-content">
+            <span class="sub-heading">إلى الأهل والأصدقاء</span>
+            <div class="monogram-logo">
+                <span>E & I</span>
+            </div>
+            <p class="invite-text">أنتم مدعوون لحضور حفل زفاف</p>
+            <h1 class="couple-names">إيجي & إيرين</h1>
+            <button id="openInvitationBtn" class="arch-btn">عرض الدعوة</button>
+        </div>
+    </div>
+
+    <!-- المحتوى الرئيسي للدعوة -->
+    <main class="invitation-container">
+
+        <!-- هيدر البداية -->
+        <section id="home" class="hero-arch-section">
+            <div class="arch-card hero-card">
+                <div class="monogram-logo small">
+                    <span>E & I</span>
+                </div>
+                <span class="section-subtitle">حفل زفاف</span>
+                <h2 class="hero-names">إيجي & إيرين</h2>
+                <div class="scroll-down-icon">
+                    <i class="fa-solid fa-chevron-down"></i>
+                </div>
+            </div>
+        </section>
+
+        <!-- اقتباس / آية قرآنية -->
+        <section class="arch-section">
+            <div class="arch-card quote-card">
+                <div class="floral-decoration">🌸</div>
+                <p class="quote-text">
+                    "وَمِنْ آيَاتِهِ أَنْ خَلَقَ لَكُم مِّنْ أَنفُسِكُمْ أَزْوَاجًا لِّتَسْكُنُوا إِلَيْهَا وَجَعَلَ بَيْنَكُم مَّوَّةً وَرَحْمَةً"
+                </p>
+                <div class="couple-photo-frame arch-photo">
+                    <img src="images/couple-1.jpg" alt="صورة العروسين" onerror="this.src='https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=600&q=80'">
+                </div>
+            </div>
+        </section>
+
+        <!-- العريس والعروس -->
+        <section id="couple" class="arch-section">
+            <h2 class="section-title">العروسان</h2>
+            
+            <!-- العريس -->
+            <div class="arch-card profile-card">
+                <div class="arch-photo">
+                    <img src="images/groom.jpg" alt="العريس" onerror="this.src='https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=600&q=80'">
+                </div>
+                <h3>إيجي سوريا</h3>
+                <p class="parents-info">ابن الأستاذ/ محمد أحمد<br>والسيدة/ فاطمة علي</p>
+                <a href="#" class="social-icon"><i class="fa-brands fa-instagram"></i></a>
+            </div>
+
+            <div class="ampersand">&</div>
+
+            <!-- العروس -->
+            <div class="arch-card profile-card">
+                <div class="arch-photo">
+                    <img src="images/bride.jpg" alt="العروس" onerror="this.src='https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=600&q=80'">
+                </div>
+                <h3>إيرين دارما</h3>
+                <p class="parents-info">ابنة الأستاذ/ عبد الله عمر<br>والسيدة/ مريم القحطاني</p>
+                <a href="#" class="social-icon"><i class="fa-brands fa-instagram"></i></a>
+            </div>
+        </section>
+
+        <!-- تفاصيل الموعد والمكان -->
+        <section id="event" class="arch-section">
+            <div class="arch-card event-card">
+                <span class="with-love">محبة وتقدير</span>
+                <p>نتشرف بدعوتكم لمشاركتنا فرحتنا في هذا اليوم المميز:</p>
+
+                <div class="event-details">
+                    <h3 class="event-type">عقد القران والزفاف</h3>
+                    <p class="event-date"><i class="fa-regular fa-calendar"></i> السبت، 21 أكتوبر 2026</p>
+                    <p class="event-time"><i class="fa-regular fa-clock"></i> 8:00 مساءً</p>
+                    <p class="event-location"><i class="fa-solid fa-location-dot"></i> قاعة الفخامة - الفندق العالمي</p>
+                    <a href="https://maps.google.com" target="_blank" class="arch-btn map-btn">عرض الموقع على الخريطة</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- تأكيد الحضور (RSVP) والتهاني -->
+        <section id="rsvp" class="arch-section">
+            <div class="arch-card rsvp-card">
+                <h2 class="section-title">تأكيد الحضور</h2>
+                <p class="rsvp-desc">يسعدنا تأكيد حضوركم لمساعدتنا في إتمام الترتيبات</p>
+                
+                <form id="rsvpForm">
+                    <div class="form-group">
+                        <label for="guestName">الاسم الكريم *</label>
+                        <input type="text" id="guestName" required placeholder="أدخل اسمك">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="attendance">هل ستحضر؟ *</label>
+                        <select id="attendance" required>
+                            <option value="نعم، يشرفني الحضور">يشرفني الحضور ✨</option>
+                            <option value="للأسف أعتذر عن الحضور">أعتذر عن الحضور 🙏</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="guestMessage">تهنئة للعروسين</label>
+                        <textarea id="guestMessage" rows="3" placeholder="اكتب كلمة أو دعاء للعروسين..."></textarea>
+                    </div>
+
+                    <button type="submit" class="arch-btn submit-btn">إرسال التهنئة والتأكيد</button>
+                </form>
+
+                <!-- حائط التبريكات والرسائل -->
+                <div class="wishes-feed" id="wishesFeed">
+                    <h3>تهاني الضيوف</h3>
+                    <div class="wish-item">
+                        <strong>أحمد السعيد:</strong>
+                        <p>ألف مبروك للعروسين بارك الله لكما وبارك عليكما وجمع بينكما في خير ❤️</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- قصة الحب والألبوم -->
+        <section id="gallery" class="arch-section">
+            <h2 class="section-title">قصتنا</h2>
+            <div class="arch-card gallery-card">
+                <blockquote class="story-quote">"عندما تجد الشخص المناسب، تتغير الحياة للأجمل."</blockquote>
+                
+                <div class="photo-grid">
+                    <div class="grid-photo arch-photo"><img src="https://images.unsplash.com/photo-1583939003579-730e3918a45a?auto=format&fit=crop&w=500&q=80" alt="معرض 1"></div>
+                    <div class="grid-photo arch-photo"><img src="https://images.unsplash.com/photo-1511285560929-80b456fea0bc?auto=format&fit=crop&w=500&q=80" alt="معرض 2"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- العد التنازلي -->
+        <section class="arch-section">
+            <div class="arch-card countdown-card">
+                <div class="monogram-logo small"><span>E & I</span></div>
+                <h3>المتبقي على يومنا المميز</h3>
+                <div id="countdown" class="timer-grid">
+                    <div class="timer-box"><span id="days">00</span><small>يوم</small></div>
+                    <div class="timer-box"><span id="hours">00</span><small>ساعة</small></div>
+                    <div class="timer-box"><span id="minutes">00</span><small>دقيقة</small></div>
+                    <div class="timer-box"><span id="seconds">00</span><small>ثانية</small></div>
+                </div>
+                <p class="hashtag">#EGI_IRENE_WEDDING</p>
+            </div>
+        </section>
+
+        <!-- الفوتر -->
+        <footer class="invitation-footer">
+            <p>نتطلع لرؤيتكم ومشاركتنا أجمل اللحظات</p>
+            <div class="footer-logo">WEDWEBS</div>
+        </footer>
+
+    </main>
+
+    <!-- شريط التنقل السفلي المثبت (Bottom Navigation Bar) -->
+    <nav class="bottom-nav">
+        <a href="#home" class="nav-item active"><i class="fa-solid fa-house"></i></a>
+        <a href="#couple" class="nav-item"><i class="fa-solid fa-user-group"></i></a>
+        <a href="#event" class="nav-item"><i class="fa-solid fa-calendar-days"></i></a>
+        <a href="#rsvp" class="nav-item"><i class="fa-solid fa-envelope"></i></a>
+        <a href="#gallery" class="nav-item"><i class="fa-solid fa-heart"></i></a>
+    </nav>
+
+    <script src="js/invitation.js"></script>
+</body>
+</html>
