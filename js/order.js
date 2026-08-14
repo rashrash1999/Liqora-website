@@ -185,7 +185,7 @@ function buildWhatsAppMessage(requestId, normalizedPhone) {
             : occasionSelect.value;
 
     return [
-        "✨ طلب جديد من موقع ليقورا",
+        "✨ طلب جديد من موقع مداد التحايا",
         "",
         `رقم الطلب: ${requestId}`,
         "حالة الطلب: بانتظار التأكيد",
@@ -212,7 +212,7 @@ function buildWhatsAppMessage(requestId, normalizedPhone) {
         "— الموقع والتصميم —",
         `اسم المكان: ${getFieldValue("venueName") || "غير محدد"}`,
         `رابط الخرائط: ${getFieldValue("mapLink") || "غير مضاف"}`,
-        `طابع التصميم: ${getFieldValue("designStyle") || "يُترك لفريق ليقورا"}`,
+        `طابع التصميم: ${getFieldValue("designStyle") || "يُترك لفريق مداد التحايا"}`,
         `الألوان المفضلة: ${getFieldValue("preferredColors") || "غير محددة"}`,
         `موعد الاستلام المفضل: ${formatDate(getFieldValue("deliveryDate"))}`,
         `رابط مرجعي: ${getFieldValue("referenceLink") || "غير مضاف"}`,
@@ -239,11 +239,11 @@ function saveDraft() {
         data[field.name] = field.value;
     });
 
-    sessionStorage.setItem("liqora-order-draft", JSON.stringify(data));
+    sessionStorage.setItem("medad-tahaya-order-draft", JSON.stringify(data));
 }
 
 function restoreDraft() {
-    const savedDraft = sessionStorage.getItem("liqora-order-draft");
+    const savedDraft = sessionStorage.getItem("medad-tahaya-order-draft");
     if (!savedDraft) return;
 
     try {
@@ -347,7 +347,7 @@ form.addEventListener("submit", (event) => {
         `تم تجهيز الطلب رقم ${requestId}. أرسلي الرسالة داخل واتساب لإكمال رفع الطلب.`
     );
 
-    sessionStorage.removeItem("liqora-order-draft");
+    sessionStorage.removeItem("medad-tahaya-order-draft");
 
     const whatsappWindow = window.open(
         whatsappUrl,

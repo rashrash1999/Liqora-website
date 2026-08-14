@@ -191,7 +191,7 @@ qsa('a[href*="wa.me/966537933514"]').forEach((link) => {
         const whatsappUrl = new URL(link.href);
         const originalMessage =
             whatsappUrl.searchParams.get("text") ||
-            "مرحباً، أرغب في الاستفسار عن خدمات ليقورا";
+            "مرحباً، أرغب في الاستفسار عن خدمات مداد التحايا";
 
         const campaignData = campaignParameters
             .map((parameterName) => {
@@ -218,4 +218,4 @@ qsa('a[target="_blank"]').forEach((link) => {
     link.setAttribute("rel", [...relValues].join(" "));
 });
 
-console.log("تم تشغيل تصميم ليقورا العصري بنجاح");
+console.log("تم تشغيل تصميم مداد التحايا العصري بنجاح");

@@ -1,26 +1,26 @@
 @import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=Noto+Kufi+Arabic:wght@500;600;700;800&display=swap");
 
 :root {
-    --bg: #f6efe5;
-    --bg-soft: #fffaf3;
+    --bg: #f8f1eb;
+    --bg-soft: #fffaf6;
     --surface: rgba(255, 255, 255, 0.72);
-    --brown-950: #1a0f09;
-    --brown-900: #28170e;
-    --brown-800: #3b2417;
-    --brown-700: #563722;
-    --brown-600: #76533a;
-    --gold-700: #9f7339;
-    --gold-600: #b98b4e;
-    --gold-500: #d1a566;
-    --gold-400: #e3c18c;
-    --gold-300: #efd8b3;
-    --gold-200: #f8ead2;
-    --text: #2b2019;
-    --muted: #76685f;
+    --brown-950: #0f2139;
+    --brown-900: #152a47;
+    --brown-800: #1d3658;
+    --brown-700: #2b4668;
+    --brown-600: #52677f;
+    --gold-700: #9b6a35;
+    --gold-600: #b27b42;
+    --gold-500: #c49052;
+    --gold-400: #d7aa70;
+    --gold-300: #e8cfad;
+    --gold-200: #f5e7d7;
+    --text: #253750;
+    --muted: #707784;
     --white: #ffffff;
-    --line: rgba(83, 52, 33, 0.12);
-    --shadow-sm: 0 10px 30px rgba(50, 30, 18, 0.08);
-    --shadow-md: 0 24px 70px rgba(50, 30, 18, 0.13);
+    --line: rgba(21, 42, 71, 0.12);
+    --shadow-sm: 0 10px 30px rgba(15, 33, 57, 0.08);
+    --shadow-md: 0 24px 70px rgba(15, 33, 57, 0.13);
     --radius-md: 24px;
     --radius-lg: 34px;
     --ease: cubic-bezier(.2, .8, .2, 1);
@@ -42,8 +42,8 @@ body {
     font-family: "IBM Plex Sans Arabic", Tahoma, Arial, sans-serif;
     color: var(--text);
     background:
-        radial-gradient(circle at 12% 8%, rgba(227, 193, 140, 0.28), transparent 34%),
-        radial-gradient(circle at 90% 16%, rgba(185, 139, 78, 0.16), transparent 30%),
+        radial-gradient(circle at 12% 8%, rgba(196, 144, 82, 0.20), transparent 34%),
+        radial-gradient(circle at 90% 16%, rgba(21, 42, 71, 0.10), transparent 30%),
         linear-gradient(180deg, var(--bg-soft), var(--bg));
     line-height: 1.9;
     overflow-x: hidden;
@@ -57,8 +57,8 @@ body::before {
     opacity: 0.25;
     pointer-events: none;
     background-image:
-        linear-gradient(rgba(86, 55, 34, 0.035) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(86, 55, 34, 0.035) 1px, transparent 1px);
+        linear-gradient(rgba(21, 42, 71, 0.035) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(21, 42, 71, 0.035) 1px, transparent 1px);
     background-size: 34px 34px;
     mask-image: linear-gradient(to bottom, black, transparent 85%);
 }
@@ -96,7 +96,7 @@ summary {
     width: 0;
     height: 3px;
     background: linear-gradient(90deg, var(--gold-700), var(--gold-400));
-    box-shadow: 0 0 16px rgba(209, 165, 102, 0.75);
+    box-shadow: 0 0 16px rgba(196, 144, 82, 0.60);
 }
 
 .cursor-glow {
@@ -107,7 +107,7 @@ summary {
     width: 340px;
     height: 340px;
     border-radius: 50%;
-    background: radial-gradient(circle, rgba(227, 193, 140, 0.2), transparent 68%);
+    background: radial-gradient(circle, rgba(196, 144, 82, 0.16), transparent 68%);
     transform: translate(-50%, -50%);
     pointer-events: none;
     filter: blur(4px);
@@ -121,7 +121,7 @@ summary {
     z-index: 100;
     padding: 14px 0;
     border-bottom: 1px solid transparent;
-    background: rgba(255, 250, 243, 0.68);
+    background: rgba(255, 250, 246, 0.78);
     backdrop-filter: blur(18px) saturate(150%);
     transition: padding .3s var(--ease), background .3s ease, border-color .3s ease, box-shadow .3s ease;
 }
@@ -129,8 +129,8 @@ summary {
 .header.is-scrolled {
     padding: 8px 0;
     border-color: var(--line);
-    background: rgba(255, 250, 243, 0.9);
-    box-shadow: 0 10px 35px rgba(46, 28, 17, 0.08);
+    background: rgba(255, 250, 246, 0.94);
+    box-shadow: 0 10px 35px rgba(15, 33, 57, 0.08);
 }
 
 .header .container {
@@ -150,16 +150,17 @@ summary {
 .logo-image {
     width: 72px;
     height: 72px;
-    object-fit: cover;
-    border: 1px solid rgba(227, 193, 140, 0.45);
+    object-fit: contain;
+    background: #fffaf6;
+    border: 1px solid rgba(196, 144, 82, 0.42);
     border-radius: 20px;
-    box-shadow: 0 12px 28px rgba(44, 25, 13, 0.17);
+    box-shadow: 0 12px 28px rgba(15, 33, 57, 0.14);
     transition: .35s var(--ease);
 }
 
 .logo-link:hover .logo-image {
     transform: translateY(-2px) rotate(-1deg);
-    box-shadow: 0 18px 38px rgba(44, 25, 13, 0.22);
+    box-shadow: 0 18px 38px rgba(15, 33, 57, 0.19);
 }
 
 .header-button,
@@ -265,7 +266,7 @@ summary {
     right: -170px;
     width: 470px;
     height: 470px;
-    border: 1px solid rgba(185, 139, 78, 0.16);
+    border: 1px solid rgba(21, 42, 71, 0.10);
     box-shadow: 0 0 0 55px rgba(185, 139, 78, 0.035), 0 0 0 110px rgba(185, 139, 78, 0.025);
     animation: float-orbit 9s ease-in-out infinite;
 }

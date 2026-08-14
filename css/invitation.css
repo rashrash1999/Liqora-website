@@ -1,11 +1,11 @@
 :root {
-    --bg-main: #e8ebe4;
-    --sage-dark: #3a4d39;
-    --sage-medium: #4e6c50;
-    --card-cream: #f9f8f3;
-    --gold-accent: #c2a649;
-    --text-dark: #2c352b;
-    --text-muted: #6b776a;
+    --bg-main: #f8f1eb;
+    --sage-dark: #152a47;
+    --sage-medium: #304d70;
+    --card-cream: #fffaf6;
+    --gold-accent: #c49052;
+    --text-dark: #253750;
+    --text-muted: #707784;
     
     --font-heading: 'Amiri', 'Cinzel', serif;
     --font-body: 'Tajawal', sans-serif;
@@ -18,7 +18,10 @@
 }
 
 body {
-    background-color: var(--bg-main);
+    background:
+        radial-gradient(circle at 15% 8%, rgba(196, 144, 82, 0.14), transparent 32%),
+        radial-gradient(circle at 88% 12%, rgba(21, 42, 71, 0.08), transparent 28%),
+        var(--bg-main);
     color: var(--text-dark);
     font-family: var(--font-body);
     display: flex;
@@ -54,7 +57,7 @@ body {
 .cover-screen {
     position: fixed;
     inset: 0;
-    background: linear-gradient(rgba(58, 77, 57, 0.4), rgba(58, 77, 57, 0.6)), 
+    background: linear-gradient(rgba(21, 42, 71, 0.36), rgba(21, 42, 71, 0.62)), 
                 url('https://images.unsplash.com/photo-1519225421980-715cb0215aed?auto=format&fit=crop&w=1000&q=80') center/cover no-repeat;
     z-index: 999;
     display: flex;
@@ -71,7 +74,7 @@ body {
 }
 
 .cover-content {
-    background: rgba(249, 248, 243, 0.92);
+    background: rgba(255, 250, 246, 0.94);
     padding: 40px 30px;
     border-radius: 200px 200px 20px 20px;
     width: 90%;
@@ -170,7 +173,7 @@ body {
     width: 100%;
     text-align: center;
     box-shadow: 0 8px 25px rgba(0,0,0,0.06);
-    border: 1px solid rgba(78, 108, 80, 0.15);
+    border: 1px solid rgba(21, 42, 71, 0.13);
 }
 
 .hero-card {
@@ -246,7 +249,7 @@ body {
 .form-group input, .form-group select, .form-group textarea {
     width: 100%;
     padding: 10px;
-    border: 1px solid #dcdacb;
+    border: 1px solid #eadccf;
     border-radius: 8px;
     background: #fff;
     font-family: var(--font-body);
@@ -259,7 +262,7 @@ body {
 
 .wishes-feed {
     margin-top: 30px;
-    border-top: 1px solid #e0decb;
+    border-top: 1px solid #efe2d6;
     padding-top: 20px;
     text-align: right;
 }
