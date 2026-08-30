@@ -1,279 +1,83 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ar" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>طلب دعوة جديدة | مداد التحايا</title>
-    <meta name="description" content="أرسلي تفاصيل مناسبتك واختاري باقة مداد التحايا المناسبة، ثم أرسلي الطلب عبر واتساب.">
-    <meta name="theme-color" content="#152A47">
-    <link rel="icon" type="image/png" href="images/Medad-logo.png">
-    <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" href="css/order.css">
+    <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>إنشاء طلب جديد | مداد التحايا</title><meta name="description" content="أنشئ طلب دعوتك الإلكترونية في خطوات واضحة.">
+    <meta name="theme-color" content="#10243f"><link rel="icon" href="images/Medad-logo.png"><link rel="stylesheet" href="css/style.css">
 </head>
-<body>
-    <header class="header">
+<body class="app-body" data-page="order">
+    <a class="skip-link" href="#main">انتقل إلى النموذج</a>
+    <header class="app-header"><div class="container header-inner"><a class="brand" href="index.html"><img src="images/Medad-logo.png" alt="" width="48" height="48"><span><strong>مداد التحايا</strong><small>طلب دعوة جديدة</small></span></a><a class="button button-secondary button-sm" href="index.html">العودة للرئيسية</a></div></header>
+    <main class="app-main" id="main">
         <div class="container">
-            <a class="logo-link" href="index.html" aria-label="العودة إلى الصفحة الرئيسية">
-                <img class="logo-image" src="images/Medad-logo.png" alt="شعار مداد التحايا" width="72" height="72">
-            </a>
-            <a class="secondary-button order-back-button" href="index.html">العودة للرئيسية</a>
-        </div>
-    </header>
-
-    <main class="order-page">
-        <section class="order-hero">
-            <div class="container">
-                <p class="section-label">طلب جديد</p>
-                <h1>أرسلي تفاصيل مناسبتك</h1>
-                <p>املئي البيانات التالية، ثم سنجهّز رسالة واتساب تحتوي على الطلب كاملًا لتأكيده مع فريق مداد التحايا.</p>
-                <div class="order-steps" aria-label="مراحل إرسال الطلب">
-                    <span class="is-active">1. تعبئة البيانات</span>
-                    <span>2. مراجعة الطلب</span>
-                    <span>3. الإرسال عبر واتساب</span>
-                </div>
+            <div class="page-intro"><div><span class="eyebrow"><i></i> طلب جديد</span><h1>لنجهّز مناسبتك</h1><p>يمكنك الحفظ والمتابعة من الجهاز نفسه في أي وقت.</p></div><span class="pill pill-warning">يستغرق نحو ٤ دقائق</span></div>
+            <div class="stepper" aria-label="خطوات إنشاء الطلب">
+                <div class="stepper-item is-active" data-stepper="1"><b>١</b><span>الباقة</span></div><div class="stepper-item" data-stepper="2"><b>٢</b><span>المناسبة</span></div><div class="stepper-item" data-stepper="3"><b>٣</b><span>التصميم</span></div><div class="stepper-item" data-stepper="4"><b>٤</b><span>المراجعة</span></div>
             </div>
-        </section>
-
-        <section class="order-content">
-            <div class="container order-layout">
-                <form class="order-form" id="order-form" novalidate>
-
-                    <section class="form-section">
-                        <div class="form-section-heading">
-                            <span class="form-section-number">1</span>
-                            <div>
-                                <h2>بيانات التواصل</h2>
-                                <p>حتى نستطيع التواصل معك بخصوص الطلب.</p>
-                            </div>
+            <div class="order-shell">
+                <form class="app-card form-card" id="order-form" novalidate>
+                    <section class="form-step" data-step="1">
+                        <h2>اختر الباقة المناسبة</h2><p class="step-description">يعتمد الحد على عدد أرقام المدعوين الذين سترسل لهم الدعوة.</p>
+                        <div class="choice-grid">
+                            <label class="choice-card"><input type="radio" name="packageId" value="basic" required><strong>الأساسية</strong><span>قالب جاهز · حتى ١٠٠ مدعو</span></label>
+                            <label class="choice-card"><input type="radio" name="packageId" value="advanced" required><strong>المتقدمة</strong><span>تصاميم مميزة · حتى ٥٠٠ مدعو</span></label>
+                            <label class="choice-card"><input type="radio" name="packageId" value="premium" required><strong>المخصصة</strong><span>تصميم خاص · عدد مرن</span></label>
                         </div>
+                        <div class="form-grid" style="margin-top:22px">
+                            <div class="field"><label for="expected-guests">العدد المتوقع للمدعوين <span>*</span></label><input id="expected-guests" name="expectedGuests" type="number" min="1" max="10000" inputmode="numeric" placeholder="مثال: 150" required><small>سنراجع توافق العدد مع الباقة قبل الدفع.</small></div>
+                            <div class="field"><label>موعد التذكير <span>*</span></label><div class="radio-row"><label class="radio-pill"><input type="radio" name="reminderHours" value="24" required><span>قبل ٢٤ ساعة</span></label><label class="radio-pill"><input type="radio" name="reminderHours" value="48"><span>قبل يومين</span></label><label class="radio-pill"><input type="radio" name="reminderHours" value="72"><span>قبل ٣ أيام</span></label></div></div>
+                        </div>
+                    </section>
 
+                    <section class="form-step" data-step="2" hidden>
+                        <h2>بياناتك وتفاصيل المناسبة</h2><p class="step-description">ستُستخدم هذه البيانات لتجهيز الطلب والتواصل معك فقط.</p>
                         <div class="form-grid">
-                            <div class="form-field form-field-wide">
-                                <label for="full-name">الاسم الكامل <span>*</span></label>
-                                <input id="full-name" name="fullName" type="text" autocomplete="name" placeholder="مثال: سارة محمد" required minlength="3">
-                            </div>
-
-                            <div class="form-field">
-                                <label for="phone">رقم الجوال <span>*</span></label>
-                                <input id="phone" name="phone" type="tel" inputmode="tel" autocomplete="tel" dir="ltr" placeholder="05XXXXXXXX" required>
-                                <small>سيظهر رقمك ضمن الطلب حتى نتواصل معك.</small>
-                            </div>
-
-                            <div class="form-field">
-                                <label for="city">المدينة</label>
-                                <input id="city" name="city" type="text" autocomplete="address-level2" placeholder="مثال: الرياض">
-                            </div>
-
-                            <div class="form-field form-field-wide">
-                                <label for="preferred-contact-time">الوقت المناسب للتواصل</label>
-                                <select id="preferred-contact-time" name="preferredContactTime">
-                                    <option value="">لا يوجد وقت محدد</option>
-                                    <option value="صباحًا">صباحًا</option>
-                                    <option value="ظهرًا">ظهرًا</option>
-                                    <option value="مساءً">مساءً</option>
-                                    <option value="في أي وقت">في أي وقت</option>
-                                </select>
-                            </div>
+                            <div class="field"><label for="owner-name">اسم صاحب الطلب <span>*</span></label><input id="owner-name" name="ownerName" type="text" autocomplete="name" minlength="3" placeholder="الاسم الكامل" required></div>
+                            <div class="field"><label for="phone">رقم الجوال <span>*</span></label><input id="phone" name="phone" type="tel" inputmode="tel" autocomplete="tel" dir="ltr" placeholder="05XXXXXXXX" required></div>
+                            <div class="field"><label for="occasion">نوع المناسبة <span>*</span></label><select id="occasion" name="occasion" required><option value="">اختر المناسبة</option><option>حفل زفاف</option><option>ملكة أو عقد قران</option><option>خطوبة</option><option>تخرج</option><option>عيد ميلاد</option><option>افتتاح أو فعالية</option><option>مناسبة عائلية</option><option>أخرى</option></select></div>
+                            <div class="field"><label for="honorees">الأسماء في الدعوة <span>*</span></label><input id="honorees" name="honorees" type="text" placeholder="مثال: سارة وعبدالله" required></div>
+                            <div class="field"><label for="event-date">تاريخ المناسبة <span>*</span></label><input id="event-date" name="eventDate" type="date" required></div>
+                            <div class="field"><label for="event-time">وقت المناسبة <span>*</span></label><input id="event-time" name="eventTime" type="time" required></div>
+                            <div class="field"><label for="venue-name">اسم المكان <span>*</span></label><input id="venue-name" name="venueName" type="text" placeholder="اسم القاعة أو المكان" required></div>
+                            <div class="field"><label for="city">المدينة <span>*</span></label><input id="city" name="city" type="text" value="الرياض" required></div>
+                            <div class="field field-wide"><label for="map-url">رابط الموقع على الخريطة <span>*</span></label><input id="map-url" name="mapUrl" type="url" dir="ltr" placeholder="https://maps.google.com/..." required></div>
+                            <div class="field"><label for="max-companions">الحد الأعلى للمرافقين</label><select id="max-companions" name="maxCompanions"><option value="0">بدون مرافقين</option><option value="1">مرافق واحد</option><option value="2">مرافقان</option><option value="3">٣ مرافقين</option><option value="4">٤ مرافقين</option></select></div>
+                            <div class="field"><label for="child-policy">سياسة الأطفال</label><select id="child-policy" name="childPolicy"><option value="">لا يوجد تنبيه</option><option>نعتذر عن استقبال الأطفال</option><option>الأطفال مسموحون</option><option>حسب الدعوة</option></select></div>
+                            <div class="field field-wide"><label for="invitation-message">نص الدعوة</label><textarea id="invitation-message" name="invitationMessage" maxlength="700" placeholder="اكتب النص المقترح أو اتركه لفريقنا"></textarea></div>
                         </div>
                     </section>
 
-                    <section class="form-section">
-                        <div class="form-section-heading">
-                            <span class="form-section-number">2</span>
-                            <div>
-                                <h2>تفاصيل المناسبة</h2>
-                                <p>ساعدينا على فهم نوع المناسبة وموعدها.</p>
-                            </div>
-                        </div>
-
+                    <section class="form-step" data-step="3" hidden>
+                        <h2>تفضيلات التصميم</h2><p class="step-description">تتغير الخيارات تلقائيًا حسب باقتك المختارة.</p>
                         <div class="form-grid">
-                            <div class="form-field">
-                                <label for="occasion">نوع المناسبة <span>*</span></label>
-                                <select id="occasion" name="occasion" required>
-                                    <option value="">اختاري نوع المناسبة</option>
-                                    <option value="زفاف">زفاف</option>
-                                    <option value="ملكة أو عقد قران">ملكة أو عقد قران</option>
-                                    <option value="خطوبة">خطوبة</option>
-                                    <option value="تخرج">تخرج</option>
-                                    <option value="مولود جديد">مولود جديد</option>
-                                    <option value="عيد ميلاد">عيد ميلاد</option>
-                                    <option value="مناسبة عائلية">مناسبة عائلية</option>
-                                    <option value="افتتاح أو فعالية">افتتاح أو فعالية</option>
-                                    <option value="أخرى">أخرى</option>
-                                </select>
-                            </div>
-
-                            <div class="form-field">
-                                <label for="occasion-other">نوع المناسبة إن كانت أخرى</label>
-                                <input id="occasion-other" name="occasionOther" type="text" placeholder="اكتبي نوع المناسبة" disabled>
-                            </div>
-
-                            <div class="form-field form-field-wide">
-                                <label for="names-on-invitation">الأسماء التي ستظهر في الدعوة</label>
-                                <input id="names-on-invitation" name="namesOnInvitation" type="text" placeholder="مثال: سارة وعبدالله">
-                            </div>
-
-                            <div class="form-field">
-                                <label for="event-date">تاريخ المناسبة <span>*</span></label>
-                                <input id="event-date" name="eventDate" type="date" required>
-                            </div>
-
-                            <div class="form-field">
-                                <label for="event-time">وقت المناسبة</label>
-                                <input id="event-time" name="eventTime" type="time">
-                            </div>
-
-                            <div class="form-field">
-                                <label for="guest-count">العدد المتوقع للضيوف <span>*</span></label>
-                                <input id="guest-count" name="guestCount" type="number" inputmode="numeric" min="1" max="10000" placeholder="مثال: 150" required>
-                            </div>
-
-                            <div class="form-field">
-                                <label for="invitation-language">لغة الدعوة</label>
-                                <select id="invitation-language" name="invitationLanguage">
-                                    <option value="العربية">العربية</option>
-                                    <option value="الإنجليزية">الإنجليزية</option>
-                                    <option value="العربية والإنجليزية">العربية والإنجليزية</option>
-                                </select>
-                            </div>
+                            <div class="field"><label for="theme">الثيم المفضل <span>*</span></label><select id="theme" name="theme" required><option value="">اختر الثيم</option><option value="classic">كلاسيكي فاخر</option><option value="modern">عصري بسيط</option><option value="floral">ورود ناعمة</option><option value="royal">ملكي داكن</option><option value="custom">يُحدد مع المصمم</option></select></div>
+                            <div class="field"><label for="orientation">اتجاه البطاقة</label><select id="orientation" name="orientation"><option>طولية</option><option>عرضية</option><option>مربعة</option></select></div>
+                            <div class="field"><label for="preferred-colors">الألوان المفضلة</label><input id="preferred-colors" name="preferredColors" type="text" placeholder="كحلي وذهبي"></div>
+                            <div class="field"><label for="design-tone">طابع التصميم</label><select id="design-tone" name="designTone"><option>رسمي</option><option>ناعم</option><option>فاخر</option><option>عصري</option><option>مرح</option></select></div>
+                            <div class="field field-wide custom-design-fields" id="custom-design-fields" hidden><label for="custom-notes">موجز التصميم المخصص</label><textarea id="custom-notes" name="customNotes" placeholder="صف لنا تصورك، الخطوط، الزخارف، الورود أو أي تفاصيل مهمة"></textarea></div>
+                            <div class="field field-wide custom-design-fields" hidden><label for="reference-file">إرفاق نموذج مرجعي</label><input id="reference-file" name="referenceFile" type="file" accept="image/png,image/jpeg,image/webp,application/pdf"><small>PNG أو JPG أو PDF، بحد أقصى 10MB عند ربط التخزين.</small></div>
+                            <div class="field field-wide"><label>إضافات اختيارية</label><div class="choice-grid"><label class="choice-card"><input type="checkbox" name="addons" value="gendered"><strong>نسختان للرجال والنساء</strong><span>نفس الهوية مع اختلاف مناسب لكل فئة.</span></label><label class="choice-card"><input type="checkbox" name="addons" value="video"><strong>فيديو بنفس الثيم</strong><span>مقطع احترافي يراجع مع فريق التصميم.</span></label><label class="choice-card"><input type="checkbox" name="addons" value="social"><strong>نسخة للنشر العام</strong><span>نسخة دون رابط RSVP أو QR.</span></label></div></div>
                         </div>
                     </section>
 
-                    <section class="form-section">
-                        <div class="form-section-heading">
-                            <span class="form-section-number">3</span>
-                            <div>
-                                <h2>الباقة والخدمات</h2>
-                                <p>يمكن تغيير الباقة قبل إرسال الطلب.</p>
-                            </div>
-                        </div>
-
-                        <div class="form-grid">
-                            <div class="form-field form-field-wide">
-                                <label for="package">الباقة المطلوبة <span>*</span></label>
-                                <select id="package" name="package" required>
-                                    <option value="">اختاري الباقة</option>
-                                    <option value="basic">الباقة الأساسية — ابتداءً من 199 ر.س</option>
-                                    <option value="advanced">الباقة المتقدمة — ابتداءً من 399 ر.س</option>
-                                    <option value="premium">الباقة المميزة — ابتداءً من 699 ر.س</option>
-                                    <option value="custom">باقة مخصصة — السعر بعد مراجعة الطلب</option>
-                                </select>
-                            </div>
-
-                            <fieldset class="form-field form-field-wide services-field">
-                                <legend>خدمات إضافية قد تحتاجينها</legend>
-                                <div class="checkbox-grid">
-                                    <label class="choice-card"><input type="checkbox" name="extraServices" value="إدارة تأكيد الحضور"><span>إدارة تأكيد الحضور</span></label>
-                                    <label class="choice-card"><input type="checkbox" name="extraServices" value="باركود أو رمز دخول للضيوف"><span>باركود أو رمز دخول</span></label>
-                                    <label class="choice-card"><input type="checkbox" name="extraServices" value="إضافة رابط خرائط Google"><span>رابط خرائط Google</span></label>
-                                    <label class="choice-card"><input type="checkbox" name="extraServices" value="عداد تنازلي للمناسبة"><span>عداد تنازلي</span></label>
-                                    <label class="choice-card"><input type="checkbox" name="extraServices" value="موسيقى أو مؤثر صوتي"><span>موسيقى أو مؤثر صوتي</span></label>
-                                    <label class="choice-card"><input type="checkbox" name="extraServices" value="نسخة خاصة للنشر في منصات التواصل"><span>نسخة لمنصات التواصل</span></label>
-                                </div>
-                            </fieldset>
-                        </div>
+                    <section class="form-step" data-step="4" hidden>
+                        <h2>راجع طلبك</h2><p class="step-description">تأكد من المعلومات قبل الانتقال إلى الدفع.</p>
+                        <div class="review-grid" id="review-grid"></div>
+                        <label class="consent-row"><input type="checkbox" name="termsAccepted" required><span>أؤكد صحة البيانات وأوافق على <a href="terms.html" target="_blank">الشروط والأحكام</a> و<a href="privacy.html" target="_blank">سياسة الخصوصية</a>، وأقر بأن لدي الصلاحية لتزويد المتجر ببيانات المدعوين لغرض المناسبة.</span></label>
                     </section>
 
-                    <section class="form-section">
-                        <div class="form-section-heading">
-                            <span class="form-section-number">4</span>
-                            <div>
-                                <h2>الموقع والتصميم</h2>
-                                <p>هذه المعلومات تساعدنا في تقديم تصور أدق.</p>
-                            </div>
-                        </div>
-
-                        <div class="form-grid">
-                            <div class="form-field">
-                                <label for="venue-name">اسم مكان المناسبة</label>
-                                <input id="venue-name" name="venueName" type="text" placeholder="مثال: قاعة...">
-                            </div>
-
-                            <div class="form-field">
-                                <label for="map-link">رابط الموقع على الخرائط</label>
-                                <input id="map-link" name="mapLink" type="url" inputmode="url" dir="ltr" placeholder="https://maps.google.com/...">
-                            </div>
-
-                            <div class="form-field">
-                                <label for="design-style">الطابع المفضل للتصميم</label>
-                                <select id="design-style" name="designStyle">
-                                    <option value="">اتركي الاختيار لنا</option>
-                                    <option value="فاخر وكلاسيكي">فاخر وكلاسيكي</option>
-                                    <option value="عصري وبسيط">عصري وبسيط</option>
-                                    <option value="ناعم ورومانسي">ناعم ورومانسي</option>
-                                    <option value="ملكي">ملكي</option>
-                                    <option value="مرح وملون">مرح وملون</option>
-                                    <option value="حسب هوية المناسبة">حسب هوية المناسبة</option>
-                                </select>
-                            </div>
-
-                            <div class="form-field">
-                                <label for="preferred-colors">الألوان المفضلة</label>
-                                <input id="preferred-colors" name="preferredColors" type="text" placeholder="مثال: بني وذهبي">
-                            </div>
-
-                            <div class="form-field">
-                                <label for="delivery-date">التاريخ المفضل لاستلام الدعوة</label>
-                                <input id="delivery-date" name="deliveryDate" type="date">
-                            </div>
-
-                            <div class="form-field">
-                                <label for="reference-link">رابط تصميم أعجبك</label>
-                                <input id="reference-link" name="referenceLink" type="url" inputmode="url" dir="ltr" placeholder="رابط Pinterest أو Instagram...">
-                            </div>
-
-                            <div class="form-field form-field-wide">
-                                <label for="notes">تفاصيل أو ملاحظات إضافية</label>
-                                <textarea id="notes" name="notes" rows="5" maxlength="1000" placeholder="اكتبي أي تفاصيل مهمة أو متطلبات خاصة..."></textarea>
-                            </div>
-                        </div>
-                    </section>
-
-                    <section class="form-section confirmation-section">
-                        <label class="confirmation-checkbox">
-                            <input id="consent" name="consent" type="checkbox" required>
-                            <span>أؤكد أن البيانات المدخلة صحيحة، وأوافق على التواصل معي عبر الجوال أو واتساب بخصوص هذا الطلب.</span>
-                        </label>
-
-                        <div class="form-message" id="form-message" role="status" aria-live="polite" hidden></div>
-
-                        <button class="primary-button submit-order-button" id="submit-order" type="submit">
-                            تأكيد وإرسال الطلب عبر واتساب
-                        </button>
-
-                        <p class="submit-note">
-                            بعد الضغط سيفتح واتساب برسالة جاهزة. يجب الضغط على «إرسال» داخل واتساب لإكمال رفع الطلب.
-                        </p>
-                    </section>
+                    <div class="form-alert" id="form-alert" role="alert" hidden></div>
+                    <div class="form-actions"><button class="button button-secondary" id="previous-step" type="button" hidden>السابق</button><button class="button button-primary" id="next-step" type="button">التالي</button><button class="button button-primary" id="submit-order" type="submit" hidden>الانتقال إلى الدفع</button></div>
                 </form>
 
-                <aside class="order-summary" aria-label="ملخص الطلب">
-                    <div class="summary-logo-wrap">
-                        <img src="images/Medad-logo.png" alt="" width="76" height="76">
-                    </div>
-                    <p class="summary-label">ملخص الباقة</p>
-                    <h2 id="summary-package-name">لم يتم اختيار باقة بعد</h2>
-                    <p class="summary-price" id="summary-package-price">اختاري الباقة لعرض السعر المبدئي.</p>
-                    <ul id="summary-package-features">
-                        <li>تعبئة البيانات لا تلزمك بالدفع.</li>
-                        <li>سنراجع التفاصيل قبل تأكيد السعر النهائي.</li>
-                        <li>يمكن تعديل الطلب أثناء التواصل.</li>
-                    </ul>
-                    <div class="summary-security">
-                        <strong>ماذا يحدث بعد الإرسال؟</strong>
-                        <p>تصلنا رسالة واتساب تشمل رقم الطلب وبياناتك وتفاصيل المناسبة والباقة المختارة.</p>
-                    </div>
+                <aside class="app-card summary-card" aria-label="ملخص الباقة">
+                    <h2>ملخص الطلب</h2><div class="summary-package"><small id="summary-label">لم تختر باقة</small><strong id="summary-name">اختر باقتك للمتابعة</strong><span id="summary-description"></span></div>
+                    <ul class="summary-list"><li><span>الحد</span><strong id="summary-limit">—</strong></li><li><span>موعد التذكير</span><strong id="summary-reminder">—</strong></li><li><span>الإضافات</span><strong id="summary-addons">لا توجد</strong></li></ul>
+                    <div class="summary-total"><span>المبلغ المبدئي</span><strong id="summary-price">—</strong></div><div class="info-box">بعد الدفع يتواصل معك الأدمن عبر واتساب لاستلام قائمة المدعوين واعتماد الإرسال.</div>
                 </aside>
             </div>
-        </section>
-    </main>
-
-    <footer class="footer">
-        <div class="container footer-content">
-            <p class="copyright">جميع الحقوق محفوظة <span id="current-year"></span> © مداد التحايا</p>
         </div>
-    </footer>
-
-    <script src="js/order.js"></script>
+    </main>
+    <script src="js/platform.js"></script><script src="js/order.js"></script>
 </body>
 </html>

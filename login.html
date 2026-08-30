@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="دخول عملاء مداد التحايا برقم الجوال.">
+  <meta name="theme-color" content="#10243f">
+  <title>دخول العميل | مداد التحايا</title>
+  <link rel="icon" href="images/Medad-logo.png" type="image/png">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/auth.css">
+</head>
+<body class="auth-page" data-login-page="customer">
+  <main class="auth-layout">
+    <section class="auth-brand-panel customer-panel">
+      <a class="brand brand-light" href="index.html"><img src="images/Medad-logo.png" alt="شعار مداد التحايا"><span><strong>مداد التحايا</strong><small>لوحة المناسبة</small></span></a>
+      <div><span class="eyebrow light"><i></i> مناسبتك بين يديك</span><h1>تابع طلبك وردود ضيوفك بسهولة</h1><p>ادخل برقم الجوال المسجل في الطلب، ثم تحقق من الرمز للوصول الآمن إلى لوحة مناسبتك.</p></div>
+      <small>لن نطلب منك كلمة مرور. في الإنتاج يصلك رمز تحقق قصير برسالة SMS.</small>
+    </section>
+    <section class="auth-form-panel">
+      <div class="auth-form-wrap">
+        <a class="auth-back" href="index.html">العودة للرئيسية</a>
+        <span class="pill pill-success">دخول العميل</span>
+        <h1>أهلًا بك مجددًا</h1>
+        <p>استخدم رقم الجوال نفسه الذي سجلت به الطلب.</p>
+        <form id="customerPhoneForm" class="auth-form" novalidate>
+          <label class="field"><span>رقم الجوال السعودي</span><input id="customerPhone" name="phone" type="tel" inputmode="tel" dir="ltr" value="0537933514" autocomplete="tel" required><small>مثال: 05xxxxxxxx</small></label>
+          <p id="customerPhoneError" class="form-alert" role="alert" hidden></p>
+          <button class="button button-primary button-block" type="submit">إرسال رمز التحقق</button>
+        </form>
+        <form id="customerOtpForm" class="auth-form" novalidate hidden>
+          <div class="verification-target"><span>أرسلنا الرمز إلى</span><strong id="verificationPhone">—</strong><button id="changePhone" type="button">تغيير الرقم</button></div>
+          <label class="field"><span>رمز التحقق</span><input id="customerOtp" name="otp" class="otp-input" type="text" inputmode="numeric" maxlength="4" autocomplete="one-time-code" placeholder="••••" required></label>
+          <p id="customerOtpError" class="form-alert" role="alert" hidden></p>
+          <button class="button button-primary button-block" type="submit">دخول لوحة المناسبة</button>
+          <p class="demo-code">رمز العرض التجريبي: <strong>1234</strong></p>
+        </form>
+        <p class="auth-security-note">الإرسال الحالي محاكاة للعرض. يلزم ربط مزود OTP وخادم قبل استقبال عملاء حقيقيين.</p>
+        <a class="switch-login" href="admin-login.html">دخول فريق الإدارة</a>
+      </div>
+    </section>
+  </main>
+  <script src="js/platform.js"></script><script src="js/auth.js"></script><script src="js/login.js"></script>
+</body>
+</html>

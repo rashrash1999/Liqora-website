@@ -1,0 +1,15 @@
+{
+  "name": "medad-al-tahaya-invitations",
+  "version": "2.0.0",
+  "private": true,
+  "description": "Arabic electronic invitation storefront and event attendance MVP",
+  "type": "module",
+  "scripts": {
+    "test": "node scripts/validate.mjs",
+    "validate": "node scripts/validate.mjs"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "license": "UNLICENSED"
+}

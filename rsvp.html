@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="تأكيد حضور ضيوف مناسبات مداد التحايا.">
+  <meta name="theme-color" content="#10243f">
+  <title>تأكيد الحضور | مداد التحايا</title>
+  <link rel="icon" href="images/Medad-logo.png" type="image/png">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/flow.css">
+</head>
+<body>
+  <main class="center-page">
+    <article class="center-card" aria-labelledby="rsvpTitle">
+      <a class="brand" href="index.html" aria-label="مداد التحايا - الرئيسية">
+        <img src="images/Medad-logo.png" alt="شعار مداد التحايا" width="54" height="54">
+        <span><strong>مداد التحايا</strong><small>دعوات تليق بمناسباتكم</small></span>
+      </a>
+
+      <section id="rsvpFormState">
+        <header class="center-heading-card">
+          <span class="pill pill-warning">دعوة شخصية</span>
+          <h1 id="rsvpTitle">نسعد بمعرفة ردّكم</h1>
+          <p>مرحبًا <strong>نورة السبيعي</strong>، هذه الخطوة لا تستغرق أكثر من دقيقة.</p>
+        </header>
+        <div class="rsvp-event-summary" aria-label="تفاصيل المناسبة">
+          <strong>حفل زفاف سارة وعبدالله</strong>
+          <span>الاثنين، 12 أكتوبر 2026 · 8:00 مساءً</span>
+          <span>قاعة ليلتي · الرياض</span>
+        </div>
+        <p class="event-note"><strong>تنويه المضيف:</strong> نعتذر عن استقبال الأطفال، ونقدّر تفهّمكم.</p>
+        <form id="rsvpForm" novalidate>
+          <fieldset class="field">
+            <legend>هل ستشرّفنا بالحضور؟ <span>*</span></legend>
+            <div class="attendance-options">
+              <label class="attendance-option"><input type="radio" name="attendance" value="yes" required><span>نعم، بكل سرور</span></label>
+              <label class="attendance-option"><input type="radio" name="attendance" value="no" required><span>أعتذر عن الحضور</span></label>
+            </div>
+          </fieldset>
+          <div class="form-grid rsvp-details" id="attendanceDetails" hidden>
+            <label class="field"><span>الاسم كما يظهر في بطاقة الدخول</span><input id="guestName" name="guestName" maxlength="60" autocomplete="name" value="نورة السبيعي" required></label>
+            <label class="field"><span>عدد المرافقين</span><select name="companions"><option value="0">بدون مرافقين</option><option value="1">مرافق واحد</option><option value="2">مرافقان</option></select><small>الحد الأعلى لهذه الدعوة: مرافقان.</small></label>
+          </div>
+          <label class="field field-wide" style="margin-top:18px"><span>رسالة لصاحب المناسبة <small>(اختياري)</small></span><textarea name="message" maxlength="300" placeholder="اكتب تهنئتك أو اعتذارك هنا"></textarea></label>
+          <p id="rsvpError" class="form-alert" role="alert" hidden></p>
+          <button class="button button-primary button-block" type="submit" style="margin-top:20px">إرسال الرد النهائي</button>
+          <p class="single-use-note">بعد الإرسال يُغلق هذا النموذج ولا يمكن تعديل الرد من الرابط نفسه. للتعديل تواصل مع صاحب المناسبة.</p>
+        </form>
+      </section>
+
+      <section id="rsvpSuccessState" class="success-state" aria-live="polite" hidden>
+        <div class="success-icon" aria-hidden="true">✓</div>
+        <h1 id="successTitle">تم تسجيل حضورك</h1>
+        <p id="successMessage">شكرًا لك، نتطلع لرؤيتك ومشاركتنا هذه المناسبة.</p>
+        <div id="ticketCard" class="ticket-card">
+          <small>بطاقة دخول شخصية</small><h2 id="ticketGuestName">نورة السبيعي</h2>
+          <img class="qr-placeholder" src="images/demo-qr.svg" alt="رمز QR الخاص بالدخول" width="180" height="180">
+          <p>يرجى إبراز الرمز عند بوابة الاستقبال. لا تشارك هذه البطاقة مع الآخرين.</p><strong>MD-G-001</strong>
+        </div>
+        <p class="single-use-note" id="closedLinkNote">تم استخدام رابط التأكيد، لذلك لن يظهر النموذج مرة أخرى على هذا الجهاز.</p>
+        <a class="button button-secondary button-block" href="invitation.html">عرض تفاصيل الدعوة</a>
+      </section>
+    </article>
+  </main>
+  <script src="js/platform.js"></script><script src="js/rsvp.js"></script>
+</body>
+</html>

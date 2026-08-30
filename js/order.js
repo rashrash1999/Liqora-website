@@ -1,367 +1,140 @@
-"use strict";
+(function () {
+    "use strict";
+    const { PACKAGES, STORAGE_KEYS, formatMoney, formatDate, normalizeSaudiPhone, generateOrderId, store } = window.Medad;
+    const form = document.getElementById("order-form");
+    const steps = [...form.querySelectorAll(".form-step")];
+    const stepperItems = [...document.querySelectorAll("[data-stepper]")];
+    const nextButton = document.getElementById("next-step");
+    const previousButton = document.getElementById("previous-step");
+    const submitButton = document.getElementById("submit-order");
+    const alertBox = document.getElementById("form-alert");
+    const guestCountInput = form.elements.expectedGuests;
+    const phoneInput = form.elements.phone;
+    const eventDateInput = form.elements.eventDate;
+    let currentStep = 1;
 
-const BUSINESS_WHATSAPP = "966537933514";
+    const today = new Date();
+    const minDate = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, "0")}-${String(today.getDate()).padStart(2, "0")}`;
+    eventDateInput.min = minDate;
 
-const packageDetails = {
-    basic: {
-        name: "الباقة الأساسية",
-        price: "ابتداءً من 199 ر.س",
-        features: [
-            "تصميم دعوة إلكترونية",
-            "تخصيص الأسماء والتاريخ",
-            "رابط جاهز للمشاركة",
-            "تعديل واحد على التصميم"
-        ]
-    },
-    advanced: {
-        name: "الباقة المتقدمة",
-        price: "ابتداءً من 399 ر.س",
-        features: [
-            "تصميم مخصص للمناسبة",
-            "تنظيم بيانات الضيوف",
-            "إدارة تأكيد الحضور",
-            "تعديلان على التصميم",
-            "دعم عبر واتساب"
-        ]
-    },
-    premium: {
-        name: "الباقة المميزة",
-        price: "ابتداءً من 699 ر.س",
-        features: [
-            "تصميم فاخر ومخصص بالكامل",
-            "إدارة متكاملة للضيوف",
-            "متابعة تأكيد الحضور",
-            "خدمات إضافية حسب المناسبة",
-            "دعم ومتابعة مخصصة"
-        ]
-    },
-    custom: {
-        name: "باقة مخصصة",
-        price: "السعر بعد مراجعة التفاصيل",
-        features: [
-            "تحديد الخدمات حسب احتياجك",
-            "تسعير مخصص بعد مراجعة الطلب",
-            "إمكانية إضافة خدمات متقدمة"
-        ]
-    }
-};
-
-const form = document.getElementById("order-form");
-const packageSelect = document.getElementById("package");
-const occasionSelect = document.getElementById("occasion");
-const occasionOtherInput = document.getElementById("occasion-other");
-const phoneInput = document.getElementById("phone");
-const eventDateInput = document.getElementById("event-date");
-const deliveryDateInput = document.getElementById("delivery-date");
-const messageBox = document.getElementById("form-message");
-const submitButton = document.getElementById("submit-order");
-const summaryName = document.getElementById("summary-package-name");
-const summaryPrice = document.getElementById("summary-package-price");
-const summaryFeatures = document.getElementById("summary-package-features");
-const yearElement = document.getElementById("current-year");
-
-if (yearElement) {
-    yearElement.textContent = new Date().getFullYear();
-}
-
-const today = new Date();
-const todayString = [
-    today.getFullYear(),
-    String(today.getMonth() + 1).padStart(2, "0"),
-    String(today.getDate()).padStart(2, "0")
-].join("-");
-
-eventDateInput.min = todayString;
-deliveryDateInput.min = todayString;
-
-function formatDate(dateValue) {
-    if (!dateValue) return "غير محدد";
-
-    const date = new Date(`${dateValue}T00:00:00`);
-
-    return new Intl.DateTimeFormat("ar-SA", {
-        year: "numeric",
-        month: "long",
-        day: "numeric"
-    }).format(date);
-}
-
-function formatTime(timeValue) {
-    if (!timeValue) return "غير محدد";
-
-    const [hours, minutes] = timeValue.split(":");
-    const time = new Date();
-    time.setHours(Number(hours), Number(minutes), 0, 0);
-
-    return new Intl.DateTimeFormat("ar-SA", {
-        hour: "numeric",
-        minute: "2-digit"
-    }).format(time);
-}
-
-function normalizeSaudiPhone(value) {
-    const digits = value.replace(/\D/g, "");
-
-    if (/^9665\d{8}$/.test(digits)) return `+${digits}`;
-    if (/^05\d{8}$/.test(digits)) return `+966${digits.slice(1)}`;
-    if (/^5\d{8}$/.test(digits)) return `+966${digits}`;
-
-    return "";
-}
-
-function getSelectedServices() {
-    return [...form.querySelectorAll(
-        'input[name="extraServices"]:checked'
-    )].map((checkbox) => checkbox.value);
-}
-
-function setMessage(text, isError = false) {
-    messageBox.textContent = text;
-    messageBox.hidden = false;
-    messageBox.classList.toggle("is-error", isError);
-}
-
-function clearMessage() {
-    messageBox.textContent = "";
-    messageBox.hidden = true;
-    messageBox.classList.remove("is-error");
-}
-
-function updatePackageSummary() {
-    const selectedPackage = packageDetails[packageSelect.value];
-
-    if (!selectedPackage) {
-        summaryName.textContent = "لم يتم اختيار باقة بعد";
-        summaryPrice.textContent = "اختاري الباقة لعرض السعر المبدئي";
-        summaryFeatures.innerHTML = `
-            <li>تعبئة البيانات لا تلزمك بالدفع.</li>
-            <li>سنراجع التفاصيل قبل تأكيد السعر النهائي.</li>
-            <li>يمكن تعديل الطلب أثناء التواصل.</li>
-        `;
-        return;
+    function formDataObject() {
+        const data = Object.fromEntries(new FormData(form).entries());
+        data.expectedGuests = Number(data.expectedGuests || 0);
+        data.reminderHours = Number(data.reminderHours || 0);
+        data.maxCompanions = Number(data.maxCompanions || 0);
+        data.addons = [...form.querySelectorAll('input[name="addons"]:checked')].map((input) => input.value);
+        return data;
     }
 
-    summaryName.textContent = selectedPackage.name;
-    summaryPrice.textContent = selectedPackage.price;
-    summaryFeatures.innerHTML = selectedPackage.features
-        .map((feature) => `<li>${feature}</li>`)
-        .join("");
-}
+    function saveDraft() { store.set(STORAGE_KEYS.orderDraft, formDataObject()); }
 
-function updateOtherOccasionField() {
-    const shouldEnable = occasionSelect.value === "أخرى";
-
-    occasionOtherInput.disabled = !shouldEnable;
-    occasionOtherInput.required = shouldEnable;
-
-    if (!shouldEnable) {
-        occasionOtherInput.value = "";
-    }
-}
-
-function generateRequestId() {
-    const datePart = new Date()
-        .toISOString()
-        .slice(2, 10)
-        .replaceAll("-", "");
-
-    const randomPart = Math.floor(1000 + Math.random() * 9000);
-
-    return `LQ-${datePart}-${randomPart}`;
-}
-
-function getFieldValue(fieldName) {
-    const field = form.elements[fieldName];
-    return field ? field.value.trim() : "";
-}
-
-function buildWhatsAppMessage(requestId, normalizedPhone) {
-    const selectedPackage = packageDetails[packageSelect.value];
-    const services = getSelectedServices();
-
-    const occasion =
-        occasionSelect.value === "أخرى"
-            ? getFieldValue("occasionOther")
-            : occasionSelect.value;
-
-    return [
-        "✨ طلب جديد من موقع مداد التحايا",
-        "",
-        `رقم الطلب: ${requestId}`,
-        "حالة الطلب: بانتظار التأكيد",
-        "",
-        "— بيانات العميلة —",
-        `الاسم: ${getFieldValue("fullName")}`,
-        `رقم الجوال: ${normalizedPhone}`,
-        `المدينة: ${getFieldValue("city") || "غير محددة"}`,
-        `الوقت المناسب للتواصل: ${getFieldValue("preferredContactTime") || "غير محدد"}`,
-        "",
-        "— تفاصيل المناسبة —",
-        `نوع المناسبة: ${occasion}`,
-        `الأسماء في الدعوة: ${getFieldValue("namesOnInvitation") || "غير محددة"}`,
-        `تاريخ المناسبة: ${formatDate(getFieldValue("eventDate"))}`,
-        `وقت المناسبة: ${formatTime(getFieldValue("eventTime"))}`,
-        `عدد الضيوف المتوقع: ${getFieldValue("guestCount")}`,
-        `لغة الدعوة: ${getFieldValue("invitationLanguage")}`,
-        "",
-        "— الباقة والخدمات —",
-        `الباقة: ${selectedPackage.name}`,
-        `السعر المبدئي: ${selectedPackage.price}`,
-        `الخدمات الإضافية: ${services.length ? services.join("، ") : "لا توجد خدمات إضافية محددة"}`,
-        "",
-        "— الموقع والتصميم —",
-        `اسم المكان: ${getFieldValue("venueName") || "غير محدد"}`,
-        `رابط الخرائط: ${getFieldValue("mapLink") || "غير مضاف"}`,
-        `طابع التصميم: ${getFieldValue("designStyle") || "يُترك لفريق مداد التحايا"}`,
-        `الألوان المفضلة: ${getFieldValue("preferredColors") || "غير محددة"}`,
-        `موعد الاستلام المفضل: ${formatDate(getFieldValue("deliveryDate"))}`,
-        `رابط مرجعي: ${getFieldValue("referenceLink") || "غير مضاف"}`,
-        "",
-        "— ملاحظات العميلة —",
-        getFieldValue("notes") || "لا توجد ملاحظات إضافية",
-        "",
-        "أرجو تأكيد استلام الطلب والتواصل معي لإكمال التفاصيل."
-    ].join("\n");
-}
-
-function saveDraft() {
-    const data = {};
-
-    [...form.elements].forEach((field) => {
-        if (!field.name) return;
-
-        if (field.type === "checkbox") {
-            if (!data[field.name]) data[field.name] = [];
-            if (field.checked) data[field.name].push(field.value);
-            return;
-        }
-
-        data[field.name] = field.value;
-    });
-
-    sessionStorage.setItem("medad-tahaya-order-draft", JSON.stringify(data));
-}
-
-function restoreDraft() {
-    const savedDraft = sessionStorage.getItem("medad-tahaya-order-draft");
-    if (!savedDraft) return;
-
-    try {
-        const data = JSON.parse(savedDraft);
-
-        Object.entries(data).forEach(([name, value]) => {
+    function restoreDraft() {
+        const draft = store.get(STORAGE_KEYS.orderDraft, null);
+        if (!draft) return;
+        Object.entries(draft).forEach(([name, value]) => {
             form.querySelectorAll(`[name="${name}"]`).forEach((field) => {
-                if (field.type === "checkbox") {
-                    field.checked =
-                        Array.isArray(value) &&
-                        value.includes(field.value);
-                } else if (typeof value === "string") {
-                    field.value = value;
-                }
+                if (field.type === "radio") field.checked = String(field.value) === String(value);
+                else if (field.type === "checkbox") field.checked = Array.isArray(value) && value.includes(field.value);
+                else if (field.type !== "file" && value !== null) field.value = value;
             });
         });
-    } catch (error) {
-        console.error("تعذر استعادة مسودة الطلب:", error);
-    }
-}
-
-restoreDraft();
-
-const packageFromUrl =
-    new URLSearchParams(window.location.search).get("package");
-
-if (packageFromUrl && packageDetails[packageFromUrl]) {
-    packageSelect.value = packageFromUrl;
-}
-
-updatePackageSummary();
-updateOtherOccasionField();
-
-packageSelect.addEventListener("change", () => {
-    updatePackageSummary();
-    saveDraft();
-});
-
-occasionSelect.addEventListener("change", () => {
-    updateOtherOccasionField();
-    saveDraft();
-});
-
-form.addEventListener("input", saveDraft);
-form.addEventListener("change", saveDraft);
-
-phoneInput.addEventListener("input", () => {
-    phoneInput.setCustomValidity("");
-});
-
-form.addEventListener("submit", (event) => {
-    event.preventDefault();
-    clearMessage();
-
-    const normalizedPhone = normalizeSaudiPhone(phoneInput.value);
-
-    if (!normalizedPhone) {
-        phoneInput.setCustomValidity(
-            "أدخلي رقم جوال سعودي صحيحًا مثل 05XXXXXXXX"
-        );
-    } else {
-        phoneInput.setCustomValidity("");
     }
 
-    if (!form.checkValidity()) {
-        form.reportValidity();
-        setMessage(
-            "يرجى تعبئة الحقول المطلوبة والتأكد من صحة رقم الجوال.",
-            true
-        );
-        return;
+    function selectedPackage() { return PACKAGES[form.elements.packageId.value] || null; }
+
+    function updateCustomFields() {
+        const show = form.elements.packageId.value === "premium";
+        document.querySelectorAll(".custom-design-fields").forEach((element) => { element.hidden = !show; });
+        form.elements.customNotes.required = show;
     }
 
-    if (
-        deliveryDateInput.value &&
-        eventDateInput.value &&
-        deliveryDateInput.value > eventDateInput.value
-    ) {
-        deliveryDateInput.focus();
-        setMessage(
-            "تاريخ استلام الدعوة يجب أن يكون قبل تاريخ المناسبة أو في اليوم نفسه.",
-            true
-        );
-        return;
+    function updateSummary() {
+        const pkg = selectedPackage();
+        const reminder = Number(form.elements.reminderHours.value || 0);
+        const addons = [...form.querySelectorAll('input[name="addons"]:checked')];
+        document.getElementById("summary-label").textContent = pkg ? pkg.label : "لم تختر باقة";
+        document.getElementById("summary-name").textContent = pkg ? pkg.name : "اختر باقتك للمتابعة";
+        document.getElementById("summary-description").textContent = pkg ? pkg.description : "";
+        document.getElementById("summary-limit").textContent = pkg ? (pkg.guestLimit ? `حتى ${pkg.guestLimit} مدعو` : "مرن حسب الاتفاق") : "—";
+        document.getElementById("summary-reminder").textContent = reminder ? `قبل ${reminder} ساعة` : "—";
+        document.getElementById("summary-addons").textContent = addons.length ? `${addons.length} إضافات` : "لا توجد";
+        document.getElementById("summary-price").textContent = pkg ? formatMoney(pkg.price) : "—";
+        updateCustomFields();
     }
 
-    const requestId = generateRequestId();
-    const message = buildWhatsAppMessage(
-        requestId,
-        normalizedPhone
-    );
+    function showAlert(message) { alertBox.textContent = message; alertBox.hidden = false; }
+    function clearAlert() { alertBox.textContent = ""; alertBox.hidden = true; }
 
-    const whatsappUrl =
-        `https://wa.me/${BUSINESS_WHATSAPP}` +
-        `?text=${encodeURIComponent(message)}`;
-
-    submitButton.disabled = true;
-    submitButton.textContent = "جارٍ فتح واتساب...";
-
-    setMessage(
-        `تم تجهيز الطلب رقم ${requestId}. أرسلي الرسالة داخل واتساب لإكمال رفع الطلب.`
-    );
-
-    sessionStorage.removeItem("medad-tahaya-order-draft");
-
-    const whatsappWindow = window.open(
-        whatsappUrl,
-        "_blank",
-        "noopener,noreferrer"
-    );
-
-    if (!whatsappWindow) {
-        window.location.href = whatsappUrl;
+    function validateStep() {
+        clearAlert();
+        const current = steps[currentStep - 1];
+        const fields = [...current.querySelectorAll("input,select,textarea")].filter((field) => !field.disabled && !field.closest("[hidden]"));
+        if (currentStep === 1) {
+            const pkg = selectedPackage();
+            if (pkg && pkg.guestLimit && Number(guestCountInput.value) > pkg.guestLimit) {
+                guestCountInput.setCustomValidity(`هذه الباقة تدعم حتى ${pkg.guestLimit} مدعو. اختر باقة أعلى أو عدّل العدد.`);
+            } else guestCountInput.setCustomValidity("");
+        }
+        if (currentStep === 2) {
+            const normalized = normalizeSaudiPhone(phoneInput.value);
+            phoneInput.setCustomValidity(normalized ? "" : "أدخل رقم جوال سعودي صحيحًا مثل 05XXXXXXXX");
+        }
+        const invalid = fields.find((field) => !field.checkValidity());
+        if (invalid) {
+            invalid.reportValidity(); invalid.focus();
+            showAlert("أكمل الحقول المطلوبة وتأكد من صحة البيانات قبل المتابعة.");
+            return false;
+        }
+        return true;
     }
 
-    window.setTimeout(() => {
-        submitButton.disabled = false;
-        submitButton.textContent =
-            "تأكيد وإرسال الطلب عبر واتساب";
-    }, 1500);
-});
+    function renderReview() {
+        const data = formDataObject();
+        const pkg = PACKAGES[data.packageId];
+        const entries = [
+            ["الباقة", pkg.name], ["صاحب الطلب", data.ownerName], ["رقم الجوال", normalizeSaudiPhone(data.phone)], ["المناسبة", data.occasion],
+            ["الأسماء في الدعوة", data.honorees], ["الموعد", `${formatDate(data.eventDate)} — ${data.eventTime}`], ["المكان", `${data.venueName}، ${data.city}`],
+            ["عدد المدعوين", data.expectedGuests], ["التذكير", `قبل ${data.reminderHours} ساعة`], ["الثيم", data.theme], ["الألوان", data.preferredColors || "يحددها الفريق"], ["الإضافات", data.addons.length ? data.addons.length : "لا توجد"]
+        ];
+        document.getElementById("review-grid").innerHTML = entries.map(([label, value]) => `<div class="review-item"><span>${label}</span><strong>${String(value)}</strong></div>`).join("");
+    }
+
+    function goToStep(nextStep) {
+        currentStep = Math.max(1, Math.min(4, nextStep));
+        steps.forEach((step, index) => { step.hidden = index + 1 !== currentStep; });
+        stepperItems.forEach((item, index) => {
+            item.classList.toggle("is-active", index + 1 === currentStep);
+            item.classList.toggle("is-complete", index + 1 < currentStep);
+            if (index + 1 < currentStep) item.querySelector("b").textContent = "✓";
+            else item.querySelector("b").textContent = String(index + 1).replace(/\d/g, (digit) => "٠١٢٣٤٥٦٧٨٩"[digit]);
+        });
+        previousButton.hidden = currentStep === 1;
+        nextButton.hidden = currentStep === 4;
+        submitButton.hidden = currentStep !== 4;
+        if (currentStep === 4) renderReview();
+        clearAlert(); window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    nextButton.addEventListener("click", () => { if (validateStep()) { saveDraft(); goToStep(currentStep + 1); } });
+    previousButton.addEventListener("click", () => goToStep(currentStep - 1));
+    form.addEventListener("change", () => { updateSummary(); saveDraft(); });
+    form.addEventListener("input", () => { clearAlert(); saveDraft(); });
+
+    form.addEventListener("submit", (event) => {
+        event.preventDefault();
+        if (!validateStep()) return;
+        const data = formDataObject();
+        const order = { ...data, id: generateOrderId(), phone: normalizeSaudiPhone(data.phone), status: "pending_payment", paid: false, createdAt: new Date().toISOString() };
+        store.set(STORAGE_KEYS.currentOrder, order);
+        store.remove(STORAGE_KEYS.orderDraft);
+        window.location.assign("checkout.html");
+    });
+
+    restoreDraft();
+    const packageFromUrl = new URLSearchParams(window.location.search).get("package");
+    if (packageFromUrl && PACKAGES[packageFromUrl]) {
+        const input = form.querySelector(`input[name="packageId"][value="${packageFromUrl}"]`);
+        if (input) input.checked = true;
+    }
+    updateSummary(); goToStep(1);
+})();

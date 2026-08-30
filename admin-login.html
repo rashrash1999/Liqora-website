@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="دخول إدارة مداد التحايا.">
+  <meta name="robots" content="noindex,nofollow">
+  <meta name="theme-color" content="#0a1728">
+  <title>دخول الإدارة | مداد التحايا</title>
+  <link rel="icon" href="images/Medad-logo.png" type="image/png">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/auth.css">
+</head>
+<body class="auth-page auth-admin-page" data-login-page="admin">
+  <main class="auth-layout">
+    <section class="auth-brand-panel">
+      <a class="brand brand-light" href="index.html"><img src="images/Medad-logo.png" alt="شعار مداد التحايا"><span><strong>مداد التحايا</strong><small>مركز العمليات</small></span></a>
+      <div><span class="eyebrow light"><i></i> دخول مخصص للفريق</span><h1>إدارة الطلبات والضيوف من مكان واحد</h1><p>هذه البوابة مخصصة لمسؤولي المنصة، وتعرض الطلبات والتصاميم والإرسال والتذكيرات.</p></div>
+      <small>جميع عمليات الإدارة الحساسة يجب أن تُسجل في سجل التدقيق عند ربط الخادم.</small>
+    </section>
+    <section class="auth-form-panel">
+      <div class="auth-form-wrap">
+        <a class="auth-back" href="index.html">العودة للرئيسية</a>
+        <span class="pill pill-warning">حساب الإدارة</span>
+        <h1>تسجيل دخول الأدمن</h1>
+        <p>أدخل البريد الإلكتروني وكلمة المرور للوصول إلى مركز العمليات.</p>
+        <form id="adminLoginForm" class="auth-form" novalidate>
+          <label class="field"><span>البريد الإلكتروني</span><input id="adminEmail" name="email" type="email" value="lolotiga2001@gmail.com" autocomplete="username" required></label>
+          <label class="field"><span>كلمة المرور</span><div class="password-field"><input id="adminPassword" name="password" type="password" autocomplete="current-password" required><button type="button" id="togglePassword" aria-label="إظهار كلمة المرور">إظهار</button></div></label>
+          <p id="adminLoginError" class="form-alert" role="alert" hidden></p>
+          <button class="button button-primary button-block" type="submit">دخول لوحة الإدارة</button>
+        </form>
+        <div class="demo-credentials"><strong>بيانات العرض التجريبي</strong><span>البريد: lolotiga2001@gmail.com</span><span>كلمة المرور: 111000</span></div>
+        <p class="auth-security-note">تنبيه: بيانات العرض ثابتة داخل الواجهة. قبل النشر يجب نقل المصادقة إلى الخادم وحفظ كلمة المرور بشكل مشفّر.</p>
+        <a class="switch-login" href="login.html">هل أنت عميل؟ ادخل برقم الجوال</a>
+      </div>
+    </section>
+  </main>
+  <script src="js/platform.js"></script><script src="js/auth.js"></script><script src="js/login.js"></script>
+</body>
+</html>
