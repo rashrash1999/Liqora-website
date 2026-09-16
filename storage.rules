@@ -7,7 +7,7 @@ service firebase.storage {
   function editable(orderId) { return order(orderId).status != 'active' && order(orderId).status != 'completed'; }
   function validFile(orderId, fileName, kind) {
    let upload = firestore.get(/databases/(default)/documents/uploads/$(fileName)).data;
-   return request.resource != null && request.auth != null && upload.ownerUid == request.auth.uid && upload.orderId == orderId && upload.kind == kind && upload.status == 'pending' && upload.expiresAt > request.time.toMillis() && request.resource.size == upload.size && request.resource.contentType == upload.contentType && request.resource.metadata.size() == 0;
+   return resource == null && request.resource != null && request.auth != null && upload.ownerUid == request.auth.uid && upload.orderId == orderId && upload.kind == kind && upload.status == 'pending' && upload.expiresAt > request.time.toMillis() && request.resource.size == upload.size && request.resource.contentType == upload.contentType && request.resource.metadata.size() == 0;
   }
   match /orders/{orderId}/references/{fileName} {
    allow read: if admin() || owner(orderId);
