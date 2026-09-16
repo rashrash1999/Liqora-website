@@ -2,14 +2,14 @@
 export const firebaseSettings = Object.freeze({
   enabled: false,
   firebase: {
-    apiKey: '',
-    authDomain: '',
+    apiKey: 'AIzaSyB2Ewbo1hmGYdutnV55tvbP8BxzF1_epi4',
+    authDomain: 'medadaltahaya.firebaseapp.com',
     projectId: 'medadaltahaya',
-    storageBucket: '',
-    messagingSenderId: '',
-    appId: '',
+    storageBucket: 'medadaltahaya.firebasestorage.app',
+    messagingSenderId: '203246514140',
+    appId: '1:203246514140:web:ed3e150b77d3fea3336919',
   },
-  functionsRegion: 'europe-west1', // Match functions/index.js and your selected data region.
-  appCheckSiteKey: '', // Public reCAPTCHA Enterprise key.
+  functionsRegion: 'europe-west1',
+  appCheckSiteKey: '',
   useEmulators: false,
 });
