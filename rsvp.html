@@ -1,68 +1,97 @@
 <!doctype html>
 <html lang="ar" dir="rtl">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <meta name="description" content="تأكيد حضور ضيوف مناسبات مداد التحايا.">
-  <meta name="theme-color" content="#10243f">
-  <title>تأكيد الحضور | مداد التحايا</title>
-  <link rel="icon" href="images/Medad-logo.png" type="image/png">
-  <link rel="stylesheet" href="css/style.css">
-  <link rel="stylesheet" href="css/flow.css">
-</head>
-<body>
-  <main class="center-page">
-    <article class="center-card" aria-labelledby="rsvpTitle">
-      <a class="brand" href="index.html" aria-label="مداد التحايا - الرئيسية">
-        <img src="images/Medad-logo.png" alt="شعار مداد التحايا" width="54" height="54">
-        <span><strong>مداد التحايا</strong><small>دعوات تليق بمناسباتكم</small></span>
-      </a>
-
-      <section id="rsvpFormState">
-        <header class="center-heading-card">
-          <span class="pill pill-warning">دعوة شخصية</span>
-          <h1 id="rsvpTitle">نسعد بمعرفة ردّكم</h1>
-          <p>مرحبًا <strong>نورة السبيعي</strong>، هذه الخطوة لا تستغرق أكثر من دقيقة.</p>
-        </header>
-        <div class="rsvp-event-summary" aria-label="تفاصيل المناسبة">
-          <strong>حفل زفاف سارة وعبدالله</strong>
-          <span>الاثنين، 12 أكتوبر 2026 · 8:00 مساءً</span>
-          <span>قاعة ليلتي · الرياض</span>
-        </div>
-        <p class="event-note"><strong>تنويه المضيف:</strong> نعتذر عن استقبال الأطفال، ونقدّر تفهّمكم.</p>
-        <form id="rsvpForm" novalidate>
-          <fieldset class="field">
-            <legend>هل ستشرّفنا بالحضور؟ <span>*</span></legend>
-            <div class="attendance-options">
-              <label class="attendance-option"><input type="radio" name="attendance" value="yes" required><span>نعم، بكل سرور</span></label>
-              <label class="attendance-option"><input type="radio" name="attendance" value="no" required><span>أعتذر عن الحضور</span></label>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="description" content="تأكيد الحضور — medad Al tahaya" />
+    <meta name="referrer" content="no-referrer" />
+    <title>تأكيد الحضور | medad Al tahaya</title>
+    <link rel="icon" href="images/Medad-logo.png" />
+    <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="css/flow.css" />
+    <link rel="stylesheet" href="css/auth.css" />
+    <link rel="stylesheet" href="css/studio.css" />
+  </head>
+  <body class="app-body">
+    <a class="skip-link" href="#main">انتقل إلى المحتوى</a>
+    <header class="app-header">
+      <div class="container header-inner">
+        <a class="brand" href="index.html"
+          ><img src="images/Medad-logo.png" alt="شعار medad Al tahaya" width="48" height="48" /><span
+            ><strong>medad Al tahaya</strong><small>تأكيد الحضور</small></span
+          ></a
+        >
+        <div class="header-actions"><a class="text-link" href="index.html">الرئيسية</a></div>
+      </div>
+    </header>
+    <main class="app-main" id="main">
+      <div class="container">
+        <p class="form-alert" id="page-error" role="alert" hidden></p>
+        <article class="center-card">
+          <section id="rsvpFormState" hidden>
+            <h1>نسعد بمعرفة ردّك</h1>
+            <p>مرحبًا <strong id="rsvp-guest"></strong></p>
+            <h2 id="rsvp-event"></h2>
+            <p id="rsvp-date"></p>
+            <p id="rsvp-venue"></p>
+            <p id="rsvp-child-policy"></p>
+            <form id="rsvpForm">
+              <fieldset class="field">
+                <legend>هل ستشرفنا بالحضور؟</legend>
+                <label
+                  ><input type="radio" name="attendance" value="yes" required /> نعم، بكل
+                  سرور</label
+                ><label
+                  ><input type="radio" name="attendance" value="no" required /> أعتذر عن
+                  الحضور</label
+                >
+              </fieldset>
+              <div id="attendanceDetails" hidden>
+                <label class="field"
+                  ><span>الاسم على بطاقة الدخول</span
+                  ><input id="guestName" name="guestName" maxlength="100" /></label
+                ><label class="field"
+                  ><span>المرافقون المسموحون</span
+                  ><select id="companions" name="companions"></select
+                ></label>
+              </div>
+              <label class="field"
+                ><span>رسالة لصاحب المناسبة</span
+                ><textarea id="guest-message" name="message" maxlength="300"></textarea>
+              </label>
+              <p class="form-alert" id="rsvpError" role="alert" hidden></p>
+              <button class="button button-primary button-block" type="submit">
+                إرسال الرد النهائي
+              </button>
+              <p>يُحفظ الرد مرة واحدة. لتغييره تواصل مع صاحب المناسبة.</p>
+            </form>
+          </section>
+          <section id="rsvpSuccessState" hidden>
+            <h1 id="successTitle"></h1>
+            <div id="ticketCard" class="ticket-card" hidden>
+              <h2 id="ticketGuestName"></h2>
+              <p id="ticket-companions"></p>
+              <img id="ticket-qr" width="256" height="256" alt="رمز بطاقة الدخول" />
+              <p id="ticket-status"></p>
+              <details>
+                <summary>إظهار رمز الإدخال اليدوي</summary>
+                <code id="ticket-token" dir="ltr" class="token-value"></code>
+              </details>
+              <p>
+                يمكنك العودة إلى رابط الدعوة لعرض بطاقتك. لا تشارك الرابط أو البطاقة مع الآخرين.
+              </p>
             </div>
-          </fieldset>
-          <div class="form-grid rsvp-details" id="attendanceDetails" hidden>
-            <label class="field"><span>الاسم كما يظهر في بطاقة الدخول</span><input id="guestName" name="guestName" maxlength="60" autocomplete="name" value="نورة السبيعي" required></label>
-            <label class="field"><span>عدد المرافقين</span><select name="companions"><option value="0">بدون مرافقين</option><option value="1">مرافق واحد</option><option value="2">مرافقان</option></select><small>الحد الأعلى لهذه الدعوة: مرافقان.</small></label>
-          </div>
-          <label class="field field-wide" style="margin-top:18px"><span>رسالة لصاحب المناسبة <small>(اختياري)</small></span><textarea name="message" maxlength="300" placeholder="اكتب تهنئتك أو اعتذارك هنا"></textarea></label>
-          <p id="rsvpError" class="form-alert" role="alert" hidden></p>
-          <button class="button button-primary button-block" type="submit" style="margin-top:20px">إرسال الرد النهائي</button>
-          <p class="single-use-note">بعد الإرسال يُغلق هذا النموذج ولا يمكن تعديل الرد من الرابط نفسه. للتعديل تواصل مع صاحب المناسبة.</p>
-        </form>
-      </section>
-
-      <section id="rsvpSuccessState" class="success-state" aria-live="polite" hidden>
-        <div class="success-icon" aria-hidden="true">✓</div>
-        <h1 id="successTitle">تم تسجيل حضورك</h1>
-        <p id="successMessage">شكرًا لك، نتطلع لرؤيتك ومشاركتنا هذه المناسبة.</p>
-        <div id="ticketCard" class="ticket-card">
-          <small>بطاقة دخول شخصية</small><h2 id="ticketGuestName">نورة السبيعي</h2>
-          <img class="qr-placeholder" src="images/demo-qr.svg" alt="رمز QR الخاص بالدخول" width="180" height="180">
-          <p>يرجى إبراز الرمز عند بوابة الاستقبال. لا تشارك هذه البطاقة مع الآخرين.</p><strong>MD-G-001</strong>
-        </div>
-        <p class="single-use-note" id="closedLinkNote">تم استخدام رابط التأكيد، لذلك لن يظهر النموذج مرة أخرى على هذا الجهاز.</p>
-        <a class="button button-secondary button-block" href="invitation.html">عرض تفاصيل الدعوة</a>
-      </section>
-    </article>
-  </main>
-  <script src="js/platform.js"></script><script src="js/rsvp.js"></script>
-</body>
+          </section>
+          <a
+            class="button button-secondary button-block"
+            id="invitation-link"
+            href="invitation.html"
+            >تفاصيل الدعوة</a
+          >
+        </article>
+      </div>
+    </main>
+    <noscript><p>يلزم تفعيل JavaScript لاستخدام هذه الصفحة.</p></noscript>
+    <script type="module" src="js/rsvp.js"></script>
+  </body>
 </html>

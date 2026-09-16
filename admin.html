@@ -1,7 +1,146 @@
-<!doctype html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>لوحة الإدارة | مداد التحايا</title><meta name="theme-color" content="#0a1728"><link rel="icon" href="images/Medad-logo.png"><link rel="stylesheet" href="css/style.css"><link rel="stylesheet" href="css/auth.css"></head>
-<body data-page="admin" data-auth="admin"><div class="admin-shell"><aside class="admin-sidebar"><a class="brand" href="index.html"><img src="images/Medad-logo.png" alt=""><span><strong>مداد التحايا</strong><small>مركز العمليات</small></span></a><nav class="admin-nav"><a class="is-active" href="#">الرئيسية</a><a href="#orders">الطلبات <b>١٢</b></a><a href="#">التصاميم <b>٥</b></a><a href="#">المدعوون</a><a href="#">الإرسال والتذكير <b>٣</b></a><a href="#">المدفوعات</a><a href="#">القوالب</a><a href="#">الإعدادات</a></nav></aside>
-<main class="admin-content"><header class="admin-topbar"><div><h1>مركز العمليات</h1><p>الأحد، ٣٠ أغسطس ٢٠٢٦ — بتوقيت الرياض</p></div><div class="admin-user-actions"><div class="admin-user"><i>م</i><div><strong>مدير العمليات</strong><small>صلاحية كاملة</small></div></div><button class="admin-logout" type="button" data-logout="admin">تسجيل الخروج</button></div></header>
-<section class="admin-metrics"><article class="app-card metric-card"><span>طلبات تحتاج إجراء</span><strong>١٢</strong><small style="color:var(--danger)">٣ متأخرة</small></article><article class="app-card metric-card"><span>تحت التصميم</span><strong>٥</strong><small style="color:var(--warning)">طلبان اليوم</small></article><article class="app-card metric-card"><span>جاهزة للإرسال</span><strong>٣</strong><small style="color:var(--success)">١٬٠٨٧ مدعو</small></article><article class="app-card metric-card"><span>مناسبات هذا الأسبوع</span><strong>٧</strong><small style="color:var(--muted)">كلها مجدولة</small></article></section>
-<div class="admin-workspace" id="orders"><section class="app-card orders-panel"><div class="panel-head"><h2>الطلبات النشطة</h2><button type="button">تصدير التقرير</button></div><div class="filter-bar"><input id="order-search" type="search" placeholder="ابحث برقم الطلب أو اسم العميل"><select id="status-filter"><option value="all">كل الحالات</option><option value="waiting_contact">بانتظار التواصل</option><option value="design">تحت التصميم</option><option value="ready">جاهز للإرسال</option></select></div><table class="order-table"><thead><tr><th>الطلب</th><th>المناسبة</th><th>التاريخ</th><th>الباقة</th><th>الحالة</th></tr></thead><tbody id="orders-body"></tbody></table></section>
-<aside class="app-card order-detail"><span class="detail-id" id="detail-id">MD-260829-1042</span><h2 id="detail-name">سارة محمد</h2><span class="pill pill-success" id="detail-status">جاهز للإرسال</span><div class="detail-meta"><div><span>المناسبة</span><strong id="detail-event">زفاف سارة وعبدالله</strong></div><div><span>الموعد</span><strong id="detail-date">١٢ أكتوبر ٢٠٢٦</strong></div><div><span>الباقة</span><strong id="detail-package">المتقدمة</strong></div><div><span>المدعوون</span><strong id="detail-guests">٤٨٧ رقمًا</strong></div></div><div class="panel-head"><h2>مهام الطلب</h2></div><ul class="task-list"><li><input type="checkbox" checked disabled><span>تأكيد الدفع</span></li><li><input type="checkbox" checked disabled><span>التواصل مع العميل عبر واتساب</span></li><li><input type="checkbox" checked disabled><span>استلام واعتماد التصميم</span></li><li><input type="checkbox" id="task-guests"><span>رفع وفحص قائمة المدعوين</span></li><li><input type="checkbox" id="task-send"><span>إرسال الدعوات</span></li></ul><div class="upload-zone"><p>رفع قائمة المدعوين</p><input id="guest-file" type="file" accept=".csv,.xlsx,.xls"><small id="upload-help">CSV أو Excel — الاسم، الجوال، نوع البطاقة، المرافقون</small></div><div class="detail-actions"><a class="button button-secondary" id="contact-client" href="https://wa.me/966537933514" target="_blank" rel="noopener noreferrer">واتساب العميل</a><button class="button button-primary" id="send-invitations" type="button">إرسال الدعوات</button><button class="button button-secondary" id="schedule-reminder" type="button">جدولة التذكير</button><a class="button button-secondary" href="checkin.html">فتح بوابة الدخول</a></div></aside></div></main></div>
-<div class="modal" id="admin-modal" hidden><div class="modal-card"><div class="success-icon">✓</div><h2 id="admin-modal-title">تمت العملية</h2><p id="admin-modal-message"></p><button class="button button-primary button-block" id="admin-modal-close" type="button">حسنًا</button></div></div><script src="js/platform.js"></script><script src="js/auth.js"></script><script src="js/admin.js"></script></body></html>
+<!doctype html>
+<html lang="ar" dir="rtl">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="description" content="إدارة الطلبات — medad Al tahaya" />
+    <meta name="referrer" content="no-referrer" />
+    <title>إدارة الطلبات | medad Al tahaya</title>
+    <link rel="icon" href="images/Medad-logo.png" />
+    <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="css/flow.css" />
+    <link rel="stylesheet" href="css/auth.css" />
+    <link rel="stylesheet" href="css/studio.css" />
+  </head>
+  <body class="app-body" data-auth="admin">
+    <a class="skip-link" href="#main">انتقل إلى المحتوى</a>
+    <header class="app-header">
+      <div class="container header-inner">
+        <a class="brand" href="index.html"
+          ><img src="images/Medad-logo.png" alt="شعار medad Al tahaya" width="48" height="48" /><span
+            ><strong>medad Al tahaya</strong><small>إدارة الطلبات</small></span
+          ></a
+        >
+        <div class="header-actions">
+          <a class="text-link" href="index.html">الرئيسية</a
+          ><button class="button button-secondary button-sm" data-logout type="button">
+            تسجيل الخروج
+          </button>
+        </div>
+      </div>
+    </header>
+    <main class="app-main" id="main">
+      <div class="container">
+        <p class="form-alert" id="page-error" role="alert" hidden></p>
+        <div class="page-intro">
+          <div>
+            <h1>مركز العمليات</h1>
+            <p>آخر 100 طلب — الظاهر حاليًا: <strong id="orders-count">0</strong></p>
+          </div>
+          <button class="button button-secondary" id="export-orders" type="button">
+            تصدير الطلبات
+          </button>
+        </div>
+        <div id="protected-content">
+          <p id="empty-orders" class="info-box" hidden>لا توجد طلبات بعد.</p>
+          <div class="admin-workspace">
+            <section class="app-card orders-panel">
+              <div class="filter-bar">
+                <label class="field"
+                  ><span>البحث ضمن الطلبات المحملة</span
+                  ><input
+                    id="order-search"
+                    type="search"
+                    placeholder="العميل أو معرف الطلب" /></label
+                ><label class="field"
+                  ><span>الحالة</span
+                  ><select id="status-filter">
+                    <option value="all">كل الحالات</option>
+                    <option value="pending_payment">بانتظار الدفع</option>
+                    <option value="awaiting_quote">بانتظار عرض السعر</option>
+                    <option value="preparing">قيد التجهيز</option>
+                    <option value="active">الدعوات متاحة</option>
+                  </select></label
+                >
+              </div>
+              <div class="table-scroll">
+                <table class="order-table">
+                  <thead>
+                    <tr>
+                      <th>الطلب</th>
+                      <th>المناسبة</th>
+                      <th>التاريخ</th>
+                      <th>الباقة</th>
+                      <th>الحالة</th>
+                    </tr>
+                  </thead>
+                  <tbody id="orders-body"></tbody>
+                </table>
+              </div>
+            </section>
+            <aside class="app-card order-detail" id="order-detail" hidden>
+              <small id="detail-id"></small>
+              <h2 id="detail-name"></h2>
+              <p id="detail-event"></p>
+              <p id="detail-date"></p>
+              <p id="detail-package"></p>
+              <p>الحالة: <strong id="detail-status"></strong></p>
+              <p>الدفع: <strong id="detail-payment"></strong></p>
+              <p>التصميم: <strong id="detail-design"></strong></p>
+              <p>الضيوف: <strong id="detail-guests">0</strong></p>
+              <a
+                class="button button-secondary"
+                id="contact-client"
+                href="https://wa.me/966537933514"
+                target="_blank"
+                rel="noopener noreferrer"
+                >واتساب هذا العميل</a
+              >
+              <hr />
+              <h3>الملفات المرجعية</h3>
+              <div id="reference-links"></div>
+              <label class="field"
+                ><span>التصميم النهائي — صورة حتى 10MB</span
+                ><input
+                  type="file"
+                  id="design-file"
+                  accept="image/png,image/jpeg,image/webp" /></label
+              ><button class="button button-secondary" id="upload-design" type="button">
+                رفع التصميم لاعتماد العميل
+              </button>
+              <p id="design-upload-status" role="status"></p>
+              <hr />
+              <h3>استيراد الضيوف</h3>
+              <a href="data/guest-import-template.csv" download>تنزيل قالب CSV</a
+              ><label class="field"
+                ><span>قائمة الضيوف — CSV حتى 2MB</span
+                ><input id="guest-file" type="file" accept=".csv,text/csv" /></label
+              ><button class="button button-secondary" id="import-guests" type="button">
+                فحص القائمة وحفظها
+              </button>
+              <p id="upload-help" role="status"></p>
+              <hr />
+              <h3>روابط الدعوات</h3>
+              <p>
+                متاحة بعد تأكيد الدفع واعتماد التصميم. بانتظار الرد:
+                <strong id="pending-guests">0</strong>.
+              </p>
+              <button class="button button-primary" id="issue-links" type="button">
+                إنشاء أو تجديد الروابط وتنزيلها
+              </button>
+              <p id="links-status" role="status"></p>
+              <p class="info-box">
+                المشاركة يدوية حاليًا. الإرسال الآلي والتذكير يتطلبان ربط خدمة الرسائل.
+              </p>
+              <a class="button button-secondary" id="checkin-link" href="checkin.html"
+                >بوابة الاستقبال</a
+              >
+            </aside>
+          </div>
+        </div>
+      </div>
+    </main>
+    <noscript><p>يلزم تفعيل JavaScript لاستخدام هذه الصفحة.</p></noscript>
+    <script type="module" src="js/admin.js"></script>
+  </body>
+</html>

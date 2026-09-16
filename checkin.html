@@ -1,14 +1,77 @@
 <!doctype html>
 <html lang="ar" dir="rtl">
-<head>
-  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="شاشة التحقق من بطاقات دخول ضيوف مداد التحايا."><meta name="theme-color" content="#10243f">
-  <title>التحقق عند البوابة | مداد التحايا</title><link rel="icon" href="images/Medad-logo.png" type="image/png"><link rel="stylesheet" href="css/style.css"><link rel="stylesheet" href="css/flow.css"><link rel="stylesheet" href="css/auth.css">
-</head>
-<body class="app-body" data-auth="admin">
-  <header class="app-header"><div class="container header-inner"><a class="brand" href="admin.html"><img src="images/Medad-logo.png" alt="شعار مداد التحايا"><span><strong>بوابة الاستقبال</strong><small>مداد التحايا</small></span></a><span class="pill pill-success">المناسبة نشطة</span></div></header>
-  <main class="app-main"><div class="container checkin-layout">
-    <section class="app-card checkin-scanner"><span class="eyebrow"><i></i> التحقق من الدعوة</span><h1>امسح رمز الدخول</h1><p>في النسخة التشغيلية ستُستخدم كاميرا الجهاز لقراءة الرمز وتأكيد صلاحيته لحظيًا من الخادم.</p><div class="scanner-frame" aria-hidden="true"><span></span><b>ضع الرمز داخل الإطار</b></div><div class="field"><label for="tokenInput">أو أدخل رمز الدعوة</label><input id="tokenInput" value="demo-guest-001" autocomplete="off"></div><button id="verifyButton" class="button button-primary button-block" type="button">تحقق من البطاقة التجريبية</button></section>
-    <section class="app-card checkin-result" aria-live="polite"><div class="empty-result" id="emptyResult"><span aria-hidden="true">⌁</span><h2>بانتظار قراءة الرمز</h2><p>ستظهر هنا بيانات الضيف وحالة دخوله.</p></div><div id="guestResult" hidden><span id="guestStatus" class="pill pill-success">دعوة صالحة</span><h2>نورة السبيعي</h2><dl class="guest-facts"><div><dt>رقم الدعوة</dt><dd>MD-G-001</dd></div><div><dt>المرافقون</dt><dd>2</dd></div><div><dt>المناسبة</dt><dd>زفاف سارة وعبدالله</dd></div></dl><button id="checkinButton" class="button button-gold button-block" type="button">تسجيل الدخول الآن</button><p class="single-use-note">لا يمكن تسجيل البطاقة نفسها مرتين.</p></div></section>
-  </div></main><script src="js/auth.js"></script><script src="js/checkin.js"></script>
-</body>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="description" content="بوابة الاستقبال — medad Al tahaya" />
+    <meta name="referrer" content="no-referrer" />
+    <title>بوابة الاستقبال | medad Al tahaya</title>
+    <link rel="icon" href="images/Medad-logo.png" />
+    <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="css/flow.css" />
+    <link rel="stylesheet" href="css/auth.css" />
+    <link rel="stylesheet" href="css/studio.css" />
+  </head>
+  <body class="app-body" data-auth="staff">
+    <a class="skip-link" href="#main">انتقل إلى المحتوى</a>
+    <header class="app-header">
+      <div class="container header-inner">
+        <a class="brand" href="index.html"
+          ><img src="images/Medad-logo.png" alt="شعار medad Al tahaya" width="48" height="48" /><span
+            ><strong>medad Al tahaya</strong><small>بوابة الاستقبال</small></span
+          ></a
+        >
+        <div class="header-actions">
+          <a class="text-link" href="index.html">الرئيسية</a
+          ><button class="button button-secondary button-sm" data-logout type="button">
+            تسجيل الخروج
+          </button>
+        </div>
+      </div>
+    </header>
+    <main class="app-main" id="main">
+      <div class="container">
+        <p class="form-alert" id="page-error" role="alert" hidden></p>
+        <div id="protected-content" class="checkin-layout">
+          <section class="app-card checkin-scanner">
+            <h1>التحقق من بطاقة الدخول</h1>
+            <label class="field"
+              ><span>المناسبة المعيّنة لك</span
+              ><select id="gate-order"></select
+            ></label>
+            <video id="camera" playsinline muted hidden class="camera-preview"></video
+            ><button id="start-camera" class="button button-secondary" type="button">
+              تشغيل الكاميرا</button
+            ><button id="stop-camera" class="button button-secondary" type="button" hidden>
+              إيقاف الكاميرا
+            </button>
+            <p>يمكن استخدام قارئ QR أو إدخال الرمز اليدوي الموجود في البطاقة.</p>
+            <label class="field"
+              ><span>رمز البطاقة</span><input id="tokenInput" autocomplete="off" dir="ltr" /></label
+            ><button id="verifyButton" class="button button-primary button-block" type="button">
+              التحقق من البطاقة
+            </button>
+          </section>
+          <section class="app-card checkin-result">
+            <div id="guestResult" hidden>
+              <span class="pill" id="guestStatus"></span>
+              <h2 id="gate-guest"></h2>
+              <p>المرافقون: <strong id="gate-companions"></strong></p>
+              <button
+                class="button button-primary button-block"
+                id="checkinButton"
+                type="button"
+                disabled
+              >
+                تسجيل الدخول الآن
+              </button>
+            </div>
+            <p>يتم التحقق من صلاحية البطاقة وحالة استخدامها عند كل عملية. يلزم اتصال بالإنترنت.</p>
+          </section>
+        </div>
+      </div>
+    </main>
+    <noscript><p>يلزم تفعيل JavaScript لاستخدام هذه الصفحة.</p></noscript>
+    <script type="module" src="js/checkin.js"></script>
+  </body>
 </html>

@@ -1,96 +1,438 @@
 <!doctype html>
 <html lang="ar" dir="rtl">
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>مداد التحايا | دعوات إلكترونية تُدار باحتراف</title>
-    <meta name="description" content="أنشئ دعوتك الإلكترونية، خصّص تصميمها، وتابع تأكيد حضور ضيوفك من لوحة واحدة.">
-    <meta name="theme-color" content="#10243f">
-    <meta property="og:title" content="مداد التحايا | الدعوات الإلكترونية">
-    <meta property="og:description" content="دعوة أنيقة، متابعة واضحة، ودخول منظم لمناسبتك.">
-    <meta property="og:image" content="images/Medad-logo.png">
-    <meta property="og:type" content="website">
-    <link rel="icon" type="image/png" href="images/Medad-logo.png">
-    <link rel="stylesheet" href="css/style.css">
-</head>
-<body data-page="home">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta
+      name="description"
+      content="دعوات إلكترونية عربية، نماذج أنيقة وباقات واضحة ومتابعة للمدعوين من مكان واحد."
+    />
+    <meta name="theme-color" content="#183c36" />
+    <meta name="referrer" content="no-referrer" />
+    <title>دعوات تُشبه لحظاتك | medad Al tahaya</title>
+    <link rel="icon" href="images/Medad-logo.png" />
+    <link rel="stylesheet" href="css/auth.css" />
+    <link rel="stylesheet" href="css/studio.css" />
+  </head>
+  <body class="medad-site">
     <a class="skip-link" href="#main">انتقل إلى المحتوى</a>
-    <header class="site-header" id="site-header">
-        <div class="container header-inner">
-            <a class="brand" href="index.html" aria-label="مداد التحايا — الرئيسية">
-                <img src="images/Medad-logo.png" alt="" width="54" height="54">
-                <span><strong>مداد التحايا</strong><small>دعوات إلكترونية</small></span>
-            </a>
-            <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="main-nav"><span></span><span></span><span></span><span class="sr-only">فتح القائمة</span></button>
-            <nav class="main-nav" id="main-nav" aria-label="التنقل الرئيسي">
-                <a href="#how">كيف تعمل؟</a><a href="#packages">الباقات</a><a href="#features">المزايا</a><a href="#faq">الأسئلة الشائعة</a>
-            </nav>
-            <div class="header-actions"><a class="text-link" href="login.html">دخول العميل</a><a class="button button-primary button-sm" href="order.html">ابدأ دعوتك</a></div>
-        </div>
+    <header class="site-header">
+      <div class="container header-inner">
+        <a class="brand" href="index.html"
+          ><img src="images/Medad-logo.png" alt="" width="48" height="48" /><span
+            ><strong>medad Al tahaya</strong><small>لكل مناسبة، تحية تليق بها</small></span
+          ></a
+        ><button
+          class="nav-toggle"
+          type="button"
+          aria-expanded="false"
+          aria-controls="site-nav"
+          aria-label="فتح قائمة التنقل"
+        >
+          <span></span><span></span>
+        </button>
+        <nav id="site-nav" aria-label="التنقل الرئيسي">
+          <a href="index.html#experience">التجربة</a><a href="index.html#designs">التصاميم</a
+          ><a href="index.html#packages">الباقات</a><a href="index.html#faq">الأسئلة الشائعة</a>
+        </nav>
+        <a class="header-account" href="login.html">حسابي <span aria-hidden="true">↗</span></a>
+      </div>
     </header>
-
     <main id="main">
-        <section class="hero-section">
-            <div class="container hero-grid">
-                <div class="hero-copy">
-                    <span class="eyebrow"><i></i> دعوتك من الفكرة إلى لحظة الدخول</span>
-                    <h1>مناسبة أجمل،<br><em>بتفاصيل أقل عليك.</em></h1>
-                    <p>نصمم دعوتك، نجهّز أسماء المدعوين، نرسلها عبر واتساب، ونجمع تأكيدات الحضور في لوحة واحدة واضحة.</p>
-                    <div class="hero-actions"><a class="button button-primary" href="order.html">أنشئ طلبك الآن <span aria-hidden="true">←</span></a><a class="button button-secondary" href="#how">شاهد خطوات العمل</a></div>
-                    <ul class="trust-list" aria-label="مزايا مختصرة"><li><span>✓</span> دعم عربي</li><li><span>✓</span> متابعة مباشرة</li><li><span>✓</span> خصوصية وأمان</li></ul>
+      <section class="hero-studio">
+        <div class="container hero-layout">
+          <div class="hero-copy">
+            <p class="overline"><span></span> من أول دعوة… إلى أجمل لقاء</p>
+            <h1>لأن فرحتك تبدأ<br />من <em>الدعوة.</em></h1>
+            <p class="hero-description">
+              تفاصيل تليق بمناسبتك، ودعوة تحمل طابعك.<br />ابدأ بتصوّرك، واجمع من تحب في تجربة
+              واحدة.
+            </p>
+            <div class="hero-actions">
+              <a class="button button-primary" href="#packages"
+                >اختر باقتك <span aria-hidden="true">←</span></a
+              ><a class="button button-light" href="preview.html"
+                ><span class="play-icon" aria-hidden="true">▷</span> جرّب الدعوة</a
+              >
+            </div>
+            <div class="hero-notes">
+              <span>تصميم عربي</span><span>دعوات بأسماء الضيوف</span><span>متابعة الحضور</span>
+            </div>
+          </div>
+          <div class="hero-art">
+            <div class="hero-orbit" aria-hidden="true"></div>
+            <div class="hero-back-card">
+              <div class="invitation-art art-floral" aria-label="نموذج تصميم دعوة">
+                <span class="art-corner"></span><span class="art-kicker">مَدَادُ التَّحَايَا</span
+                ><span class="art-symbol" aria-hidden="true">✧</span
+                ><small>بكل الحب، ندعوكم لمشاركتنا فرحتنا</small><strong>فرحة <i>تجمعنا</i></strong
+                ><span class="art-divider"></span><span class="art-date">١٢ · ١٠ · ٢٠٣٠</span
+                ><small>الرياض · أمسية لا تُنسى</small><span class="art-caption">نموذج توضيحي</span>
+              </div>
+            </div>
+            <div class="hero-front-card">
+              <div class="invitation-art art-classic" aria-label="نموذج تصميم دعوة">
+                <span class="art-corner"></span><span class="art-kicker">مَدَادُ التَّحَايَا</span
+                ><span class="art-symbol" aria-hidden="true">✧</span
+                ><small>بكل الحب، ندعوكم لمشاركتنا فرحتنا</small
+                ><strong>سارة <i>&</i> عبدالله</strong><span class="art-divider"></span
+                ><span class="art-date">١٢ · ١٠ · ٢٠٣٠</span><small>الرياض · أمسية لا تُنسى</small
+                ><span class="art-caption">نموذج توضيحي</span>
+              </div>
+            </div>
+            <div class="floating-note">
+              <span class="note-icon" aria-hidden="true">♡</span>
+              <div>
+                <strong>لحظتك… بتفاصيلك</strong><small>من فكرة الدعوة إلى قائمة الضيوف</small>
+              </div>
+            </div>
+            <span class="art-label">THE ART OF COMING TOGETHER</span>
+          </div>
+        </div>
+        <div class="hero-bottom container">
+          <span>أفراح · تخرّج · مناسبات عائلية · فعاليات</span
+          ><a href="#experience">اكتشف التجربة <span aria-hidden="true">↓</span></a>
+        </div>
+      </section>
+      <section class="section experience-section" id="experience">
+        <div class="container">
+          <div class="section-heading">
+            <div>
+              <p class="overline">تفاصيل أقل عليك</p>
+              <h2>كل ما يخص دعوتك.<br /><em>في مكان واحد.</em></h2>
+            </div>
+            <p>رحلة واضحة لك، وتجربة سهلة لضيوفك.<br />اختر، راجع، ثم تابع تفاصيل مناسبتك.</p>
+          </div>
+          <div class="experience-grid">
+            <article>
+              <span class="feature-icon" aria-hidden="true">✧</span>
+              <h3>دعوة بطابعك</h3>
+              <p>حدد المناسبة والثيم والألوان، وراجع تفاصيل التصميم قبل اعتماده.</p>
+              <span class="feature-number">01</span>
+            </article>
+            <article>
+              <span class="feature-icon" aria-hidden="true">↗</span>
+              <h3>لكل ضيف رابط</h3>
+              <p>
+                روابط فردية للمشاركة اليدوية، يتابع منها المدعو تفاصيل المناسبة ويرد على الدعوة.
+              </p>
+              <span class="feature-number">02</span>
+            </article>
+            <article>
+              <span class="feature-icon" aria-hidden="true">✓</span>
+              <h3>الحضور أوضح</h3>
+              <p>قائمة مدعوين، ردود حضور، وبطاقات دخول تساعدك في تنظيم الاستقبال.</p>
+              <span class="feature-number">03</span>
+            </article>
+          </div>
+        </div>
+      </section>
+      <section class="section designs-section" id="designs">
+        <div class="container">
+          <div class="section-heading">
+            <div>
+              <p class="overline">أول انطباع… يبقى</p>
+              <h2>أي طابع <em>يشبه مناسبتك؟</em></h2>
+            </div>
+            <p>اتجاهات بصرية لتبدأ منها.<br />جرّب الألوان والنص في نموذج الدعوة.</p>
+          </div>
+          <div class="design-filters" role="group" aria-label="تصفية نماذج التصاميم">
+            <button class="is-selected" type="button" data-filter="all" aria-pressed="true">
+              كل النماذج</button
+            ><button type="button" data-filter="wedding" aria-pressed="false">زفاف وعقد قران</button
+            ><button type="button" data-filter="celebration" aria-pressed="false">
+              مناسبات واحتفالات
+            </button>
+          </div>
+          <div class="design-gallery">
+            <article class="design-card" data-category="wedding">
+              <a href="preview.html?theme=classic" aria-label="معاينة تصميم أثر الذهب"
+                ><div class="invitation-art art-classic" aria-label="نموذج تصميم دعوة">
+                  <span class="art-corner"></span><span class="art-kicker">مَدَادُ التَّحَايَا</span
+                  ><span class="art-symbol" aria-hidden="true">✧</span
+                  ><small>بكل الحب، ندعوكم لمشاركتنا فرحتنا</small
+                  ><strong>سارة <i>&</i> عبدالله</strong><span class="art-divider"></span
+                  ><span class="art-date">١٢ · ١٠ · ٢٠٣٠</span><small>الرياض · أمسية لا تُنسى</small
+                  ><span class="art-caption">نموذج توضيحي</span>
+                </div></a
+              >
+              <div class="design-caption">
+                <div>
+                  <h3>أثر الذهب</h3>
+                  <span>كلاسيكي · دافئ</span>
                 </div>
-                <div class="hero-product" aria-label="معاينة تجربة مداد التحايا">
-                    <div class="product-glow"></div>
-                    <article class="invitation-preview">
-                        <div class="preview-topline"><span>دعوة خاصة</span><span>١٢ أكتوبر ٢٠٢٦</span></div>
-                        <div class="preview-mark">م</div><p>يسرّنا دعوتكم لحضور حفل زفاف</p><h2>سارة <span>&</span> عبدالله</h2>
-                        <div class="preview-details"><span>السبت، ٨ مساءً</span><i></i><span>قاعة ليلتي — الرياض</span></div><a href="invitation.html">عرض نموذج الدعوة</a>
-                    </article>
-                    <div class="floating-card floating-card-status"><span class="status-dot"></span><div><small>تأكيد جديد</small><strong>تم تأكيد حضور نورة</strong></div></div>
-                    <div class="floating-card floating-card-metric"><small>نسبة الاستجابة</small><strong>٨٤٪</strong><div class="mini-progress"><span style="width:84%"></span></div></div>
+                <a href="preview.html?theme=classic" aria-label="فتح نموذج أثر الذهب">↗</a>
+              </div>
+            </article>
+            <article class="design-card" data-category="wedding">
+              <a href="preview.html?theme=floral" aria-label="معاينة تصميم ورد وود"
+                ><div class="invitation-art art-floral" aria-label="نموذج تصميم دعوة">
+                  <span class="art-corner"></span><span class="art-kicker">مَدَادُ التَّحَايَا</span
+                  ><span class="art-symbol" aria-hidden="true">✧</span
+                  ><small>بكل الحب، ندعوكم لمشاركتنا فرحتنا</small><strong>نورة <i>&</i> فهد</strong
+                  ><span class="art-divider"></span><span class="art-date">١٢ · ١٠ · ٢٠٣٠</span
+                  ><small>الرياض · أمسية لا تُنسى</small
+                  ><span class="art-caption">نموذج توضيحي</span>
+                </div></a
+              >
+              <div class="design-caption">
+                <div>
+                  <h3>ورد وود</h3>
+                  <span>ناعم · رومانسي</span>
                 </div>
-            </div>
-        </section>
-
-        <section class="signal-strip" aria-label="مزايا المنصة"><div class="container signal-grid"><div><strong>دعوة شخصية</strong><span>باسم كل مدعو</span></div><div><strong>RSVP ذكي</strong><span>رابط استخدام واحد</span></div><div><strong>QR آمن</strong><span>لدخول منظم</span></div><div><strong>تقارير لحظية</strong><span>من لوحة المناسبة</span></div></div></section>
-
-        <section class="section" id="how">
-            <div class="container">
-                <div class="section-heading split-heading"><div><span class="eyebrow"><i></i> رحلة بسيطة وواضحة</span><h2>أربع خطوات، والباقي علينا</h2></div><p>صممنا الرحلة لتكون مطمئنة من أول اختيار حتى إرسال آخر تذكير.</p></div>
-                <ol class="process-grid">
-                    <li><span>01</span><div class="process-icon">◫</div><h3>اختر باقتك</h3><p>اختر التصميم الجاهز أو المميز أو اطلب تصميمًا خاصًا.</p></li>
-                    <li><span>02</span><div class="process-icon">✎</div><h3>أكمل التفاصيل</h3><p>أضف بيانات المناسبة والموقع وتفضيلات التصميم والتذكير.</p></li>
-                    <li><span>03</span><div class="process-icon">✓</div><h3>ادفع واعتمد</h3><p>راجع ملخص طلبك، أكمل الدفع، ثم تابع التجهيز من لوحتك.</p></li>
-                    <li><span>04</span><div class="process-icon">↗</div><h3>نرسل ونتابع</h3><p>يتواصل الأدمن معك، يضيف المدعوين، ويرسل الدعوات والتذكير.</p></li>
-                </ol>
-            </div>
-        </section>
-
-        <section class="section section-tint" id="packages">
-            <div class="container">
-                <div class="section-heading center-heading"><span class="eyebrow"><i></i> باقات واضحة</span><h2>اختر ما يناسب حجم مناسبتك</h2><p>الأسعار المبدئية مأخوذة من نسختك الحالية ويمكن تعديلها لاحقًا من ملف الإعدادات.</p></div>
-                <div class="pricing-grid">
-                    <article class="price-card"><div class="price-card-head"><span class="package-code">جاهزة</span><h3>الباقة الأساسية</h3><p>للمناسبات الصغيرة والتجهيز السريع.</p></div><p class="price-value"><small>ابتداءً من</small><strong>١٩٩</strong><span>ر.س</span></p><ul><li>تصميم جاهز من القوالب</li><li>حتى ١٠٠ مدعو</li><li>رابط تأكيد حضور شخصي</li><li>لوحة متابعة المناسبة</li><li>QR دخول لكل مؤكد</li></ul><a class="button button-secondary button-block" href="order.html?package=basic">اختيار الأساسية</a></article>
-                    <article class="price-card featured"><span class="popular-badge">الأكثر طلبًا</span><div class="price-card-head"><span class="package-code">مميزة</span><h3>الباقة المتقدمة</h3><p>خيارات تصميم أوسع وإدارة عدد أكبر.</p></div><p class="price-value"><small>ابتداءً من</small><strong>٣٩٩</strong><span>ر.س</span></p><ul><li>اختيار من التصاميم المميزة</li><li>حتى ٥٠٠ مدعو</li><li>بطاقات شخصية بأسماء الضيوف</li><li>تذكير قبل ٢٤ أو ٤٨ أو ٧٢ ساعة</li><li>تقارير الإرسال والاستجابة</li></ul><a class="button button-primary button-block" href="order.html?package=advanced">اختيار المتقدمة</a></article>
-                    <article class="price-card"><div class="price-card-head"><span class="package-code">خاصة</span><h3>الباقة المخصصة</h3><p>هوية مصممة خصيصًا لمناسبتك.</p></div><p class="price-value"><small>ابتداءً من</small><strong>٦٩٩</strong><span>ر.س</span></p><ul><li>تصميم مخصص بالكامل</li><li>عدد مدعوين مرن حسب الاتفاق</li><li>رفع نموذج وتحديد الألوان</li><li>نسخة رجالية ونسائية اختيارية</li><li>إمكانية إضافة فيديو بنفس الثيم</li></ul><a class="button button-secondary button-block" href="order.html?package=premium">اختيار المخصصة</a></article>
+                <a href="preview.html?theme=floral" aria-label="فتح نموذج ورد وود">↗</a>
+              </div>
+            </article>
+            <article class="design-card" data-category="celebration">
+              <a href="preview.html?theme=modern" aria-label="معاينة تصميم غصن"
+                ><div class="invitation-art art-modern" aria-label="نموذج تصميم دعوة">
+                  <span class="art-corner"></span><span class="art-kicker">مَدَادُ التَّحَايَا</span
+                  ><span class="art-symbol" aria-hidden="true">✧</span
+                  ><small>نحتفي بالبدايات التي تستحق</small><strong>فرحة <i>الإنجاز</i></strong
+                  ><span class="art-divider"></span><span class="art-date">١٢ · ١٠ · ٢٠٣٠</span
+                  ><small>الرياض · أمسية لا تُنسى</small
+                  ><span class="art-caption">نموذج توضيحي</span>
+                </div></a
+              >
+              <div class="design-caption">
+                <div>
+                  <h3>غصن</h3>
+                  <span>عصري · هادئ</span>
                 </div>
+                <a href="preview.html?theme=modern" aria-label="فتح نموذج غصن">↗</a>
+              </div>
+            </article>
+          </div>
+          <p class="section-footnote">
+            النماذج للمعاينة؛ تفاصيل التخصيص والتسليم تُراجع مع الفريق ضمن عرض السعر.
+          </p>
+        </div>
+      </section>
+      <section class="section packages-section" id="packages">
+        <div class="container">
+          <div class="section-heading centered">
+            <p class="overline">اختيار واضح من البداية</p>
+            <h2>مساحة لكل <em>مناسبة.</em></h2>
+            <p>ابدأ بعدد الدعوات، واختر الباقة المناسبة لك.</p>
+          </div>
+          <div class="guest-picker">
+            <label for="package-guests">كم دعوة تخطط لها؟</label>
+            <div>
+              <button type="button" id="guest-minus" aria-label="تقليل عدد الدعوات">−</button
+              ><input
+                type="number"
+                id="package-guests"
+                value="100"
+                min="1"
+                max="10000"
+                step="1"
+                inputmode="numeric"
+              /><button type="button" id="guest-plus" aria-label="زيادة عدد الدعوات">+</button>
             </div>
-        </section>
-
-        <section class="section" id="features">
-            <div class="container feature-showcase">
-                <div class="feature-copy"><span class="eyebrow"><i></i> إدارة من مكان واحد</span><h2>كل ضيف، وكل رد، أمامك بوضوح</h2><p>بعد الدفع ترى مرحلة الطلب، موعد المناسبة، نتائج الإرسال، وردود المدعوين دون الرجوع إلى قوائم متفرقة.</p><ul class="check-list"><li>المؤكدون والمعتذرون ومن لم يرد</li><li>رسائل الضيوف لصاحب المناسبة</li><li>حالة التصميم والطلب لحظة بلحظة</li><li>موعد التذكير وحالة إرساله</li></ul><a class="text-arrow" href="login.html">دخول لوحة العميل <span>←</span></a></div>
-                <div class="dashboard-preview" aria-label="معاينة لوحة التحكم"><div class="dash-preview-head"><div><small>مناسبة سارة وعبدالله</small><strong>بقي ١٢ يومًا</strong></div><span class="pill pill-success">جاهزة للإرسال</span></div><div class="dash-preview-metrics"><div><span>إجمالي المدعوين</span><strong>٤٨٧</strong></div><div><span>أكدوا الحضور</span><strong>٣١٢</strong></div><div><span>اعتذروا</span><strong>٤١</strong></div></div><div class="response-chart"><div class="chart-head"><span>استجابة الضيوف</span><small>آخر ٧ أيام</small></div><div class="bars" aria-hidden="true"><i style="height:28%"></i><i style="height:42%"></i><i style="height:34%"></i><i style="height:58%"></i><i style="height:70%"></i><i style="height:83%"></i><i style="height:96%"></i></div></div></div>
-            </div>
-        </section>
-
-        <section class="section section-tint" id="faq"><div class="container faq-layout"><div class="section-heading"><span class="eyebrow"><i></i> قبل أن تبدأ</span><h2>أسئلة تتكرر كثيرًا</h2><p>إن لم تجد إجابتك، تواصل معنا وسيجيبك الفريق مباشرة.</p><a class="button button-secondary" href="https://wa.me/966537933514" target="_blank" rel="noopener noreferrer">اسأل عبر واتساب</a></div><div class="faq-list"><details open><summary>متى أرسل أسماء وأرقام المدعوين؟</summary><p>بعد الدفع واعتماد التصميم يتواصل معك الأدمن عبر واتساب ويرسل لك نموذجًا منظمًا لإكمال القائمة.</p></details><details><summary>هل يمكن للمدعو تعبئة الرابط أكثر من مرة؟</summary><p>لا. يصبح نموذج التأكيد غير قابل للإرسال بعد تسجيل الرد بنجاح، ويمكن للأدمن إعادة فتحه عند الحاجة.</p></details><details><summary>متى يصل QR للمدعو؟</summary><p>يصدر QR منفصل بعد تأكيد الحضور، ويُستخدم للتحقق من الدخول يوم المناسبة.</p></details><details><summary>هل يمكن إرسال تذكير للمدعوين؟</summary><p>نعم، تختار قبل ٢٤ أو ٤٨ أو ٧٢ ساعة، ويرسل للأشخاص الذين أكدوا حضورهم فقط.</p></details></div></div></section>
-
-        <section class="final-cta"><div class="container final-cta-inner"><div><span class="eyebrow light"><i></i> البداية لا تستغرق سوى دقائق</span><h2>دع مناسبتك تتحدث عن ذوقك</h2><p>اختر باقتك، أضف التفاصيل، وسنتولى ما بعدها معك خطوة بخطوة.</p></div><a class="button button-gold" href="order.html">ابدأ طلب دعوتك <span>←</span></a></div></section>
+            <span id="package-recommendation" role="status"
+              >حتى ١٠٠ دعوة · الباقة الأساسية تناسبك</span
+            >
+          </div>
+          <p class="form-alert" id="package-error" role="alert" hidden></p>
+          <div class="pricing-grid">
+            <article class="price-card" data-package="basic">
+              <p class="package-eyebrow">للمناسبات الأقرب</p>
+              <h3>الأساسية</h3>
+              <p>بداية مرتبة لدعواتك.</p>
+              <div class="price-value">
+                <strong data-price="basic">١٩٩</strong><span>ر.س <small>سعر مبدئي</small></span>
+              </div>
+              <div class="capacity">حتى ١٠٠ دعوة</div>
+              <ul>
+                <li>بيانات المناسبة ورابط لكل ضيف</li>
+                <li>تأكيد حضور أو اعتذار</li>
+                <li>بطاقة دخول ومتابعة الردود</li>
+                <li>مشاركة روابط الدعوات يدويًا</li>
+              </ul>
+              <a
+                class="button button-secondary package-select"
+                data-package-link="basic"
+                href="order.html?package=basic"
+                >اختر الأساسية <span aria-hidden="true">←</span></a
+              ><span class="recommendation-tag" data-recommended="basic">تناسب عدد دعواتك</span>
+            </article>
+            <article class="price-card price-featured" data-package="advanced">
+              <p class="package-eyebrow">للقاءات الأكبر</p>
+              <h3>المتقدمة</h3>
+              <p>مساحة أوسع لمن تحب.</p>
+              <div class="price-value">
+                <strong data-price="advanced">٣٩٩</strong><span>ر.س <small>سعر مبدئي</small></span>
+              </div>
+              <div class="capacity">حتى ٥٠٠ دعوة</div>
+              <ul>
+                <li>جميع أدوات إدارة الدعوات</li>
+                <li>سعة أكبر لقائمة المدعوين</li>
+                <li>تحديد المرافقين لكل دعوة</li>
+                <li>تصدير قائمة الضيوف والردود</li>
+              </ul>
+              <a
+                class="button button-primary package-select"
+                data-package-link="advanced"
+                href="order.html?package=advanced"
+                >اختر المتقدمة <span aria-hidden="true">←</span></a
+              ><span class="recommendation-tag" data-recommended="advanced" hidden
+                >تناسب عدد دعواتك</span
+              >
+            </article>
+            <article class="price-card" data-package="premium">
+              <p class="package-eyebrow">لتفاصيلك الخاصة</p>
+              <h3>المخصصة</h3>
+              <p>نبدأ من فكرتك.</p>
+              <div class="price-value">
+                <strong data-price="premium">٦٩٩</strong><span>ر.س <small>تبدأ من</small></span>
+              </div>
+              <div class="capacity">العدد والخدمات حسب عرض السعر</div>
+              <ul>
+                <li>موجز مفصل لتصورك</li>
+                <li>إرفاق مراجع للتصميم</li>
+                <li>مراجعة الإضافات المطلوبة</li>
+                <li>اعتماد التكلفة قبل الدفع</li>
+              </ul>
+              <a
+                class="button button-secondary package-select"
+                data-package-link="premium"
+                href="order.html?package=premium"
+                >اطلب عرض سعر <span aria-hidden="true">←</span></a
+              ><span class="recommendation-tag" data-recommended="premium" hidden
+                >تناسب عدد دعواتك</span
+              >
+            </article>
+          </div>
+          <div class="pricing-disclosure">
+            <span aria-hidden="true">ⓘ</span>
+            <p>
+              الأسعار المبدئية للباقة، ويُعتمد الإجمالي وأي إضافات أو ضريبة منطبقة قبل الدفع. الدفع
+              الإلكتروني والإرسال الآلي والتذكيرات قيد التجهيز حاليًا.
+            </p>
+          </div>
+        </div>
+      </section>
+      <section class="section journey-section">
+        <div class="container journey-layout">
+          <div>
+            <p class="overline">من هنا تبدأ الحكاية</p>
+            <h2>خطوات بسيطة.<br /><em>لتفاصيل تستحق.</em></h2>
+            <a class="text-arrow" href="order.html">ابدأ طلبك <span aria-hidden="true">←</span></a>
+          </div>
+          <ol class="journey-list">
+            <li>
+              <span>01</span>
+              <div>
+                <h3>أخبرنا عن مناسبتك</h3>
+                <p>اختر الباقة وأضف الموعد والمكان وتفضيلات التصميم.</p>
+              </div>
+            </li>
+            <li>
+              <span>02</span>
+              <div>
+                <h3>راجع التفاصيل والتكلفة</h3>
+                <p>طلبك محفوظ في حسابك. تعرف على السعر النهائي قبل أي دفع.</p>
+              </div>
+            </li>
+            <li>
+              <span>03</span>
+              <div>
+                <h3>جهّز دعوتك وتابع ضيوفك</h3>
+                <p>بعد اكتمال الدفع والاعتماد، تُجهز الروابط وتتابع الردود من لوحة مناسبتك.</p>
+              </div>
+            </li>
+          </ol>
+        </div>
+      </section>
+      <section class="section faq-section" id="faq">
+        <div class="container faq-layout">
+          <div>
+            <p class="overline">قد تتساءل</p>
+            <h2>نوضح لك <em>التفاصيل.</em></h2>
+            <p>ولأي سؤال آخر، يسعدنا تواصلك.</p>
+            <a
+              class="text-arrow"
+              href="https://wa.me/966537933514"
+              target="_blank"
+              rel="noopener noreferrer"
+              >تحدث مع medad Al tahaya ↗</a
+            >
+          </div>
+          <div class="faq-list">
+            <details>
+              <summary>هل السعر الظاهر هو المبلغ النهائي؟</summary>
+              <p>
+                هو سعر مبدئي للباقة. التصميم المخصص والإضافات تحتاج عرض سعر؛ يظهر الإجمالي المعتمد
+                قبل الدفع.
+              </p>
+            </details>
+            <details>
+              <summary>هل يمكنني تجربة الدعوة قبل الطلب؟</summary>
+              <p>
+                نعم. افتح نموذج المعاينة لتجربة الطابع والأسماء والرد. هذه تجربة توضيحية ولا ترسل
+                رسائل أو تسجل ضيوفًا حقيقيين.
+              </p>
+            </details>
+            <details>
+              <summary>هل عدد الدعوات يشمل المرافقين؟</summary>
+              <p>
+                العدد يشير إلى أرقام المدعوين وروابطهم الفردية. تحدد المرافقين لكل دعوة بشكل منفصل
+                ضمن إعداد المناسبة.
+              </p>
+            </details>
+            <details>
+              <summary>كيف أعرف أن الدفع اكتمل؟</summary>
+              <p>
+                تؤخذ الحالة من سجل الطلب الموثق. العودة إلى الصفحة أو حفظ الطلب وحدهما لا يعنيان
+                نجاح الدفع. الدفع الإلكتروني غير مفعّل حاليًا.
+              </p>
+            </details>
+            <details>
+              <summary>هل الإرسال عبر واتساب متاح تلقائيًا؟</summary>
+              <p>
+                المتاح في النسخة الحالية هو ملف روابط للمشاركة اليدوية بعد تفعيل الدعوات. الإرسال
+                الآلي والتذكيرات لم يُفعّلا بعد.
+              </p>
+            </details>
+          </div>
+        </div>
+      </section>
+      <section class="closing-banner container">
+        <span class="overline">لكل اجتماع، معنى</span>
+        <h2>لنبدأ بدعوة <em>تليق بفرحتك.</em></h2>
+        <a class="button button-light" href="#packages"
+          >اكتشف باقتك <span aria-hidden="true">←</span></a
+        ><span class="closing-spark" aria-hidden="true">✧</span>
+      </section>
     </main>
-
-    <footer class="site-footer"><div class="container footer-grid"><div class="footer-brand-block"><a class="brand brand-light" href="index.html"><img src="images/Medad-logo.png" alt="" width="58" height="58"><span><strong>مداد التحايا</strong><small>دعوات إلكترونية</small></span></a><p>نحوّل تفاصيل مناسبتك إلى تجربة دعوة أنيقة ومنظمة.</p></div><div><h3>روابط سريعة</h3><a href="#how">كيف تعمل؟</a><a href="#packages">الباقات</a><a href="order.html">طلب جديد</a><a href="login.html">دخول العميل</a><a href="admin-login.html">دخول الإدارة</a></div><div><h3>السياسات</h3><a href="privacy.html">سياسة الخصوصية</a><a href="terms.html">الشروط والأحكام</a><a href="mailto:hello@medadtahaya.com">hello@medadtahaya.com</a></div></div><div class="container footer-bottom"><span>© <span data-current-year></span> مداد التحايا. جميع الحقوق محفوظة.</span><span>صُمم بعناية في المملكة العربية السعودية</span></div></footer>
-    <a class="whatsapp-fab" href="https://wa.me/966537933514?text=%D9%85%D8%B1%D8%AD%D8%A8%D8%A7%D8%8C%20%D8%A3%D8%B1%D8%BA%D8%A8%20%D9%81%D9%8A%20%D8%A7%D9%84%D8%A7%D8%B3%D8%AA%D9%81%D8%B3%D8%A7%D8%B1%20%D8%B9%D9%86%20%D8%AE%D8%AF%D9%85%D8%A7%D8%AA%D9%83%D9%85" target="_blank" rel="noopener noreferrer" aria-label="تواصل معنا عبر واتساب"><span>واتساب</span><b>◉</b></a>
-    <script src="js/platform.js"></script><script src="js/app.js"></script>
-</body>
+    <footer class="site-footer">
+      <div class="container footer-grid">
+        <div>
+          <a class="brand" href="index.html"
+            ><img src="images/Medad-logo.png" alt="" width="48" height="48" /><span
+              ><strong>medad Al tahaya</strong><small>لكل مناسبة، تحية تليق بها</small></span
+            ></a
+          >
+          <p>دعوة تعبّر عنك.<br />وتفاصيل تجمع من تحب.</p>
+        </div>
+        <div>
+          <h3>تعرّف على medad Al tahaya</h3>
+          <a href="index.html#designs">نماذج التصاميم</a
+          ><a href="index.html#packages">الباقات والأسعار</a><a href="preview.html">جرّب الدعوة</a>
+        </div>
+        <div>
+          <h3>نحن بالقرب منك</h3>
+          <a href="https://wa.me/966537933514" target="_blank" rel="noopener noreferrer"
+            >تواصل عبر واتساب ↗</a
+          ><a href="dashboard.html">متابعة طلبك</a><a href="index.html#faq">الأسئلة الشائعة</a>
+        </div>
+      </div>
+      <div class="container footer-bottom">
+        <span>© medad Al tahaya</span>
+        <div><a href="privacy.html">الخصوصية</a><a href="terms.html">الشروط والأحكام</a></div>
+        <span>صُممت للمناسبات التي تستحق</span>
+      </div>
+    </footer>
+    <script type="module" src="js/storefront.js"></script>
+  </body>
 </html>

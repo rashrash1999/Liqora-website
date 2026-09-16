@@ -1,8 +1,196 @@
-<!doctype html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>الدفع الآمن | مداد التحايا</title><meta name="theme-color" content="#10243f"><link rel="icon" href="images/Medad-logo.png"><link rel="stylesheet" href="css/style.css"></head>
-<body class="app-body" data-page="checkout">
-<header class="app-header"><div class="container header-inner"><a class="brand" href="index.html"><img src="images/Medad-logo.png" alt=""><span><strong>مداد التحايا</strong><small>الدفع الآمن</small></span></a><a class="button button-secondary button-sm" href="order.html">تعديل الطلب</a></div></header>
-<main class="app-main"><div class="container"><div class="page-intro"><div><span class="eyebrow"><i></i> الخطوة الأخيرة</span><h1>راجع وأكمل الدفع</h1><p>بعد تأكيد العملية ستنتقل مباشرة إلى لوحة مناسبتك.</p></div><span class="pill pill-success">اتصال مشفّر</span></div>
-<div class="checkout-layout"><section class="app-card payment-card"><h2>وسيلة الدفع</h2><p style="color:var(--muted);font-size:13px">سيتم ربط مزود الدفع السعودي المختار هنا. العرض الحالي يحاكي رحلة النجاح فقط.</p><div class="payment-methods"><div class="payment-method">مدى</div><div class="payment-method">Apple Pay</div><div class="payment-method">Visa / Mastercard</div></div><div class="field"><label for="billing-name">الاسم على الفاتورة</label><input id="billing-name" type="text" autocomplete="name"></div><label class="consent-row"><input id="payment-confirm" type="checkbox"><span>أوافق على إتمام الطلب وفق السعر الظاهر والشروط والأحكام.</span></label><button class="button button-primary button-block" id="pay-button" type="button" style="margin-top:20px">إتمام الدفع الآمن</button><div class="secure-note"><span>🔒</span><span>لا يخزن هذا المشروع بيانات البطاقات. في الإنتاج يتم إدخالها داخل صفحة مزود الدفع المعتمد.</span></div></section>
-<aside class="app-card summary-card"><h2>تفاصيل الطلب</h2><div class="summary-package"><small id="checkout-order-id">—</small><strong id="checkout-package">—</strong><span id="checkout-event">—</span></div><ul class="summary-list"><li><span>صاحب الطلب</span><strong id="checkout-owner">—</strong></li><li><span>تاريخ المناسبة</span><strong id="checkout-date">—</strong></li><li><span>المدعوون</span><strong id="checkout-guests">—</strong></li></ul><div class="summary-total"><span>الإجمالي</span><strong id="checkout-total">—</strong></div><div class="info-box">رسوم رسائل واتساب والإضافات الخاصة تُعرض منفصلة عند اعتمادها.</div></aside></div></div></main>
-<div class="modal" id="payment-modal" hidden><div class="modal-card"><div class="success-icon">✓</div><h2>تم الدفع بنجاح</h2><p>أصبح طلبك نشطًا. ادخل برقم الجوال المسجل في الطلب لمتابعة الخطوات القادمة.</p><a class="button button-primary button-block" href="login.html?return=dashboard.html%3Fnew%3D1">تسجيل الدخول للوحة المناسبة</a></div></div>
-<script src="js/platform.js"></script><script src="js/checkout.js"></script></body></html>
+<!doctype html>
+<html lang="ar" dir="rtl">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="description" content="تفاصيل طلبك، عرض السعر وحالة الدفع الموثقة." />
+    <meta name="theme-color" content="#183c36" />
+    <meta name="referrer" content="no-referrer" />
+    <title>مراجعة الطلب والدفع | medad Al tahaya</title>
+    <link rel="icon" href="images/Medad-logo.png" />
+    <link rel="stylesheet" href="css/auth.css" />
+    <link rel="stylesheet" href="css/studio.css" />
+  </head>
+  <body class="app-body medad-site checkout-page" data-auth="customer">
+    <a class="skip-link" href="#main">انتقل إلى المحتوى</a>
+    <header class="site-header">
+      <div class="container header-inner">
+        <a class="brand" href="index.html"
+          ><img src="images/Medad-logo.png" alt="" width="48" height="48" /><span
+            ><strong>medad Al tahaya</strong><small>لكل مناسبة، تحية تليق بها</small></span
+          ></a
+        ><button
+          class="nav-toggle"
+          type="button"
+          aria-expanded="false"
+          aria-controls="site-nav"
+          aria-label="فتح قائمة التنقل"
+        >
+          <span></span><span></span>
+        </button>
+        <nav id="site-nav" aria-label="التنقل الرئيسي">
+          <a href="index.html#experience">التجربة</a><a href="index.html#designs">التصاميم</a
+          ><a href="index.html#packages">الباقات</a><a href="index.html#faq">الأسئلة الشائعة</a>
+        </nav>
+        <a class="header-account" href="login.html">حسابي <span aria-hidden="true">↗</span></a>
+      </div>
+    </header>
+    <main class="app-main" id="main">
+      <div class="container checkout-container">
+        <nav class="breadcrumbs" aria-label="مسار الصفحة">
+          <a href="index.html">الرئيسية</a><span aria-hidden="true">/</span
+          ><a href="dashboard.html">طلباتي</a><span aria-hidden="true">/</span
+          ><span>مراجعة الطلب</span>
+        </nav>
+        <div class="checkout-page-heading">
+          <div>
+            <p class="overline">كل التفاصيل أمامك</p>
+            <h1>مراجعة الطلب <em>والدفع.</em></h1>
+          </div>
+          <button class="button button-secondary button-sm" id="refresh-payment" type="button">
+            ↻ تحديث الحالة
+          </button>
+        </div>
+        <p id="page-error" class="form-alert" role="alert" hidden></p>
+        <p id="checkout-stale" class="form-alert" role="status" hidden>
+          تعذر تأكيد الحالة الحالية. أي تفاصيل ظاهرة قد تكون قديمة؛ حدّث الحالة عند عودة الاتصال.
+        </p>
+        <section id="checkout-empty" class="checkout-empty" hidden>
+          <span aria-hidden="true">◇</span>
+          <h2>اختر الطلب الذي تريد مراجعته</h2>
+          <p>تجد تفاصيل الدفع داخل كل طلب في لوحة مناسبتك.</p>
+          <a class="button button-primary" href="dashboard.html">عرض طلباتي ←</a>
+        </section>
+        <div id="checkout-skeleton" class="checkout-skeleton" role="status" aria-live="polite">
+          <span></span><span></span>
+          <p>جارٍ التحقق من الطلب…</p>
+        </div>
+        <div id="protected-content">
+          <div id="checkout-content" hidden>
+            <ol class="purchase-progress" aria-label="مراحل الطلب">
+              <li class="is-complete"><b>✓</b><span>حفظ الطلب</span></li>
+              <li id="step-payment" aria-current="step"><b>٢</b><span>التكلفة والدفع</span></li>
+              <li><b>٣</b><span>تجهيز الدعوة</span></li>
+            </ol>
+            <div class="checkout-grid">
+              <div class="checkout-main">
+                <section class="payment-state">
+                  <span class="state-symbol" aria-hidden="true">◇</span
+                  ><span class="pill" id="checkout-status"></span>
+                  <h2 id="checkout-title"></h2>
+                  <p id="payment-notice"></p>
+                  <div class="payment-state-footer">
+                    <span class="connection-dot" aria-hidden="true"></span
+                    ><span id="checkout-updated"></span>
+                  </div>
+                </section>
+                <section class="checkout-panel">
+                  <div class="panel-title">
+                    <h2>تفاصيل مناسبتك</h2>
+                    <span>01</span>
+                  </div>
+                  <h3 id="checkout-event"></h3>
+                  <dl class="event-facts">
+                    <div>
+                      <dt>صاحب الطلب</dt>
+                      <dd id="checkout-owner">—</dd>
+                    </div>
+                    <div>
+                      <dt>عدد الدعوات</dt>
+                      <dd id="checkout-guests">—</dd>
+                    </div>
+                    <div>
+                      <dt>الموعد</dt>
+                      <dd id="checkout-date">—</dd>
+                    </div>
+                    <div>
+                      <dt>المكان</dt>
+                      <dd id="checkout-venue">—</dd>
+                    </div>
+                    <div class="wide">
+                      <dt>الإضافات المطلوبة</dt>
+                      <dd id="checkout-addons">—</dd>
+                    </div>
+                  </dl>
+                  <p id="upload-notice" class="form-alert" hidden></p>
+                </section>
+                <section class="help-panel">
+                  <span class="help-icon" aria-hidden="true">?</span>
+                  <div>
+                    <h3>تحتاج مساعدة في طلبك؟</h3>
+                    <p>أرسل رقم الطلب لفريق medad Al tahaya لنراجع التفاصيل معك.</p>
+                  </div>
+                  <a
+                    id="checkout-support"
+                    href="https://wa.me/966537933514"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    >تواصل معنا ↗</a
+                  >
+                </section>
+              </div>
+              <aside class="checkout-receipt">
+                <div class="receipt-top">
+                  <span class="overline">ملخص التكلفة</span>
+                  <h2 id="checkout-package">—</h2>
+                  <span>رقم الطلب</span><code id="checkout-order-id"></code>
+                </div>
+                <ul class="receipt-lines" id="checkout-lines"></ul>
+                <div class="receipt-total">
+                  <span id="checkout-total-label">الإجمالي النهائي</span
+                  ><strong id="checkout-total">لم يُعتمد بعد</strong>
+                </div>
+                <div class="paid-row" id="paid-row" hidden>
+                  <span>المبلغ المدفوع المسجل</span><strong id="checkout-paid">—</strong>
+                </div>
+                <p class="receipt-note" id="price-note"></p>
+                <button class="button button-primary" id="payment-action" type="button" disabled>
+                  الدفع الإلكتروني غير متاح حاليًا</button
+                ><a class="button button-secondary" id="dashboard-link" href="dashboard.html"
+                  >متابعة الطلب من حسابي ←</a
+                >
+                <p class="receipt-security">
+                  لا تُدخل بيانات بطاقة في هذه الصفحة. الدفع يتاح بعد تفعيل الخدمة واعتماد التكلفة.
+                </p>
+                <div class="receipt-legal">
+                  <a href="terms.html">الشروط والأحكام</a><a href="privacy.html">الخصوصية</a>
+                </div>
+              </aside>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+    <footer class="site-footer">
+      <div class="container footer-grid">
+        <div>
+          <a class="brand" href="index.html"
+            ><img src="images/Medad-logo.png" alt="" width="48" height="48" /><span
+              ><strong>medad Al tahaya</strong><small>لكل مناسبة، تحية تليق بها</small></span
+            ></a
+          >
+          <p>دعوة تعبّر عنك.<br />وتفاصيل تجمع من تحب.</p>
+        </div>
+        <div>
+          <h3>تعرّف على medad Al tahaya</h3>
+          <a href="index.html#designs">نماذج التصاميم</a
+          ><a href="index.html#packages">الباقات والأسعار</a><a href="preview.html">جرّب الدعوة</a>
+        </div>
+        <div>
+          <h3>نحن بالقرب منك</h3>
+          <a href="https://wa.me/966537933514" target="_blank" rel="noopener noreferrer"
+            >تواصل عبر واتساب ↗</a
+          ><a href="dashboard.html">متابعة طلبك</a><a href="index.html#faq">الأسئلة الشائعة</a>
+        </div>
+      </div>
+      <div class="container footer-bottom">
+        <span>© medad Al tahaya</span>
+        <div><a href="privacy.html">الخصوصية</a><a href="terms.html">الشروط والأحكام</a></div>
+        <span>صُممت للمناسبات التي تستحق</span>
+      </div>
+    </footer>
+    <noscript><p class="form-alert">فعّل JavaScript للتحقق من حالة طلبك.</p></noscript>
+    <script type="module" src="js/navigation.js"></script>
+    <script type="module" src="js/checkout.js"></script>
+  </body>
+</html>

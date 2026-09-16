@@ -1,18 +1,87 @@
 <!doctype html>
 <html lang="ar" dir="rtl">
-<head>
-  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="دعوة زفاف سارة وعبدالله من مداد التحايا."><meta name="theme-color" content="#132b47">
-  <title>دعوة زفاف سارة وعبدالله</title><link rel="icon" href="images/Medad-logo.png" type="image/png"><link rel="stylesheet" href="css/invitation.css">
-</head>
-<body>
-  <div class="invitation-cover" id="invitationCover"><div class="cover-frame"><small>دعوة شخصية إلى</small><div class="cover-monogram" aria-hidden="true">س <i>&</i> ع</div><h1>سارة وعبدالله</h1><p>نتشرّف بدعوتكم لمشاركتنا ليلة العمر</p><button id="openInvitation" type="button">فتح الدعوة</button></div></div>
-  <main class="invitation-page" id="invitationPage" hidden>
-    <section class="invitation-hero" id="top"><div class="floral floral-one" aria-hidden="true"></div><div class="floral floral-two" aria-hidden="true"></div><div class="hero-inner"><p class="overline">بسم الله الرحمن الرحيم</p><div class="monogram" aria-hidden="true">س <i>&</i> ع</div><p>بكل الحب والفرح</p><h1>سارة <em>و</em> عبدالله</h1><p class="hero-message">ندعوكم لمشاركتنا بداية فصل جديد من حياتنا، فحضوركم يكمل فرحتنا.</p><a class="invitation-button gold" href="#details">تفاصيل المناسبة</a></div></section>
-    <section class="verse-section"><p>﴿ وَمِنْ آيَاتِهِ أَنْ خَلَقَ لَكُم مِّنْ أَنفُسِكُمْ أَزْوَاجًا لِّتَسْكُنُوا إِلَيْهَا وَجَعَلَ بَيْنَكُم مَّوَدَّةً وَرَحْمَةً ﴾</p><small>الروم · 21</small></section>
-    <section class="details-section" id="details"><div class="section-heading"><span>الموعد المنتظر</span><h2>تفاصيل ليلة العمر</h2></div><div class="details-grid"><article><i aria-hidden="true">12</i><h3>التاريخ</h3><p>الاثنين<br>12 أكتوبر 2026</p></article><article><i aria-hidden="true">8</i><h3>الوقت</h3><p>الاستقبال 7:30<br>الحفل 8:00 مساءً</p></article><article><i aria-hidden="true">⌖</i><h3>المكان</h3><p>قاعة ليلتي<br>الرياض</p></article></div><a class="invitation-button outline" href="https://maps.google.com" target="_blank" rel="noopener noreferrer">فتح الموقع في الخرائط</a></section>
-    <section class="countdown-section"><span>حتى نلتقي</span><h2>المتبقي على مناسبتنا</h2><div class="countdown" id="countdown"><div><strong id="days">00</strong><small>يوم</small></div><div><strong id="hours">00</strong><small>ساعة</small></div><div><strong id="minutes">00</strong><small>دقيقة</small></div><div><strong id="seconds">00</strong><small>ثانية</small></div></div></section>
-    <section class="rsvp-section"><div class="rsvp-card"><small>ننتظر ردّكم</small><h2>هل ستشاركوننا الفرحة؟</h2><p>يرجى تأكيد الحضور من الرابط الشخصي. سيظهر رمز الدخول بعد إرسال الموافقة.</p><p class="children-note">نعتذر عن استقبال الأطفال</p><a class="invitation-button gold" href="rsvp.html?token=demo-guest-001">تأكيد الحضور</a></div></section>
-    <footer><img src="images/Medad-logo.png" alt="مداد التحايا" width="52" height="52"><p>صُممت بكل عناية بواسطة مداد التحايا</p><a href="index.html">اصنع دعوتك معنا</a></footer>
-  </main><script src="js/invitation.js"></script>
-</body>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="description" content="دعوتك الشخصية — medad Al tahaya" />
+    <meta name="referrer" content="no-referrer" />
+    <title>دعوتك الشخصية | medad Al tahaya</title>
+    <link rel="icon" href="images/Medad-logo.png" />
+    <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="css/flow.css" />
+    <link rel="stylesheet" href="css/auth.css" />
+    <link rel="stylesheet" href="css/invitation.css" />
+  </head>
+  <body class="app-body">
+    <a class="skip-link" href="#main">انتقل إلى المحتوى</a>
+    <header class="app-header">
+      <div class="container header-inner">
+        <a class="brand" href="index.html"
+          ><img src="images/Medad-logo.png" alt="شعار medad Al tahaya" width="48" height="48" /><span
+            ><strong>medad Al tahaya</strong><small>دعوتك الشخصية</small></span
+          ></a
+        >
+        <div class="header-actions"><a class="text-link" href="index.html">الرئيسية</a></div>
+      </div>
+    </header>
+    <main class="app-main" id="main">
+      <div class="container">
+        <p class="form-alert" id="page-error" role="alert" hidden></p>
+        <div id="invitationPage" hidden>
+          <section class="invitation-hero">
+            <div class="hero-inner">
+              <p>بسم الله الرحمن الرحيم</p>
+              <h1 data-honorees></h1>
+              <p class="hero-message" id="invitation-message"></p>
+            </div>
+          </section>
+          <section class="details-section">
+            <h2>تفاصيل المناسبة</h2>
+            <div class="details-grid">
+              <article>
+                <h3>التاريخ</h3>
+                <p id="invitation-date"></p>
+              </article>
+              <article>
+                <h3>الوقت</h3>
+                <p id="invitation-time"></p>
+              </article>
+              <article>
+                <h3>المكان</h3>
+                <p id="invitation-venue"></p>
+              </article>
+            </div>
+            <a
+              class="invitation-button outline"
+              id="invitation-map"
+              href="https://maps.google.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              >فتح الخريطة</a
+            >
+          </section>
+          <section class="countdown-section">
+            <h2>المتبقي على المناسبة</h2>
+            <div class="countdown">
+              <div><strong id="days">—</strong><small>يوم</small></div>
+              <div><strong id="hours">—</strong><small>ساعة</small></div>
+              <div><strong id="minutes">—</strong><small>دقيقة</small></div>
+              <div><strong id="seconds">—</strong><small>ثانية</small></div>
+            </div>
+          </section>
+          <section class="rsvp-section">
+            <div class="rsvp-card">
+              <h2>نسعد بحضورك</h2>
+              <p id="invitation-child-policy"></p>
+              <a class="invitation-button gold" id="rsvp-link" href="rsvp.html"
+                >تأكيد الحضور أو عرض بطاقتك</a
+              >
+            </div>
+          </section>
+        </div>
+      </div>
+    </main>
+    <noscript><p>يلزم تفعيل JavaScript لاستخدام هذه الصفحة.</p></noscript>
+    <script type="module" src="js/invitation.js"></script>
+  </body>
 </html>
