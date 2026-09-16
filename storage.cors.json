@@ -1,0 +1,8 @@
+[
+  {
+    "origin": ["https://rashrash1999.github.io"],
+    "method": ["GET", "HEAD"],
+    "responseHeader": ["Content-Type"],
+    "maxAgeSeconds": 3600
+  }
+]

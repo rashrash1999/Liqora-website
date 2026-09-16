@@ -1,0 +1,24 @@
+rules_version = '2';
+service firebase.storage {
+ match /b/{bucket}/o {
+  function admin() { return request.auth != null && request.auth.token.get('admin', false) == true; }
+  function order(orderId) { return firestore.get(/databases/(default)/documents/orders/$(orderId)).data; }
+  function owner(orderId) { return request.auth != null && order(orderId).ownerUid == request.auth.uid; }
+  function editable(orderId) { return order(orderId).status != 'active' && order(orderId).status != 'completed'; }
+  function validFile(orderId, fileName, kind) {
+   let upload = firestore.get(/databases/(default)/documents/uploads/$(fileName)).data;
+   return request.resource != null && request.auth != null && upload.ownerUid == request.auth.uid && upload.orderId == orderId && upload.kind == kind && upload.status == 'pending' && upload.expiresAt > request.time.toMillis() && request.resource.size == upload.size && request.resource.contentType == upload.contentType && request.resource.metadata.size() == 0;
+  }
+  match /orders/{orderId}/references/{fileName} {
+   allow read: if admin() || owner(orderId);
+   allow create: if owner(orderId) && editable(orderId) && validFile(orderId, fileName, 'reference');
+   allow update, delete: if false;
+  }
+  match /orders/{orderId}/design/{fileName} {
+   allow read: if admin() || owner(orderId);
+   allow create: if admin() && editable(orderId) && order(orderId).paymentStatus == 'paid' && validFile(orderId, fileName, 'design');
+   allow update, delete: if false;
+  }
+  match /{allPaths=**} { allow read, write: if false; }
+ }
+}
