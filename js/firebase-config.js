@@ -9,7 +9,7 @@ export const firebaseSettings = Object.freeze({
     messagingSenderId: '203246514140',
     appId: '1:203246514140:web:ed3e150b77d3fea3336919',
   },
-  functionsRegion: 'europe-west1',
+  functionsRegion: 'me-central2',
   appCheckSiteKey: '',
   useEmulators: false,
 });
