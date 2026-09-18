@@ -1,6 +1,6 @@
 // Public web configuration only. NEVER add service-account or payment secrets here.
 export const firebaseSettings = Object.freeze({
-  enabled: false,
+  enabled: true,
   firebase: {
     apiKey: 'AIzaSyB2Ewbo1hmGYdutnV55tvbP8BxzF1_epi4',
     authDomain: 'medadaltahaya.firebaseapp.com',
@@ -10,6 +10,6 @@ export const firebaseSettings = Object.freeze({
     appId: '1:203246514140:web:ed3e150b77d3fea3336919',
   },
   functionsRegion: 'me-central2',
-  appCheckSiteKey: '',
+  appCheckSiteKey: '6LeROsItAAAAAAtHM_XxP55BvQOmTvGULR-0kMoV',
   useEmulators: false,
 });
