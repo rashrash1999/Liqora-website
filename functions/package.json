@@ -1,0 +1,20 @@
+{
+  "name": "medad-functions",
+  "version": "3.0.0",
+  "private": true,
+  "type": "module",
+  "main": "index.js",
+  "engines": {
+    "node": "22"
+  },
+  "dependencies": {
+    "firebase-admin": "14.4.0",
+    "firebase-functions": "7.3.2",
+    "qrcode": "1.5.4"
+  },
+  "overrides": {
+    "gaxios@6.7.1": {
+      "uuid": "11.1.1"
+    }
+  }
+}

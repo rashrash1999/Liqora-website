@@ -1,0 +1,14 @@
+[
+  {
+    "origin": [
+      "https://medadtahaya.com",
+      "https://www.medadtahaya.com",
+      "https://liqora-website.pages.dev",
+      "https://firebase-integration.liqora-website.pages.dev",
+      "https://rashrash1999.github.io"
+    ],
+    "method": ["GET", "HEAD"],
+    "responseHeader": ["Content-Type"],
+    "maxAgeSeconds": 3600
+  }
+]
