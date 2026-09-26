@@ -1,0 +1,17 @@
+{
+  "name": "medad Al tahaya",
+  "short_name": "مداد التحايا",
+  "lang": "ar",
+  "dir": "rtl",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f7f1e7",
+  "theme_color": "#183c36",
+  "icons": [
+    {
+      "src": "/images/Medad-logo.png",
+      "sizes": "1254x1254",
+      "type": "image/png"
+    }
+  ]
+}

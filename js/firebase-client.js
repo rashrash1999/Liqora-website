@@ -99,3 +99,17 @@ export async function privateFileUrl(path) {
   const { sdk, storage } = await getClient();
   return URL.createObjectURL(await sdk.getBlob(sdk.ref(storage, path), 10 * 1024 * 1024));
 }
+export async function getFullOrderReport(orderId) {
+  let cursor = null;
+  let order = null;
+  const guests = [];
+  for (let page = 0; page < 25; page += 1) {
+    const result = await call('getOrderReport', { orderId, cursor, pageSize: 500 });
+    order ||= result.order;
+    guests.push(...result.guests);
+    if (!result.nextCursor) return { order, guests };
+    if (result.nextCursor === cursor) throw new Error('تعذر إكمال التقرير؛ حاول مرة أخرى.');
+    cursor = result.nextCursor;
+  }
+  throw new Error('تجاوز التقرير الحد التشغيلي البالغ 10,000 ضيف.');
+}

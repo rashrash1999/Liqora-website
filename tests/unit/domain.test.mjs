@@ -12,6 +12,7 @@ import {
   reminderTimestamp,
   csvCell,
   safeHttpsUrl,
+  calculateOrderPricing,
 } from '../../functions/lib/domain.js';
 import { baseOrder, guestRows } from '../helpers/fixtures.mjs';
 const now = Date.parse('2030-10-01T00:00:00Z'),
@@ -39,6 +40,45 @@ test('server derives price and refuses forged authority fields', () => {
   for (const field of ['paid', 'price', 'paymentStatus', 'ownerUid', 'status'])
     assert.throws(() => normalizeOrder({ ...baseOrder(), [field]: 'forged' }, phone, now));
 });
+test('individual additions are priced automatically while business requires a quote', () => {
+  const custom = normalizeOrder(
+    { ...baseOrder(), theme: 'custom', customNotes: 'هوية مخصصة للمناسبة' },
+    phone,
+    now,
+  );
+  assert.equal(custom.quoteRequired, false);
+  assert.equal(custom.automaticPricing.subtotalHalalas, 39800);
+  assert.throws(() => normalizeOrder({ ...baseOrder(), theme: 'custom' }, phone, now));
+  assert.equal(
+    normalizeOrder({ ...baseOrder(), addons: ['video'] }, phone, now).automaticPricing
+      .subtotalHalalas,
+    49800,
+  );
+  assert.equal(
+    normalizeOrder(
+      {
+        ...baseOrder(),
+        packageId: 'business',
+        organizationName: 'شركة الاختبار',
+        organizationType: 'company',
+        contactEmail: 'events@example.sa',
+        theme: 'custom',
+        customNotes: 'هوية فعالية مؤسسية',
+      },
+      phone,
+      now,
+    ).quoteRequired,
+    true,
+  );
+  assert.throws(() =>
+    calculateOrderPricing({
+      packageId: 'basic',
+      invitationLimit: 251,
+      theme: 'classic',
+      addons: [],
+    }),
+  );
+});
 test('ownership phone, consent and all required form fields are enforced', () => {
   assert.throws(() => normalizeOrder(baseOrder(), '+966500000002', now));
   assert.throws(() => normalizeOrder({ ...baseOrder(), termsAccepted: 'on' }, phone, now));
@@ -55,8 +95,9 @@ test('ownership phone, consent and all required form fields are enforced', () =>
     assert.throws(() => normalizeOrder({ ...baseOrder(), [field]: '' }, phone, now), field);
 });
 test('package capacity and integer boundaries are enforced', () => {
-  for (const expectedGuests of [0, 101, -1, 1.5, NaN, Infinity, '1e2', true])
-    assert.throws(() => normalizeOrder({ ...baseOrder(), expectedGuests }, phone, now));
+  for (const invitationLimit of [0, 251, -1, 1.5, NaN, Infinity, '1e2', true])
+    assert.throws(() => normalizeOrder({ ...baseOrder(), invitationLimit }, phone, now));
+  assert.throws(() => normalizeOrder({ ...baseOrder(), seatCapacity: 7 }, phone, now));
 });
 test('impossible dates, past events and invalid times are rejected', () => {
   assert.throws(() => eventTimestamp('2030-02-30', '20:00'));
@@ -91,13 +132,18 @@ test('invalid CSV structure and normalized duplicate phones are rejected', () =>
 });
 test('guest and RSVP companions never exceed invitation policy', () => {
   assert.throws(() => normalizeGuests([{ ...guestRows()[0], max_companions: 3 }], baseOrder()));
-  for (const companions of [-1, 3, 1.5, 'Infinity'])
+  for (const companionNames of [['أ', 'ب', 'ج'], 'not-an-array', [null]])
     assert.throws(() =>
-      normalizeRsvp({ attendance: 'yes', guestName: 'ضيف', companions }, { companionsLimit: 2 }),
+      normalizeRsvp(
+        { attendance: 'yes', guestName: 'ضيف', companionNames },
+        { companionsLimit: 2, companionNamesRequired: true },
+      ),
     );
   assert.equal(
-    normalizeRsvp({ attendance: 'no', guestName: 'ضيف', companions: 99 }, { companionsLimit: 2 })
-      .companions,
+    normalizeRsvp(
+      { attendance: 'no', guestName: 'ضيف', companionNames: ['يُهمل'] },
+      { companionsLimit: 2 },
+    ).companions,
     0,
   );
   assert.throws(() =>
@@ -108,7 +154,7 @@ test('CSV formula payloads are exported as text', () => {
   for (const value of ['=HYPERLINK("x")', '+966500000001', '  @SUM(A1)', '-10'])
     assert.ok(csvCell(value).startsWith('"\''));
 });
-test('activation requires paid order, matching design version and nonempty guest list', () => {
+test('activation enforces payment, design, capacity and registration mode', () => {
   const ready = {
     status: 'preparing',
     paymentStatus: 'paid',
@@ -116,7 +162,9 @@ test('activation requires paid order, matching design version and nonempty guest
     approvedDesignVersion: 'v1',
     designVersion: 'v1',
     guestCount: 2,
-    expectedGuests: 2,
+    invitationLimit: 2,
+    seatCapacity: 6,
+    registrationMode: 'private',
     eventAt: now + 86400000,
   };
   assert.doesNotThrow(() => assertReady(ready, now));
@@ -130,6 +178,9 @@ test('activation requires paid order, matching design version and nonempty guest
     { status: 'completed' },
   ])
     assert.throws(() => assertReady({ ...ready, ...patch }, now));
+  assert.doesNotThrow(() =>
+    assertReady({ ...ready, registrationMode: 'open', guestCount: 0 }, now),
+  );
 });
 test('reminders cannot be saved for a time that has passed', () => {
   assert.throws(() => reminderTimestamp({ eventAt: now + 3600000 }, 24, now));

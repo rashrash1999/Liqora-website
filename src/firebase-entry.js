@@ -7,6 +7,7 @@ export {
   signInWithEmailAndPassword,
   RecaptchaVerifier,
   signInWithPhoneNumber,
+  updateProfile,
   setPersistence,
   browserSessionPersistence,
   connectAuthEmulator,

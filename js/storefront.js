@@ -10,11 +10,11 @@ function update() {
   error.textContent = valid ? '' : 'اختر عددًا صحيحًا من ١ إلى ١٠٠٠٠ دعوة.';
   input.setAttribute('aria-invalid', String(!valid));
   const recommended = valid
-    ? count <= 100
+    ? count <= PACKAGES.basic.guestLimit
       ? 'basic'
-      : count <= 500
+      : count <= PACKAGES.advanced.guestLimit
         ? 'advanced'
-        : 'premium'
+        : 'business'
     : null;
   message.textContent = valid
     ? `${new Intl.NumberFormat('ar-SA').format(count)} دعوة · ${PACKAGES[recommended].name} تناسبك`

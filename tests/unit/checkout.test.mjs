@@ -64,6 +64,42 @@ test('final totals require valid currency, integers and matching arithmetic', ()
     assert.equal(readPricing(invalid, now), null);
   assert.equal(checkoutModel({ ...order, pricing }, now).finalAmountHalalas, 33235);
 });
+test('only an approved quote and a verified Moyasar URL enables payment', () => {
+  const create = checkoutModel({ ...order, pricing }, now);
+  assert.equal(create.paymentAction.type, 'create');
+  assert.equal(create.paymentEnabled, true);
+  const resume = checkoutModel(
+    {
+      ...order,
+      pricing,
+      paymentStatus: 'pending',
+      paymentSession: {
+        checkoutUrl: 'https://checkout.moyasar.com/invoices/secure',
+        expiresAt: now + 60000,
+      },
+    },
+    now,
+  );
+  assert.equal(resume.paymentAction.type, 'resume');
+  assert.equal(resume.paymentAction.url, 'https://checkout.moyasar.com/invoices/secure');
+  for (const checkoutUrl of [
+    'http://checkout.moyasar.com/invoices/x',
+    'https://checkout.moyasar.com.evil.example/x',
+    'https://user:pass@checkout.moyasar.com/x',
+  ])
+    assert.equal(
+      checkoutModel(
+        {
+          ...order,
+          pricing,
+          paymentStatus: 'pending',
+          paymentSession: { checkoutUrl, expiresAt: now + 60000 },
+        },
+        now,
+      ).paymentAction,
+      null,
+    );
+});
 test('processing, failed and refunded are never shown as paid', () => {
   for (const state of [
     'pending',

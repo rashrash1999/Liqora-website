@@ -1,6 +1,6 @@
 import { requireUser, authFailure } from './auth.js';
-import { getOrder } from './firebase-client.js';
-import { checkoutModel } from './checkout-model.js';
+import { call, getOrder } from './firebase-client.js';
+import { checkoutModel } from './payment/checkout-model.js';
 import {
   $,
   PACKAGES,
@@ -9,13 +9,16 @@ import {
   formatMoney,
   formatDate,
   storageGet,
+  storageSet,
   storageRemove,
   showError,
   busy,
 } from './platform.js';
 let orderId,
   loading = false,
-  sessionReady = false;
+  sessionReady = false,
+  currentOrder = null,
+  currentModel = null;
 const money = (value) => (value == null ? 'لم يُعتمد بعد' : formatMoney(value / 100));
 function row(label, value) {
   const item = document.createElement('li'),
@@ -28,6 +31,8 @@ function row(label, value) {
 }
 function render(order) {
   const model = checkoutModel(order);
+  currentOrder = order;
+  currentModel = model;
   $('checkout-skeleton').hidden = true;
   $('checkout-content').hidden = false;
   $('checkout-content').dataset.state = model.state;
@@ -41,7 +46,7 @@ function render(order) {
     'checkout-owner': order.ownerName,
     'checkout-date': `${formatDate(order.eventDate)}، ${order.eventTime || ''} بتوقيت الرياض`,
     'checkout-venue': `${order.venueName}، ${order.city}`,
-    'checkout-guests': `${order.expectedGuests} دعوة`,
+    'checkout-guests': `${order.invitationLimit || order.expectedGuests} رقم · سعة ${order.seatCapacity || order.expectedGuests} شخص`,
     'checkout-total': money(model.finalAmountHalalas),
     'checkout-total-label': model.amountLabel,
     'checkout-paid': money(model.paidAmountHalalas),
@@ -72,17 +77,12 @@ function render(order) {
   const support = new URL(`https://wa.me/${CONFIG.whatsappNumber}`);
   support.searchParams.set('text', `مرحبًا medad Al tahaya، أحتاج المساعدة بشأن الطلب ${order.id}`);
   $('checkout-support').href = support.href;
-  $('payment-action').hidden = [
-    'paid',
-    'pending',
-    'refunded',
-    'cancelled',
-    'expired',
-    'review',
-  ].includes(model.state);
-  $('payment-action').disabled = true;
+  $('payment-action').hidden =
+    !model.paymentAction && ['paid', 'refunded', 'expired', 'review'].includes(model.state);
+  $('payment-action').disabled = !model.paymentAction;
   $('payment-action').textContent =
-    model.state === 'quote' ? 'بانتظار اعتماد عرض السعر' : 'الدفع الإلكتروني غير متاح حاليًا';
+    model.paymentAction?.label ||
+    (model.state === 'quote' ? 'بانتظار اعتماد المبلغ النهائي' : 'الدفع غير متاح لهذه الحالة');
   $('step-payment').classList.toggle('is-complete', order.paymentStatus === 'paid');
   $('step-payment').setAttribute('aria-current', order.paymentStatus === 'paid' ? 'false' : 'step');
   setText(
@@ -90,12 +90,14 @@ function render(order) {
     `آخر تحقق: ${new Intl.DateTimeFormat('ar-SA', { hour: '2-digit', minute: '2-digit', second: '2-digit' }).format(new Date())}`,
   );
 }
-async function refresh() {
+async function refresh({ sync = false } = {}) {
   if (!sessionReady || loading) return;
   loading = true;
   $('page-error').hidden = true;
   $('checkout-stale').hidden = true;
   try {
+    if (sync && currentOrder?.paymentSession?.invoiceId)
+      await call('syncPaymentSession', { orderId });
     render(await getOrder(orderId, { fresh: true }));
   } catch (error) {
     if (['permission-denied', 'not-found'].includes(error.code)) {
@@ -108,9 +110,54 @@ async function refresh() {
     loading = false;
   }
 }
-$('refresh-payment').addEventListener('click', () => busy($('refresh-payment'), refresh));
+$('refresh-payment').addEventListener('click', () =>
+  busy($('refresh-payment'), () => refresh({ sync: true })),
+);
+$('payment-action').addEventListener('click', () =>
+  busy($('payment-action'), async () => {
+    if (!currentModel?.paymentAction) return;
+    if (currentModel.paymentAction.type === 'resume') {
+      location.assign(currentModel.paymentAction.url);
+      return;
+    }
+    const key = `medad.payment.request.${orderId}`;
+    let requestId = storageGet(key);
+    if (typeof requestId !== 'string') {
+      requestId = crypto.randomUUID();
+      storageSet(key, requestId);
+    }
+    try {
+      const session = await call('createPaymentSession', { orderId, requestId });
+      if (session.paymentStatus === 'paid') {
+        storageRemove(key);
+        await refresh();
+        return;
+      }
+      const action = checkoutModel({
+        ...currentOrder,
+        paymentStatus: session.paymentStatus,
+        paymentSession: {
+          provider: 'moyasar',
+          checkoutUrl: session.checkoutUrl,
+          expiresAt: session.expiresAt,
+        },
+      }).paymentAction;
+      if (!action || action.type !== 'resume')
+        throw new Error('لم تُرجع بوابة الدفع رابطًا آمنًا. حدّث الصفحة وحاول مجددًا.');
+      storageRemove(key);
+      location.assign(action.url);
+    } catch (error) {
+      showError(error);
+    }
+  }),
+);
 addEventListener('focus', () => {
-  if (sessionReady) refresh();
+  if (sessionReady)
+    refresh({
+      sync:
+        ['pending', 'processing'].includes(currentOrder?.paymentStatus) &&
+        Boolean(currentOrder?.paymentSession?.invoiceId),
+    });
 });
 (async () => {
   orderId = new URLSearchParams(location.search).get('order');
@@ -122,7 +169,14 @@ addEventListener('focus', () => {
   }
   if (!(await requireUser())) return;
   sessionReady = true;
+  const paymentReturn = new URLSearchParams(location.search).get('payment');
   await refresh();
+  if (['success', 'back'].includes(paymentReturn) && currentOrder?.paymentSession?.invoiceId) {
+    await refresh({ sync: true });
+    const clean = new URL(location.href);
+    clean.searchParams.delete('payment');
+    history.replaceState(null, '', clean);
+  }
   const notice = storageGet('medad.notice');
   if (notice) {
     setText('upload-notice', notice);

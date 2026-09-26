@@ -5,9 +5,10 @@
   "description": "Arabic electronic invitation storefront and event attendance MVP",
   "type": "module",
   "scripts": {
-    "build": "node scripts/build.mjs",
+    "build": "node scripts/build.mjs && node scripts/build-site.mjs",
     "validate": "node scripts/validate.mjs",
-    "test": "npm run build && npm run validate && node --test tests/unit/*.test.mjs",
+    "format:check": "prettier --check '*.html' 'js/*.js' 'js/payment/*.js' 'functions/*.js' 'functions/lib/*.js' 'functions/payment/*.js' 'functions/messaging/*.js' 'tests/**/*.mjs' 'docs/*.md' 'README.md' '.github/**/*.yml' 'firebase.json' 'firestore.indexes.json' 'storage.cors.json'",
+    "test": "npm run format:check && npm run build && npm run validate && node --test tests/unit/*.test.mjs",
     "test:integration": "firebase emulators:exec --project demo-medad-audit --only auth,firestore,storage \"node --test --test-concurrency=1 tests/integration/*.test.mjs\"",
     "serve": "node scripts/serve.mjs"
   },

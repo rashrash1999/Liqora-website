@@ -2,28 +2,48 @@
 export const PACKAGES = Object.freeze({
   basic: Object.freeze({
     id: 'basic',
-    name: 'الباقة الأساسية',
-    label: 'جاهزة',
+    name: 'البطاقة الذكية',
+    label: 'جاهزة وسريعة',
     price: 199,
-    guestLimit: 100,
-    description: 'قالب جاهز وتجهيز سريع',
+    includedInvitations: 100,
+    guestLimit: 250,
+    extraBlock: 50,
+    extraBlockPrice: 59,
+    designMode: 'ready',
+    description: 'ثلاثة قوالب جاهزة ورابط تسجيل وتقارير الحضور',
   }),
   advanced: Object.freeze({
     id: 'advanced',
-    name: 'الباقة المتقدمة',
-    label: 'مميزة',
-    price: 399,
-    guestLimit: 500,
-    description: 'تصاميم مميزة وإدارة أوسع',
+    name: 'موقع المناسبة المميز',
+    label: 'تصميم مخصص',
+    price: 799,
+    includedInvitations: 500,
+    guestLimit: 2000,
+    extraBlock: 100,
+    extraBlockPrice: 149,
+    designMode: 'custom',
+    description: 'موقع دعوة مخصص ونسختان للرجال والنساء وتقارير موسعة',
   }),
-  premium: Object.freeze({
-    id: 'premium',
-    name: 'الباقة المخصصة',
-    label: 'خاصة',
-    price: 699,
+  business: Object.freeze({
+    id: 'business',
+    name: 'مداد أعمال',
+    label: 'للشركات والجهات',
+    price: 2950,
+    includedInvitations: 1000,
     guestLimit: 10000,
-    description: 'تصميم خاص بعرض سعر معتمد',
+    extraBlock: 500,
+    extraBlockPrice: 499,
+    designMode: 'custom',
+    manualQuote: true,
+    description: 'هوية الجهة وصلاحيات متعددة وتقارير تشغيلية بعرض سعر',
   }),
+});
+
+export const ADDON_PRICES = Object.freeze({
+  customDesign: 199,
+  gendered: 99,
+  video: 299,
+  social: 49,
 });
 export class DomainError extends Error {
   constructor(message, code = 'invalid-argument') {
@@ -97,6 +117,10 @@ const ORDER_FIELDS = new Set([
   'packageId',
   'ownerName',
   'phone',
+  'organizationName',
+  'organizationType',
+  'contactEmail',
+  'vatNumber',
   'occasion',
   'honorees',
   'eventDate',
@@ -105,8 +129,13 @@ const ORDER_FIELDS = new Set([
   'city',
   'mapUrl',
   'expectedGuests',
+  'invitationLimit',
+  'seatCapacity',
+  'registrationMode',
   'reminderHours',
   'maxCompanions',
+  'companionNamesRequired',
+  'allowWaitlist',
   'childPolicy',
   'invitationMessage',
   'theme',
@@ -117,6 +146,62 @@ const ORDER_FIELDS = new Set([
   'addons',
   'termsAccepted',
 ]);
+
+export function normalizeReminderHours(value) {
+  const input = Array.isArray(value) ? value : [value];
+  demand(input.length > 0 && input.length <= 3, 'اختر من موعد إلى ثلاثة مواعيد للتذكير.');
+  const hours = [...new Set(input.map((item) => integer(item, 'التذكير', 24, 72)))].sort(
+    (a, b) => b - a,
+  );
+  demand(
+    hours.length === input.length && hours.every((hour) => [24, 48, 72].includes(hour)),
+    'اختر التذكير قبل 24 أو 48 أو 72 ساعة دون تكرار.',
+  );
+  return hours;
+}
+
+export function normalizeEmail(value, required = false) {
+  demand(value == null || typeof value === 'string', 'البريد الإلكتروني: قيمة غير صحيحة.');
+  const email = String(value || '')
+    .trim()
+    .toLowerCase();
+  demand(
+    (!required && !email) ||
+      (email.length <= 254 &&
+        /^[a-z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-z0-9-]+(?:\.[a-z0-9-]+)+$/.test(email)),
+    'أدخل بريدًا إلكترونيًا صحيحًا.',
+  );
+  return email;
+}
+
+export function calculateOrderPricing({ packageId, invitationLimit, theme, addons = [] }) {
+  const pkg = Object.hasOwn(PACKAGES, packageId) ? PACKAGES[packageId] : null;
+  demand(pkg, 'اختر باقة صحيحة.');
+  const count = integer(invitationLimit, 'عدد الدعوات', 1, pkg.guestLimit);
+  const items = [{ label: pkg.name, amountHalalas: pkg.price * 100 }];
+  const extra = Math.max(0, count - pkg.includedInvitations);
+  if (extra) {
+    const blocks = Math.ceil(extra / pkg.extraBlock);
+    items.push({
+      label: `${blocks * pkg.extraBlock} دعوة إضافية`,
+      amountHalalas: blocks * pkg.extraBlockPrice * 100,
+    });
+  }
+  if (theme === 'custom' && pkg.designMode !== 'custom')
+    items.push({ label: 'تصميم ثابت مخصص', amountHalalas: ADDON_PRICES.customDesign * 100 });
+  if (addons.includes('gendered') && pkg.id === 'basic')
+    items.push({ label: 'نسختان للرجال والنساء', amountHalalas: ADDON_PRICES.gendered * 100 });
+  if (addons.includes('video'))
+    items.push({ label: 'فيديو دعوة بسيط', amountHalalas: ADDON_PRICES.video * 100 });
+  if (addons.includes('social'))
+    items.push({ label: 'نسخة للنشر الاجتماعي', amountHalalas: ADDON_PRICES.social * 100 });
+  return {
+    items,
+    subtotalHalalas: items.reduce((sum, item) => sum + item.amountHalalas, 0),
+    currency: 'SAR',
+  };
+}
+
 export function normalizeOrder(input, verifiedPhone, now = Date.now()) {
   demand(input && typeof input === 'object' && !Array.isArray(input), 'بيانات الطلب غير صحيحة.');
   demand(
@@ -134,8 +219,11 @@ export function normalizeOrder(input, verifiedPhone, now = Date.now()) {
   demand(input.termsAccepted === true, 'الموافقة على الشروط وصحة البيانات مطلوبة.');
   const at = eventTimestamp(input.eventDate, input.eventTime);
   demand(at > now, 'يجب أن يكون موعد المناسبة في المستقبل بتوقيت الرياض.');
-  const reminderHours = integer(input.reminderHours, 'التذكير', 24, 72);
-  demand([24, 48, 72].includes(reminderHours), 'اختر تذكيرًا قبل 24 أو 48 أو 72 ساعة.');
+  const reminderHours = normalizeReminderHours(input.reminderHours);
+  demand(
+    reminderHours.every((hours) => at - hours * 3600000 > now),
+    'اختر مواعيد تذكير لم تمضِ بعد، أو اجعل المناسبة أبعد زمنيًا.',
+  );
   const addons = input.addons ?? [];
   demand(
     Array.isArray(addons) &&
@@ -150,10 +238,47 @@ export function normalizeOrder(input, verifiedPhone, now = Date.now()) {
     ['classic', 'modern', 'floral', 'royal', 'custom'].includes(input.theme),
     'اختر ثيمًا صحيحًا.',
   );
+  const maxCompanions = integer(input.maxCompanions ?? 0, 'عدد المرافقين', 0, 2);
+  const invitationLimit = integer(
+    input.invitationLimit ?? input.expectedGuests,
+    'عدد الدعوات',
+    1,
+    pkg.guestLimit,
+  );
+  const seatCapacity = integer(
+    input.seatCapacity ?? invitationLimit,
+    'السعة الفعلية',
+    1,
+    invitationLimit * (maxCompanions + 1),
+  );
+  demand(
+    input.registrationMode === 'open' || input.registrationMode === 'private',
+    'اختر رابط تسجيل مفتوحًا أو قائمة ضيوف خاصة.',
+  );
+  const customDesign = pkg.designMode === 'custom' || input.theme === 'custom';
+  const business = pkg.id === 'business';
+  const organizationType = textValue(input.organizationType, 'نوع الجهة', 40, business);
+  if (organizationType)
+    demand(
+      ['company', 'government', 'nonprofit', 'agency', 'other'].includes(organizationType),
+      'اختر نوع جهة صحيحًا.',
+    );
+  const vatNumber = digits(input.vatNumber || '').trim();
+  demand(!vatNumber || /^3\d{13}3$/.test(vatNumber), 'الرقم الضريبي يجب أن يتكون من 15 رقمًا.');
+  const automaticPricing = calculateOrderPricing({
+    packageId: pkg.id,
+    invitationLimit,
+    theme: input.theme,
+    addons,
+  });
   return {
     packageId: pkg.id,
     ownerName: textValue(input.ownerName, 'اسم العميل', 100),
     phone,
+    organizationName: textValue(input.organizationName, 'اسم الجهة', 160, business),
+    organizationType,
+    contactEmail: normalizeEmail(input.contactEmail, business),
+    vatNumber,
     occasion: textValue(input.occasion, 'المناسبة', 80),
     honorees: textValue(input.honorees, 'الأسماء', 160),
     eventDate: input.eventDate,
@@ -162,8 +287,14 @@ export function normalizeOrder(input, verifiedPhone, now = Date.now()) {
     venueName: textValue(input.venueName, 'المكان', 160),
     city: textValue(input.city, 'المدينة', 80),
     mapUrl,
-    expectedGuests: integer(input.expectedGuests, 'عدد المدعوين', 1, pkg.guestLimit),
-    maxCompanions: integer(input.maxCompanions ?? 0, 'عدد المرافقين', 0, 4),
+    // expectedGuests is retained as a compatibility alias for older dashboards.
+    expectedGuests: invitationLimit,
+    invitationLimit,
+    seatCapacity,
+    registrationMode: input.registrationMode,
+    maxCompanions,
+    companionNamesRequired: input.companionNamesRequired !== false,
+    allowWaitlist: input.allowWaitlist === true,
     reminderHours,
     childPolicy: textValue(input.childPolicy, 'سياسة الأطفال', 200, false),
     invitationMessage: textValue(input.invitationMessage, 'نص الدعوة', 700, false),
@@ -171,13 +302,15 @@ export function normalizeOrder(input, verifiedPhone, now = Date.now()) {
     orientation: textValue(input.orientation, 'اتجاه البطاقة', 30),
     designTone: textValue(input.designTone, 'طابع التصميم', 40),
     preferredColors: textValue(input.preferredColors, 'الألوان', 120, false),
-    customNotes: textValue(input.customNotes, 'التصميم المخصص', 2000, pkg.id === 'premium'),
+    customNotes: textValue(input.customNotes, 'التصميم المخصص', 2000, customDesign),
     addons,
     termsAccepted: true,
-    termsVersion: '2026-09-15',
+    termsVersion: '2026-09-26',
     baseAmountHalalas: pkg.price * 100,
+    automaticPricing,
     currency: 'SAR',
-    quoteRequired: pkg.id === 'premium' || addons.length > 0,
+    quoteRequired: pkg.manualQuote === true,
+    customDesign,
   };
 }
 export function normalizeGuests(rows, order) {
@@ -213,13 +346,17 @@ export function normalizeGuests(rows, order) {
 }
 export function normalizeRsvp(input, guest) {
   demand(input.attendance === 'yes' || input.attendance === 'no', 'حدد الحضور أو الاعتذار.');
+  const companionNames = input.attendance === 'yes' ? (input.companionNames ?? []) : [];
+  demand(Array.isArray(companionNames), 'أسماء المرافقين غير صحيحة.');
+  demand(companionNames.length <= guest.companionsLimit, 'عدد المرافقين أكبر من المسموح.');
+  const names = companionNames.map((name, index) =>
+    textValue(name, `اسم المرافق ${index + 1}`, 100, guest.companionNamesRequired !== false),
+  );
   return {
     attendance: input.attendance,
     guestName: textValue(input.guestName, 'اسم الضيف', 100),
-    companions:
-      input.attendance === 'yes'
-        ? integer(input.companions ?? 0, 'المرافقون', 0, guest.companionsLimit)
-        : 0,
+    companions: names.length,
+    companionNames: names,
     message: textValue(input.message, 'الرسالة', 300, false),
   };
 }
@@ -239,11 +376,18 @@ export function assertReady(order, now = Date.now()) {
     'يجب أن يعتمد العميل النسخة الحالية من التصميم.',
     'failed-precondition',
   );
-  demand(
-    order.guestCount > 0 && order.guestCount <= order.expectedGuests,
-    'راجع قائمة المدعوين وحد الباقة.',
-    'failed-precondition',
-  );
+  if (order.registrationMode === 'private')
+    demand(
+      order.guestCount > 0 && order.guestCount <= (order.invitationLimit || order.expectedGuests),
+      'أضف قائمة المدعوين ضمن حد الباقة قبل النشر.',
+      'failed-precondition',
+    );
+  else
+    demand(
+      (order.guestCount || 0) <= (order.invitationLimit || order.expectedGuests),
+      'تجاوز عدد التسجيلات حد الباقة.',
+      'failed-precondition',
+    );
   demand(order.eventAt > now, 'انتهى موعد المناسبة.', 'failed-precondition');
 }
 export function reminderTimestamp(order, hours, now = Date.now()) {

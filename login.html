@@ -35,6 +35,18 @@
           <p>استخدم رقم الجوال نفسه الذي سجلت به الطلب.</p>
           <form id="customerPhoneForm" class="auth-form" novalidate>
             <label class="field"
+              ><span>الاسم الكامل</span
+              ><input
+                id="customerName"
+                name="name"
+                type="text"
+                autocomplete="name"
+                minlength="3"
+                maxlength="100"
+                placeholder="مثال: رجا العرادي"
+                required
+            /></label>
+            <label class="field"
               ><span>رقم الجوال السعودي</span
               ><input
                 id="customerPhone"

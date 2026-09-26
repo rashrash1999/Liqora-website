@@ -1,6 +1,6 @@
 import { requireUser, authFailure } from './auth.js';
 import { call, uploadFile } from './firebase-client.js';
-import { normalizeOrder } from './domain.js';
+import { normalizeOrder, calculateOrderPricing } from './domain.js';
 import {
   $,
   PACKAGES,
@@ -26,8 +26,13 @@ function data() {
   const result = Object.fromEntries(new FormData(form));
   delete result.referenceFile;
   result.addons = [...form.querySelectorAll('[name=addons]:checked')].map((n) => n.value);
-  for (const name of ['expectedGuests', 'reminderHours', 'maxCompanions'])
+  result.reminderHours = [...form.querySelectorAll('[name=reminderHours]:checked')].map((n) =>
+    Number(n.value),
+  );
+  for (const name of ['invitationLimit', 'seatCapacity', 'maxCompanions'])
     result[name] = Number(result[name] || 0);
+  result.companionNamesRequired = form.elements.companionNamesRequired.checked;
+  result.allowWaitlist = form.elements.allowWaitlist.checked;
   result.termsAccepted = form.elements.termsAccepted.checked;
   return result;
 }
@@ -36,7 +41,16 @@ function save() {
 }
 function updateSummary() {
   const pkg = PACKAGES[form.elements.packageId.value],
-    custom = pkg?.id === 'premium';
+    custom = pkg?.designMode === 'custom' || form.elements.theme.value === 'custom',
+    business = pkg?.id === 'business';
+  document.querySelectorAll('.business-fields').forEach((node) => {
+    node.hidden = !business;
+    node.querySelectorAll('input,select').forEach((field) => {
+      field.disabled = !business;
+      if (['organizationName', 'organizationType', 'contactEmail'].includes(field.name))
+        field.required = business;
+    });
+  });
   document.querySelectorAll('.custom-design-fields').forEach((n) => {
     n.hidden = !custom;
     n.querySelectorAll('input,textarea').forEach((field) => {
@@ -44,32 +58,64 @@ function updateSummary() {
     });
   });
   form.elements.customNotes.required = custom;
+  const reminders = [...form.querySelectorAll('[name=reminderHours]:checked')].map(
+      (node) => node.value,
+    ),
+    invitationLimit = Number(form.elements.invitationLimit.value || 0),
+    seatCapacity = Number(form.elements.seatCapacity.value || 0),
+    maxCompanions = Number(form.elements.maxCompanions.value || 0),
+    addons = [...form.querySelectorAll('[name=addons]:checked')].map((node) => node.value);
+  let pricing;
+  try {
+    if (pkg && invitationLimit)
+      pricing = calculateOrderPricing({
+        packageId: pkg.id,
+        invitationLimit,
+        theme: form.elements.theme.value || 'classic',
+        addons,
+      });
+  } catch {}
   const labels = {
     'summary-label': pkg?.label || 'لم تختر باقة',
     'summary-name': pkg?.name || 'اختر باقتك',
     'summary-description': pkg?.description || '',
-    'summary-limit': pkg
-      ? pkg.id === 'premium'
-        ? 'حسب عرض السعر'
-        : `حتى ${pkg.guestLimit} مدعو`
-      : '—',
-    'summary-reminder': form.elements.reminderHours.value
-      ? `قبل ${form.elements.reminderHours.value} ساعة`
-      : '—',
-    'summary-addons': form.querySelectorAll('[name=addons]:checked').length
-      ? 'تُسعّر في العرض النهائي'
-      : 'لا توجد',
-    'summary-price': pkg ? formatMoney(pkg.price) : '—',
+    'summary-limit': pkg ? `${invitationLimit || '—'} رقم · ${seatCapacity || '—'} مقعد` : '—',
+    'summary-reminder': reminders.length ? reminders.map((x) => `${x}س`).join('، ') : '—',
+    'summary-addons': addons.length ? `${addons.length} إضافات` : 'لا توجد',
+    'summary-price': pricing
+      ? formatMoney(pricing.subtotalHalalas / 100)
+      : pkg
+        ? formatMoney(pkg.price)
+        : '—',
   };
   Object.entries(labels).forEach(([id, value]) => ($(id).textContent = value));
-  form.elements.expectedGuests.setCustomValidity(
-    pkg && Number(form.elements.expectedGuests.value) > pkg.guestLimit
-      ? `حد هذه الباقة ${pkg.guestLimit} مدعو.`
+  form.elements.invitationLimit.max = String(pkg?.guestLimit || 10000);
+  form.elements.invitationLimit.setCustomValidity(
+    pkg && invitationLimit > pkg.guestLimit ? `حد هذه الباقة ${pkg.guestLimit} مدعو.` : '',
+  );
+  const maximumSeats = invitationLimit * (maxCompanions + 1);
+  form.elements.seatCapacity.max = String(Math.max(1, maximumSeats || 30000));
+  form.elements.seatCapacity.setCustomValidity(
+    seatCapacity && maximumSeats && seatCapacity > maximumSeats
+      ? `السعة القصوى وفق الدعوات والمرافقين هي ${maximumSeats} شخصًا.`
       : '',
   );
+  const reminderInputs = [...form.querySelectorAll('[name=reminderHours]')];
+  reminderInputs[0].setCustomValidity(reminders.length ? '' : 'اختر موعد تذكير واحدًا على الأقل.');
   form.elements.phone.setCustomValidity(
     normalizeSaudiPhone(form.elements.phone.value) ? '' : 'أدخل رقم جوال صحيحًا.',
   );
+  const theme = form.elements.theme.value || 'classic';
+  $('order-live-preview').className = `order-live-preview theme-${theme}`;
+  $('live-occasion').textContent = form.elements.occasion.value || 'دعوة مناسبة';
+  $('live-honorees').textContent = form.elements.honorees.value || 'أسماء أصحاب المناسبة';
+  $('live-date').textContent =
+    form.elements.eventDate.value && form.elements.eventTime.value
+      ? `${formatDate(form.elements.eventDate.value)} · ${form.elements.eventTime.value}`
+      : 'التاريخ والوقت';
+  $('live-venue').textContent =
+    [form.elements.venueName.value, form.elements.city.value].filter(Boolean).join('، ') ||
+    'المكان';
 }
 function renderReview() {
   const d = data(),
@@ -78,15 +124,36 @@ function renderReview() {
     ['الباقة', pkg?.name],
     ['صاحب الطلب', d.ownerName],
     ['رقم الجوال', d.phone],
+    ...(d.packageId === 'business'
+      ? [
+          ['الجهة', d.organizationName],
+          ['نوع الجهة', d.organizationType],
+          ['بريد العمل', d.contactEmail],
+        ]
+      : []),
     ['المناسبة', d.occasion],
     ['الأسماء', d.honorees],
     ['الموعد', `${formatDate(d.eventDate)} — ${d.eventTime}`],
     ['المكان', `${d.venueName}، ${d.city}`],
-    ['عدد المدعوين', d.expectedGuests],
+    ['أرقام الدعوات', d.invitationLimit],
+    ['السعة الفعلية', d.seatCapacity],
+    ['طريقة التسجيل', d.registrationMode === 'open' ? 'رابط مفتوح مع تحقق الجوال' : 'قائمة خاصة'],
     ['المرافقون لكل دعوة', d.maxCompanions],
-    ['التذكير', `قبل ${d.reminderHours} ساعة`],
+    ['التذكيرات', d.reminderHours.map((hour) => `قبل ${hour} ساعة`).join('، ')],
     ['الإضافات', d.addons.length],
-    ['المبلغ المبدئي', formatMoney(pkg?.price)],
+    [
+      'المبلغ المحسوب',
+      pkg
+        ? formatMoney(
+            calculateOrderPricing({
+              packageId: pkg.id,
+              invitationLimit: d.invitationLimit,
+              theme: d.theme,
+              addons: d.addons,
+            }).subtotalHalalas / 100,
+          )
+        : '—',
+    ],
   ];
   const nodes = entries.map(([label, value]) => {
     const n = document.createElement('div');
@@ -204,11 +271,15 @@ form.addEventListener('submit', (event) => {
     const value = draft[field.name];
     if (field.type === 'radio') field.checked = field.value === String(value);
     else if (field.type === 'checkbox')
-      field.checked = Array.isArray(value) && value.includes(field.value);
+      field.checked = Array.isArray(value)
+        ? value.includes(Number(field.value) || field.value)
+        : Boolean(value);
     else if (value != null) field.value = value;
   }
   form.elements.phone.value = user.phoneNumber;
   form.elements.phone.readOnly = true;
+  if (!form.elements.ownerName.value && user.displayName)
+    form.elements.ownerName.value = user.displayName;
   form.elements.termsAccepted.checked = false;
   form.elements.eventDate.min = new Intl.DateTimeFormat('en-CA', {
     timeZone: 'Asia/Riyadh',
@@ -218,13 +289,18 @@ form.addEventListener('submit', (event) => {
   }).format(new Date());
   const params = new URLSearchParams(location.search);
   const guests = Number(params.get('guests'));
-  if (Number.isInteger(guests) && guests >= 1 && guests <= 10000)
-    form.elements.expectedGuests.value = guests;
+  if (Number.isInteger(guests) && guests >= 1 && guests <= 10000) {
+    form.elements.invitationLimit.value = guests;
+    form.elements.seatCapacity.value = guests;
+  }
   const theme = params.get('theme');
-  if (['classic', 'floral', 'modern', 'royal'].includes(theme)) form.elements.theme.value = theme;
+  if (['classic', 'floral', 'modern', 'royal', 'custom'].includes(theme))
+    form.elements.theme.value = theme;
   const pkg = params.get('package');
   if (Object.hasOwn(PACKAGES, pkg || ''))
     form.querySelector(`[name=packageId][value="${pkg}"]`).checked = true;
+  if (!form.elements.registrationMode.value)
+    form.querySelector('[name=registrationMode][value="open"]').checked = true;
   updateSummary();
   goToStep(1);
   next.disabled = false;

@@ -63,6 +63,8 @@ export function errorMessage(error) {
     'auth/network-request-failed': 'تعذر الاتصال. تحقق من اتصال الإنترنت.',
     'auth/invalid-phone-number': 'رقم الجوال غير صحيح.',
     'auth/operation-not-allowed': 'تسجيل الدخول بهذه الطريقة غير متاح حاليًا.',
+    'auth/billing-not-enabled': 'إرسال رمز التحقق غير متاح مؤقتًا حتى يكتمل تفعيل خدمة الرسائل.',
+    'auth/quota-exceeded': 'توقّف إرسال رموز التحقق مؤقتًا بسبب بلوغ حد الرسائل.',
     'auth/unauthorized-domain': 'تسجيل الدخول غير مفعّل على هذا النطاق. تواصل مع إدارة الموقع.',
     'auth/captcha-check-failed': 'أعد التحقق من أنك لست روبوتًا.',
     'functions/unauthenticated': 'انتهت الجلسة؛ سجّل الدخول مجددًا.',

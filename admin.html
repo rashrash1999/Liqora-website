@@ -17,9 +17,12 @@
     <header class="app-header">
       <div class="container header-inner">
         <a class="brand" href="index.html"
-          ><img src="images/Medad-logo.png" alt="شعار medad Al tahaya" width="48" height="48" /><span
-            ><strong>medad Al tahaya</strong><small>إدارة الطلبات</small></span
-          ></a
+          ><img
+            src="images/Medad-logo.png"
+            alt="شعار medad Al tahaya"
+            width="48"
+            height="48"
+          /><span><strong>medad Al tahaya</strong><small>إدارة الطلبات</small></span></a
         >
         <div class="header-actions">
           <a class="text-link" href="index.html">الرئيسية</a
@@ -84,10 +87,15 @@
               <p id="detail-event"></p>
               <p id="detail-date"></p>
               <p id="detail-package"></p>
+              <p id="detail-organization" hidden></p>
               <p>الحالة: <strong id="detail-status"></strong></p>
               <p>الدفع: <strong id="detail-payment"></strong></p>
               <p>التصميم: <strong id="detail-design"></strong></p>
               <p>الضيوف: <strong id="detail-guests">0</strong></p>
+              <p>المقاعد المحجوزة: <strong id="detail-seats">0</strong></p>
+              <button class="button button-secondary" id="download-order-report" type="button">
+                تنزيل تقرير العميل الكامل
+              </button>
               <a
                 class="button button-secondary"
                 id="contact-client"
@@ -96,6 +104,52 @@
                 rel="noopener noreferrer"
                 >واتساب هذا العميل</a
               >
+              <hr />
+              <section aria-labelledby="pricing-title">
+                <h3 id="pricing-title">اعتماد المبلغ النهائي</h3>
+                <p>
+                  السعر المحسوب: <strong id="quote-base">—</strong>. الباقات الفردية تتاح للدفع
+                  تلقائيًا، ويمكنك هنا اعتماد خصم أو رسوم إضافية قبل بدء الدفع. باقة الأعمال تحتاج
+                  اعتمادًا يدويًا.
+                </p>
+                <label class="field"
+                  ><span>التخصيص والإضافات — ر.س</span
+                  ><input
+                    id="quote-additional"
+                    type="text"
+                    inputmode="decimal"
+                    autocomplete="off"
+                    value="0" /></label
+                ><label class="field"
+                  ><span>الخصم — ر.س</span
+                  ><input
+                    id="quote-discount"
+                    type="text"
+                    inputmode="decimal"
+                    autocomplete="off"
+                    value="0" /></label
+                ><label class="field"
+                  ><span>الضريبة — ر.س</span
+                  ><input
+                    id="quote-tax"
+                    type="text"
+                    inputmode="decimal"
+                    autocomplete="off"
+                    value="0" /></label
+                ><label class="field"
+                  ><span>صلاحية العرض</span
+                  ><select id="quote-valid-days">
+                    <option value="1">يوم واحد</option>
+                    <option value="3" selected>3 أيام</option>
+                    <option value="7">7 أيام</option>
+                  </select></label
+                >
+                <p class="info-box" id="quote-summary">الإجمالي سيظهر هنا.</p>
+                <button class="button button-primary" id="approve-pricing" type="button">
+                  اعتماد السعر وإتاحة الدفع
+                </button>
+                <p id="pricing-status" role="status"></p>
+              </section>
               <hr />
               <h3>الملفات المرجعية</h3>
               <div id="reference-links"></div>
@@ -128,9 +182,13 @@
               <button class="button button-primary" id="issue-links" type="button">
                 إنشاء أو تجديد الروابط وتنزيلها
               </button>
+              <button class="button button-secondary" id="send-whatsapp" type="button">
+                إرسال الروابط عبر WhatsApp
+              </button>
               <p id="links-status" role="status"></p>
               <p class="info-box">
-                المشاركة يدوية حاليًا. الإرسال الآلي والتذكير يتطلبان ربط خدمة الرسائل.
+                الإرسال والتذكير يعملان بعد ضبط WhatsApp Cloud API واعتماد قالبي الدعوة والتذكير في
+                Meta. يحتفظ النظام بسجل إرسال لمنع التكرار.
               </p>
               <a class="button button-secondary" id="checkin-link" href="checkin.html"
                 >بوابة الاستقبال</a

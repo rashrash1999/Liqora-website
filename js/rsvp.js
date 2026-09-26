@@ -10,6 +10,23 @@ import {
   storageSet,
 } from './platform.js';
 let token, record, key;
+function renderCompanionNames(count) {
+  const required = record?.guest?.companionNamesRequired !== false;
+  $('companion-names').replaceChildren(
+    ...Array.from({ length: count }, (_, index) => {
+      const label = document.createElement('label');
+      label.className = 'field';
+      const span = document.createElement('span');
+      span.textContent = `اسم المرافق ${index + 1}`;
+      const input = document.createElement('input');
+      input.name = 'companionName';
+      input.maxLength = 100;
+      input.required = required;
+      label.append(span, input);
+      return label;
+    }),
+  );
+}
 function render(result) {
   record = result;
   const { event, guest, response, ticket } = result;
@@ -27,13 +44,26 @@ function render(result) {
       return n;
     }),
   );
+  renderCompanionNames(0);
   $('rsvpFormState').hidden = !!response;
   $('rsvpSuccessState').hidden = !response;
   $('invitation-link').href = `invitation.html#${new URLSearchParams({ token })}`;
   if (response) {
-    setText('successTitle', response.attendance === 'yes' ? 'تم تأكيد حضورك' : 'تم تسجيل اعتذارك');
+    setText(
+      'successTitle',
+      response.attendance === 'yes'
+        ? 'تم تأكيد حضورك'
+        : response.attendance === 'waitlist'
+          ? 'أنت في قائمة الانتظار'
+          : 'تم تسجيل اعتذارك',
+    );
     setText('ticketGuestName', response.guestName);
-    setText('ticket-companions', `المرافقون: ${response.companions}`);
+    setText(
+      'ticket-companions',
+      response.companionNames?.length
+        ? `المرافقون: ${response.companionNames.join('، ')}`
+        : 'بدون مرافقين',
+    );
     $('ticketCard').hidden = !ticket;
     if (ticket) {
       $('ticket-qr').src = ticket.qrDataUrl;
@@ -51,6 +81,9 @@ $('rsvpForm').addEventListener('change', (event) => {
     $('guestName').required = event.target.value === 'yes';
   }
 });
+$('companions').addEventListener('change', () =>
+  renderCompanionNames(Number($('companions').value)),
+);
 $('rsvpForm').addEventListener('submit', (event) => {
   event.preventDefault();
   if (!record || record.response) return;
@@ -69,8 +102,12 @@ $('rsvpForm').addEventListener('submit', (event) => {
         requestId,
         attendance,
         guestName: attendance === 'yes' ? $('guestName').value : record.guest.displayName,
-        companions: Number($('companions').value),
+        companionNames:
+          attendance === 'yes'
+            ? [...document.querySelectorAll('[name=companionName]')].map((input) => input.value)
+            : [],
         message: $('guest-message').value,
+        privacyAccepted: $('rsvp-consent').checked,
       });
       render(result);
     } catch (error) {

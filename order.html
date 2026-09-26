@@ -49,51 +49,79 @@
               <div class="choice-grid">
                 <label class="choice-card"
                   ><input type="radio" name="packageId" value="basic" required /><strong
-                    >الأساسية</strong
-                  ><span>قالب جاهز · حتى ١٠٠ مدعو</span></label
+                    >البطاقة الذكية</strong
+                  ><span>١٩٩ ر.س · تشمل ١٠٠ رقم · ٣ قوالب جاهزة</span></label
                 >
                 <label class="choice-card"
                   ><input type="radio" name="packageId" value="advanced" required /><strong
-                    >المتقدمة</strong
-                  ><span>تصاميم مميزة · حتى ٥٠٠ مدعو</span></label
+                    >موقع المناسبة المميز</strong
+                  ><span>٧٩٩ ر.س · يشمل ٥٠٠ رقم · تصميم مخصص</span></label
                 >
                 <label class="choice-card"
-                  ><input type="radio" name="packageId" value="premium" required /><strong
-                    >المخصصة</strong
-                  ><span>تصميم خاص · عدد مرن</span></label
+                  ><input type="radio" name="packageId" value="business" required /><strong
+                    >مداد أعمال</strong
+                  ><span>للشركات والجهات · تبدأ من ٢٬٩٥٠ ر.س</span></label
                 >
               </div>
               <div class="form-grid" style="margin-top: 22px">
                 <div class="field">
-                  <label for="expected-guests">العدد المتوقع للمدعوين <span>*</span></label
+                  <label for="invitation-limit">عدد أرقام الدعوات <span>*</span></label
                   ><input
-                    id="expected-guests"
-                    name="expectedGuests"
+                    id="invitation-limit"
+                    name="invitationLimit"
                     type="number"
                     min="1"
                     max="10000"
                     inputmode="numeric"
-                    placeholder="مثال: 150"
+                    placeholder="مثال: 100"
                     required
-                  /><small>سنراجع توافق العدد مع الباقة قبل الدفع.</small>
+                  /><small>كل رقم جوال فريد يُحسب دعوة أساسية واحدة.</small>
                 </div>
                 <div class="field">
-                  <label>تفضيل موعد التذكير <span>*</span></label>
+                  <label for="seat-capacity">السعة الفعلية للحضور <span>*</span></label
+                  ><input
+                    id="seat-capacity"
+                    name="seatCapacity"
+                    type="number"
+                    min="1"
+                    max="30000"
+                    inputmode="numeric"
+                    placeholder="تشمل المدعوين والمرافقين"
+                    required
+                  /><small>المرافقون يستهلكون مقاعد من هذه السعة.</small>
+                </div>
+                <div class="field field-wide">
+                  <label>طريقة استقبال الضيوف <span>*</span></label>
+                  <div class="choice-grid compact-grid">
+                    <label class="choice-card"
+                      ><input type="radio" name="registrationMode" value="open" required /><strong
+                        >رابط تسجيل مفتوح</strong
+                      ><span>يشارك العميل رابطًا، ويتحقق كل ضيف من جواله.</span></label
+                    ><label class="choice-card"
+                      ><input type="radio" name="registrationMode" value="private" /><strong
+                        >قائمة خاصة</strong
+                      ><span>ترفع الإدارة الأسماء وتصدر رابطًا شخصيًا لكل ضيف.</span></label
+                    >
+                  </div>
+                </div>
+                <div class="field field-wide" id="reminder-options">
+                  <label>مواعيد التذكير المطلوبة <span>*</span></label>
                   <div class="radio-row">
                     <label class="radio-pill"
-                      ><input type="radio" name="reminderHours" value="24" required /><span
+                      ><input type="checkbox" name="reminderHours" value="72" /><span
+                        >قبل ٧٢ ساعة</span
+                      ></label
+                    ><label class="radio-pill"
+                      ><input type="checkbox" name="reminderHours" value="48" checked /><span
+                        >قبل ٤٨ ساعة</span
+                      ></label
+                    ><label class="radio-pill"
+                      ><input type="checkbox" name="reminderHours" value="24" /><span
                         >قبل ٢٤ ساعة</span
-                      ></label
-                    ><label class="radio-pill"
-                      ><input type="radio" name="reminderHours" value="48" /><span
-                        >قبل يومين</span
-                      ></label
-                    ><label class="radio-pill"
-                      ><input type="radio" name="reminderHours" value="72" /><span
-                        >قبل ٣ أيام</span
                       ></label
                     >
                   </div>
+                  <small>يبدأ الإرسال بعد ربط حساب WhatsApp Business واعتماد القوالب.</small>
                 </div>
               </div>
             </section>
@@ -125,6 +153,62 @@
                     dir="ltr"
                     placeholder="05XXXXXXXX"
                     required
+                  />
+                </div>
+                <div class="field field-wide business-fields" hidden>
+                  <h3>بيانات الجهة</h3>
+                  <p class="step-description">
+                    تظهر هذه الحقول لباقة الأعمال فقط، وتُستخدم لعرض السعر والفاتورة والتنسيق.
+                  </p>
+                </div>
+                <div class="field business-fields" hidden>
+                  <label for="organization-name">اسم الجهة <span>*</span></label
+                  ><input
+                    id="organization-name"
+                    name="organizationName"
+                    type="text"
+                    maxlength="160"
+                    autocomplete="organization"
+                    placeholder="اسم الشركة أو الجهة"
+                    disabled
+                  />
+                </div>
+                <div class="field business-fields" hidden>
+                  <label for="organization-type">نوع الجهة <span>*</span></label
+                  ><select id="organization-type" name="organizationType" disabled>
+                    <option value="">اختر نوع الجهة</option>
+                    <option value="company">شركة</option>
+                    <option value="government">جهة حكومية</option>
+                    <option value="nonprofit">جهة غير ربحية</option>
+                    <option value="agency">وكالة أو منظم فعاليات</option>
+                    <option value="other">أخرى</option>
+                  </select>
+                </div>
+                <div class="field business-fields" hidden>
+                  <label for="contact-email">بريد العمل <span>*</span></label
+                  ><input
+                    id="contact-email"
+                    name="contactEmail"
+                    type="email"
+                    maxlength="254"
+                    autocomplete="email"
+                    placeholder="events@example.sa"
+                    dir="ltr"
+                    disabled
+                  />
+                </div>
+                <div class="field business-fields" hidden>
+                  <label for="vat-number">الرقم الضريبي — اختياري</label
+                  ><input
+                    id="vat-number"
+                    name="vatNumber"
+                    type="text"
+                    inputmode="numeric"
+                    pattern="3[0-9]{13}3"
+                    maxlength="15"
+                    placeholder="15 رقمًا"
+                    dir="ltr"
+                    disabled
                   />
                 </div>
                 <div class="field">
@@ -191,8 +275,6 @@
                     <option value="0">بدون مرافقين</option>
                     <option value="1">مرافق واحد</option>
                     <option value="2">مرافقان</option>
-                    <option value="3">٣ مرافقين</option>
-                    <option value="4">٤ مرافقين</option>
                   </select>
                 </div>
                 <div class="field">
@@ -203,6 +285,18 @@
                     <option>الأطفال مسموحون</option>
                     <option>حسب الدعوة</option>
                   </select>
+                </div>
+                <div class="field field-wide inline-options">
+                  <label class="consent-row"
+                    ><input type="checkbox" name="companionNamesRequired" checked /><span
+                      >إلزام الضيف بكتابة أسماء المرافقين</span
+                    ></label
+                  >
+                  ><label class="consent-row"
+                    ><input type="checkbox" name="allowWaitlist" /><span
+                      >إضافة الضيف إلى قائمة انتظار إذا اكتملت المقاعد</span
+                    ></label
+                  >
                 </div>
                 <div class="field field-wide">
                   <label for="invitation-message">نص الدعوة</label
@@ -219,8 +313,7 @@
             <section class="form-step" data-step="3" hidden>
               <h2>تفضيلات التصميم</h2>
               <p class="step-description">
-                هذه تفضيلات لتجهيز التصميم. تخصيص القالب والإضافات يُراجع مع الفريق ضمن العرض، ولا
-                ينفذ تلقائيًا بمجرد الاختيار.
+                القوالب الجاهزة تُنشر فور الدفع. التصميم المخصص يمر بالمراجعة والاعتماد قبل النشر.
               </p>
               <div class="form-grid">
                 <div class="field">
@@ -287,8 +380,10 @@
                       ><span>نفس الهوية مع اختلاف مناسب لكل فئة.</span></label
                     ><label class="choice-card"
                       ><input type="checkbox" name="addons" value="video" /><strong
-                        >فيديو بنفس الثيم</strong
-                      ><span>مقطع احترافي يراجع مع فريق التصميم.</span></label
+                        >طلب فيديو بنفس الثيم</strong
+                      ><span
+                        >يسلّمه فريق التصميم بعد المراجعة؛ لا يُولّد آليًا داخل المنصة.</span
+                      ></label
                     ><label class="choice-card"
                       ><input type="checkbox" name="addons" value="social" /><strong
                         >نسخة للنشر العام</strong
@@ -338,12 +433,19 @@
               <li><span>الإضافات</span><strong id="summary-addons">لا توجد</strong></li>
             </ul>
             <div class="summary-total">
-              <span>سعر الباقة المبدئي</span><strong id="summary-price">—</strong>
+              <span>السعر المحسوب</span><strong id="summary-price">—</strong>
             </div>
             <div class="info-box">
-              الإضافات والتصميم المخصص يحتاجان عرض سعر قبل الدفع. طلب موعد تذكير لا يعني تفعيل
-              الإرسال؛ التذكيرات الآلية قيد التجهيز.
+              السعر يحسب تلقائيًا للباقات الفردية. باقة الأعمال والأعمال المرئية المعقدة تحتاج
+              اعتماد عرض نهائي. رسوم مزود الرسائل منفصلة.
             </div>
+            <article class="order-live-preview theme-classic" id="order-live-preview">
+              <small id="live-occasion">دعوة مناسبة</small>
+              <h3 id="live-honorees">أسماء أصحاب المناسبة</h3>
+              <p id="live-date">التاريخ والوقت</p>
+              <p id="live-venue">المكان</p>
+              <span>medad Al tahaya</span>
+            </article>
           </aside>
         </div>
       </div>

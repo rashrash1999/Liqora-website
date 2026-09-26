@@ -3,6 +3,7 @@ import { $, busy, showError, safeReturn, normalizeSaudiPhone, digits } from './p
 const params = new URLSearchParams(location.search),
   isAdmin = document.body.dataset.loginPage === 'admin';
 let recaptcha, confirmation;
+let pendingName = '';
 function destination(claims) {
   return safeReturn(
     params.get('return'),
@@ -59,6 +60,11 @@ async function start() {
   await recaptcha.render();
   $('customerPhoneForm').addEventListener('submit', (event) => {
     event.preventDefault();
+    pendingName = $('customerName').value.trim();
+    if (pendingName.length < 3 || pendingName.length > 100) {
+      showError(new Error('اكتب الاسم الكامل من 3 إلى 100 حرف.'), 'customerPhoneError');
+      return;
+    }
     const phone = normalizeSaudiPhone($('customerPhone').value);
     if (!phone) {
       showError(new Error('أدخل رقم جوال سعودي صحيحًا.'), 'customerPhoneError');
@@ -92,6 +98,8 @@ async function start() {
       try {
         $('customerOtpError').hidden = true;
         const credential = await confirmation.confirm(code);
+        await sdk.updateProfile(credential.user, { displayName: pendingName });
+        await credential.user.getIdToken(true);
         await finish(credential.user, sdk, auth);
       } catch (error) {
         showError(error, 'customerOtpError');

@@ -17,9 +17,12 @@
     <header class="app-header">
       <div class="container header-inner">
         <a class="brand" href="index.html"
-          ><img src="images/Medad-logo.png" alt="شعار medad Al tahaya" width="48" height="48" /><span
-            ><strong>medad Al tahaya</strong><small>تأكيد الحضور</small></span
-          ></a
+          ><img
+            src="images/Medad-logo.png"
+            alt="شعار medad Al tahaya"
+            width="48"
+            height="48"
+          /><span><strong>medad Al tahaya</strong><small>تأكيد الحضور</small></span></a
         >
         <div class="header-actions"><a class="text-link" href="index.html">الرئيسية</a></div>
       </div>
@@ -54,11 +57,19 @@
                   ><span>المرافقون المسموحون</span
                   ><select id="companions" name="companions"></select
                 ></label>
+                <div id="companion-names"></div>
               </div>
               <label class="field"
                 ><span>رسالة لصاحب المناسبة</span
                 ><textarea id="guest-message" name="message" maxlength="300"></textarea>
               </label>
+              <label class="consent-row"
+                ><input id="rsvp-consent" type="checkbox" required /><span
+                  >أوافق على استخدام بيانات ردي لإدارة هذه المناسبة وفق
+                  <a href="privacy.html" target="_blank" rel="noopener noreferrer">سياسة الخصوصية</a
+                  >.</span
+                ></label
+              >
               <p class="form-alert" id="rsvpError" role="alert" hidden></p>
               <button class="button button-primary button-block" type="submit">
                 إرسال الرد النهائي

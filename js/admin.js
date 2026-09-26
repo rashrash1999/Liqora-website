@@ -1,5 +1,12 @@
 import { requireUser, authFailure } from './auth.js';
-import { watchOrders, watchGuests, call, uploadFile, privateFileUrl } from './firebase-client.js';
+import {
+  watchOrders,
+  watchGuests,
+  call,
+  uploadFile,
+  privateFileUrl,
+  getFullOrderReport,
+} from './firebase-client.js';
 import { parseCsv, normalizeGuests, normalizeSaudiPhone } from './domain.js';
 import {
   $,
@@ -7,6 +14,8 @@ import {
   STATUS_LABELS,
   setText,
   formatDate,
+  formatMoney,
+  digits,
   busy,
   showError,
   downloadCsv,
@@ -17,6 +26,80 @@ let orders = [],
   stopGuests,
   stopOrders,
   selection = 0;
+const QUOTE_INPUTS = ['quote-additional', 'quote-discount', 'quote-tax', 'quote-valid-days'];
+const paymentLabels = Object.freeze({
+  unpaid: 'غير مدفوع',
+  pending: 'بانتظار إكمال الدفع',
+  processing: 'قيد التحقق',
+  paid: 'مدفوع ومؤكد',
+  failed: 'لم يكتمل',
+  cancelled: 'ملغي',
+  refunded: 'مسترد',
+});
+const automaticAmount = (order) =>
+  Number(order.automaticPricing?.subtotalHalalas || order.baseAmountHalalas || 0);
+function asMillis(value) {
+  if (Number.isFinite(value)) return value;
+  if (value && typeof value.toMillis === 'function') return value.toMillis();
+  if (value && Number.isFinite(value.seconds)) return value.seconds * 1000;
+  return NaN;
+}
+function toHalalas(value, label) {
+  const normalized = digits(value).trim().replace(',', '.');
+  if (!/^\d{1,7}(?:\.\d{1,2})?$/.test(normalized))
+    throw new Error(`${label}: أدخل مبلغًا موجبًا بدقة هللتين كحد أقصى.`);
+  const [riyals, fraction = ''] = normalized.split('.');
+  const result = Number(riyals) * 100 + Number(fraction.padEnd(2, '0'));
+  if (!Number.isSafeInteger(result) || result > 100_000_000)
+    throw new Error(`${label}: المبلغ أكبر من الحد المسموح.`);
+  return result;
+}
+function inputMoney(value) {
+  return (Number(value || 0) / 100).toFixed(2).replace(/\.00$/, '');
+}
+function quoteValues() {
+  return {
+    additionalAmountHalalas: toHalalas($('quote-additional').value, 'التخصيص والإضافات'),
+    discountHalalas: toHalalas($('quote-discount').value, 'الخصم'),
+    taxHalalas: toHalalas($('quote-tax').value, 'الضريبة'),
+  };
+}
+function quotePreview() {
+  if (!current) return;
+  try {
+    const amounts = quoteValues();
+    const subtotal = automaticAmount(current) + amounts.additionalAmountHalalas;
+    if (amounts.discountHalalas > subtotal) throw new Error('الخصم يتجاوز المجموع.');
+    const total = subtotal - amounts.discountHalalas + amounts.taxHalalas;
+    setText('quote-summary', `الإجمالي الذي سيدفعه العميل: ${formatMoney(total / 100)}`);
+  } catch (error) {
+    setText('quote-summary', error.message);
+  }
+}
+function renderPricing(order) {
+  const pricing = order.pricing;
+  const itemTotal = Array.isArray(pricing?.items)
+    ? pricing.items.reduce((sum, item) => sum + Number(item.amountHalalas || 0), 0)
+    : automaticAmount(order);
+  $('quote-additional').value = inputMoney(Math.max(0, itemTotal - automaticAmount(order)));
+  $('quote-discount').value = inputMoney(pricing?.discountHalalas);
+  $('quote-tax').value = inputMoney(pricing?.taxHalalas);
+  setText('quote-base', formatMoney(automaticAmount(order) / 100));
+  const expiresAt = asMillis(pricing?.expiresAt);
+  setText(
+    'pricing-status',
+    pricing?.status === 'approved'
+      ? `السعر الحالي معتمد: ${formatMoney(pricing.totalHalalas / 100)}${Number.isFinite(expiresAt) ? ` — صالح حتى ${formatDate(expiresAt)}` : ''}`
+      : 'لم يعتمد السعر النهائي بعد.',
+  );
+  const locked =
+    ['paid', 'pending', 'processing'].includes(order.paymentStatus) ||
+    ['active', 'cancelled', 'completed'].includes(order.status) ||
+    asMillis(order.eventAt) <= Date.now();
+  for (const id of QUOTE_INPUTS) $(id).disabled = locked;
+  $('approve-pricing').disabled = locked;
+  quotePreview();
+}
 function render() {
   const term = $('order-search').value.trim().toLowerCase(),
     status = $('status-filter').value;
@@ -67,8 +150,9 @@ async function select(id) {
     'detail-date': formatDate(o.eventDate),
     'detail-package': PACKAGES[o.packageId]?.name,
     'detail-guests': o.guestCount || 0,
+    'detail-seats': `${o.acceptedSeats || 0} / ${o.seatCapacity || o.expectedGuests || 0}`,
     'detail-status': STATUS_LABELS[o.status] || o.status,
-    'detail-payment': o.paymentStatus === 'paid' ? 'مدفوع' : 'غير مدفوع',
+    'detail-payment': paymentLabels[o.paymentStatus] || 'تحتاج مراجعة',
     'detail-design':
       o.designStatus === 'approved'
         ? 'معتمد'
@@ -77,10 +161,18 @@ async function select(id) {
           : 'غير مرفوع',
   }))
     setText(k, v);
+  $('detail-organization').hidden = !o.organizationName;
+  setText(
+    'detail-organization',
+    o.organizationName
+      ? `الجهة: ${o.organizationName}${o.contactEmail ? ` — ${o.contactEmail}` : ''}`
+      : '',
+  );
   $('contact-client').href =
     `https://wa.me/${normalizeSaudiPhone(o.phone).replace('+', '')}?text=${encodeURIComponent(`مرحبًا ${o.ownerName}، بخصوص الطلب ${o.id}.`)}`;
   $('checkin-link').href = `checkin.html?order=${encodeURIComponent(o.id)}`;
   $('guest-file').value = '';
+  renderPricing(o);
   setText('upload-help', 'ارفع ملف CSV وفق القالب المرفق.');
   $('reference-links').replaceChildren(
     ...(o.referencePaths || []).map((path, i) => {
@@ -123,6 +215,31 @@ async function select(id) {
 }
 $('order-search').addEventListener('input', render);
 $('status-filter').addEventListener('change', render);
+for (const id of QUOTE_INPUTS) $(id).addEventListener('input', quotePreview);
+$('approve-pricing').addEventListener('click', () =>
+  busy($('approve-pricing'), async () => {
+    try {
+      if (!current) return;
+      const days = Number($('quote-valid-days').value);
+      const now = Date.now();
+      const eventAt = asMillis(current.eventAt);
+      if (!Number.isFinite(eventAt) || eventAt <= now + 5 * 60_000)
+        throw new Error('موعد المناسبة قريب جدًا أو غير صالح لاعتماد عرض جديد.');
+      const expiresAt = Math.min(now + days * 24 * 60 * 60_000, eventAt);
+      const result = await call('approvePricing', {
+        orderId: current.id,
+        ...quoteValues(),
+        expiresAt,
+      });
+      setText(
+        'pricing-status',
+        `تم اعتماد ${formatMoney(result.pricing.totalHalalas / 100)} وإتاحة الدفع للعميل.`,
+      );
+    } catch (error) {
+      showError(error);
+    }
+  }),
+);
 $('import-guests').addEventListener('click', () =>
   busy($('import-guests'), async () => {
     let added = 0,
@@ -194,7 +311,7 @@ $('issue-links').addEventListener('click', () =>
       }
       setText(
         'links-status',
-        `تم إنشاء ${links.length} رابط. نزّل الملف وشاركه يدويًا مع الضيوف المقصودين؛ الإرسال الآلي غير مفعّل.`,
+        `تم إنشاء ${links.length} رابط وتنزيل نسخة احتياطية. يمكنك الآن الإرسال عبر WhatsApp.`,
       );
     } catch (error) {
       showError(
@@ -212,6 +329,75 @@ $('issue-links').addEventListener('click', () =>
             return [item.name, item.phone, url.href];
           }),
         ]);
+    }
+  }),
+);
+$('send-whatsapp').addEventListener('click', () =>
+  busy($('send-whatsapp'), async () => {
+    let sent = 0,
+      failed = 0,
+      skipped = 0;
+    try {
+      if (!current) return;
+      const selected = current;
+      const ready = guests.filter(
+        (guest) => guest.rsvpState === 'pending' && guest.inviteVersion && guest.inviteHash,
+      );
+      if (!ready.length)
+        throw new Error('أنشئ روابط الدعوات أولًا، ثم انتظر ظهورها واضغط الإرسال.');
+      for (let index = 0; index < ready.length; index += 25) {
+        const result = await call('sendInvitations', {
+          orderId: selected.id,
+          guestIds: ready.slice(index, index + 25).map((guest) => guest.id),
+        });
+        sent += result.sent;
+        failed += result.failed;
+        skipped += result.skipped;
+        setText(
+          'links-status',
+          `تم إرسال ${sent}، تعذر ${failed}، وتجاوز ${skipped} رسالة مرسلة مسبقًا.`,
+        );
+      }
+      if (failed)
+        throw new Error(
+          `تعذر إرسال ${failed} رسالة. راجع إعداد WhatsApp والقالب ثم أعد المحاولة؛ الرسائل الناجحة لن تتكرر.`,
+        );
+    } catch (error) {
+      showError(error);
+    }
+  }),
+);
+$('download-order-report').addEventListener('click', () =>
+  busy($('download-order-report'), async () => {
+    try {
+      if (!current) return;
+      const report = await getFullOrderReport(current.id);
+      downloadCsv(`admin-report-${current.id}.csv`, [
+        [
+          'الاسم',
+          'رقم الجوال',
+          'الرد',
+          'أسماء المرافقين',
+          'المقاعد',
+          'الدخول',
+          'عدم الحضور',
+          'الرسالة',
+          'المصدر',
+        ],
+        ...report.guests.map((guest) => [
+          guest.name,
+          guest.phone,
+          guest.response,
+          guest.companionNames.join('، '),
+          guest.seats,
+          guest.checkedIn ? 'نعم' : 'لا',
+          guest.noShow ? 'نعم' : 'لا',
+          guest.message,
+          guest.source,
+        ]),
+      ]);
+    } catch (error) {
+      showError(error);
     }
   }),
 );

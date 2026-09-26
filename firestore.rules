@@ -9,6 +9,7 @@ service cloud.firestore {
    // All mutations are validated in callable functions; even admins cannot write from a browser.
    allow create, update, delete: if false;
    match /guests/{guestId} { allow read: if admin() || owner(orderId); allow write: if false; }
+   match /notifications/{notificationId} { allow read: if admin() || owner(orderId); allow write: if false; }
    match /guestContacts/{guestId} { allow read, write: if false; }
   }
   match /{document=**} { allow read, write: if false; }

@@ -5,3 +5,10 @@
 
 [hidden] { display: none !important; }
 .preview-notice { padding: 1rem; text-align: center; background: #fff4da; color: #332600; }
+.invitation-page.theme-modern .invitation-hero{background:radial-gradient(circle at 12% 15%,rgba(255,255,255,.12),transparent 28%),linear-gradient(160deg,#37698c,#10243f)}
+.invitation-page.theme-floral .invitation-hero{background:radial-gradient(circle at 12% 15%,rgba(255,236,239,.18),transparent 28%),linear-gradient(160deg,#b9808b,#704452)}
+.invitation-page.theme-royal .invitation-hero{background:radial-gradient(circle at 12% 15%,rgba(211,163,95,.24),transparent 28%),linear-gradient(160deg,#39364b,#15151d)}
+.invitation-page.theme-custom .invitation-hero{background:radial-gradient(circle at 12% 15%,rgba(255,255,255,.13),transparent 28%),linear-gradient(160deg,#866982,#403246)}
+.invitation-page.card-male .invitation-hero{box-shadow:inset 0 0 0 8px rgba(86,131,158,.2)}
+.invitation-page.card-female .invitation-hero{box-shadow:inset 0 0 0 8px rgba(187,128,147,.2)}
+.custom-design-art{display:block;width:min(100%,560px);max-height:68vh;margin:0 auto 30px;border-radius:22px;object-fit:contain;box-shadow:0 24px 70px rgba(0,0,0,.25)}

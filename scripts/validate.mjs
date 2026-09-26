@@ -9,7 +9,10 @@ async function walk(directory) {
   const entries = await readdir(directory, { withFileTypes: true });
   const nested = await Promise.all(
     entries
-      .filter((entry) => !entry.name.startsWith('.') && entry.name !== 'node_modules')
+      .filter(
+        (entry) =>
+          !entry.name.startsWith('.') && entry.name !== 'node_modules' && entry.name !== 'dist',
+      )
       .map((entry) => {
         const path = join(directory, entry.name);
         return entry.isDirectory() ? walk(path) : [path];
@@ -59,6 +62,7 @@ for (const required of [
   'dashboard.html',
   'admin.html',
   'invitation.html',
+  'join.html',
   'rsvp.html',
   'checkin.html',
 ]) {

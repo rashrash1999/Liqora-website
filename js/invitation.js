@@ -5,12 +5,19 @@ let timer;
   const token = tokenFromUrl();
   const { event } = await call('getInvitation', { token });
   $('invitationPage').hidden = false;
+  $('invitationPage').className =
+    `invitation-page theme-${event.theme || 'classic'} card-${event.cardType || 'general'}`;
   document.querySelectorAll('[data-honorees]').forEach((n) => (n.textContent = event.honorees));
   setText('invitation-date', formatDate(event.eventDate));
   setText('invitation-time', `${event.eventTime} بتوقيت الرياض`);
   setText('invitation-venue', `${event.venueName}، ${event.city}`);
   setText('invitation-message', event.invitationMessage || 'يسرنا حضوركم ومشاركتكم هذه المناسبة.');
   setText('invitation-child-policy', event.childPolicy || '');
+  const design = safeHttpsUrl(event.designUrl);
+  if (design) {
+    $('invitation-design').src = design;
+    $('invitation-design').hidden = false;
+  }
   const map = safeHttpsUrl(event.mapUrl);
   if (map) $('invitation-map').href = map;
   else $('invitation-map').hidden = true;

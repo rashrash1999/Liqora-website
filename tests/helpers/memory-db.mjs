@@ -34,30 +34,36 @@ export function memoryDb() {
       },
     };
   }
-  function collection(path, filters = [], max = Infinity) {
+  function collection(path, filters = [], max = Infinity, ordered = false, cursor = null) {
     return {
       doc: (id) => doc(`${path}/${id || randomUUID()}`),
       where: (field, op, value) => {
         if (op !== '==') throw new Error('Unsupported test query');
-        return collection(path, [...filters, [field, value]], max);
+        return collection(path, [...filters, [field, value]], max, ordered, cursor);
       },
-      limit: (n) => collection(path, filters, n),
-      get: async () => ({
-        docs: [...data.keys()]
+      orderBy: () => collection(path, filters, max, true, cursor),
+      startAfter: (value) => collection(path, filters, max, true, value),
+      limit: (n) => collection(path, filters, n, ordered, cursor),
+      get: async () => {
+        const keys = [...data.keys()]
           .filter(
             (k) =>
               k.startsWith(path + '/') &&
               k.split('/').length === path.split('/').length + 1 &&
-              filters.every(([f, v]) => data.get(k)[f] === v),
+              filters.every(([f, v]) => data.get(k)[f] === v) &&
+              (!cursor || k.split('/').at(-1) > cursor),
           )
-          .slice(0, max)
-          .map((k) => snapshot(doc(k))),
-      }),
+          .sort((a, b) => (ordered ? a.localeCompare(b) : 0))
+          .slice(0, max);
+        const docs = keys.map((k) => snapshot(doc(k)));
+        return { docs, size: docs.length };
+      },
     };
   }
   return {
     doc,
     collection,
+    getAll: async (...refs) => refs.map((ref) => snapshot(ref)),
     runTransaction: async (callback) => {
       const execute = async () => {
         const staged = new Map([...data].map(([k, v]) => [k, structuredClone(v)]));

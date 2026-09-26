@@ -97,6 +97,16 @@ test('Storage rules require a matching upload reservation and immutable objects'
   const a = env.authenticatedContext('alice').storage(),
     b = env.authenticatedContext('bob').storage();
   const bytes = new Uint8Array([1, 2, 3, 4]);
+  await assertFails(
+    uploadBytes(ref(a, 'orders/missing/references/upload-test'), bytes, {
+      contentType: 'image/png',
+    }),
+  );
+  await assertFails(
+    uploadBytes(ref(a, 'orders/order-storage/references/missing'), bytes, {
+      contentType: 'image/png',
+    }),
+  );
   await assertFails(uploadBytes(ref(b, path), bytes, { contentType: 'image/png' }));
   await assertFails(uploadBytes(ref(a, path), bytes, { contentType: 'text/html' }));
   await assertFails(uploadBytes(ref(a, path), new Uint8Array(5), { contentType: 'image/png' }));
@@ -104,6 +114,84 @@ test('Storage rules require a matching upload reservation and immutable objects'
   await assertFails(uploadBytes(ref(a, path), bytes, { contentType: 'image/png' }));
   await assertFails(getBytes(ref(b, path)));
   await assertSucceeds(getBytes(ref(a, path)));
+});
+test('Storage rules reject uploads after an order is cancelled', async () => {
+  await env.withSecurityRulesDisabled(async (context) => {
+    await setDoc(doc(context.firestore(), 'orders/order-cancelled'), {
+      ownerUid: 'alice',
+      status: 'cancelled',
+      paymentStatus: 'unpaid',
+    });
+    await setDoc(doc(context.firestore(), 'uploads/upload-cancelled'), {
+      ownerUid: 'alice',
+      orderId: 'order-cancelled',
+      kind: 'reference',
+      status: 'pending',
+      expiresAt: Date.now() + 600000,
+      contentType: 'image/png',
+      size: 4,
+    });
+  });
+  const storage = env.authenticatedContext('alice').storage();
+  await assertFails(
+    uploadBytes(
+      ref(storage, 'orders/order-cancelled/references/upload-cancelled'),
+      new Uint8Array([1, 2, 3, 4]),
+      { contentType: 'image/png' },
+    ),
+  );
+});
+test('Storage design uploads require an administrator and a paid order', async () => {
+  await env.withSecurityRulesDisabled(async (context) => {
+    const db = context.firestore();
+    await setDoc(doc(db, 'orders/order-design-paid'), {
+      ownerUid: 'alice',
+      status: 'preparing',
+      paymentStatus: 'paid',
+    });
+    await setDoc(doc(db, 'uploads/design-paid'), {
+      ownerUid: 'admin',
+      orderId: 'order-design-paid',
+      kind: 'design',
+      status: 'pending',
+      expiresAt: Date.now() + 600000,
+      contentType: 'image/png',
+      size: 4,
+    });
+    await setDoc(doc(db, 'orders/order-design-unpaid'), {
+      ownerUid: 'alice',
+      status: 'pending_payment',
+      paymentStatus: 'unpaid',
+    });
+    await setDoc(doc(db, 'uploads/design-unpaid'), {
+      ownerUid: 'admin',
+      orderId: 'order-design-unpaid',
+      kind: 'design',
+      status: 'pending',
+      expiresAt: Date.now() + 600000,
+      contentType: 'image/png',
+      size: 4,
+    });
+  });
+  const alice = env.authenticatedContext('alice').storage(),
+    admin = env.authenticatedContext('admin', { admin: true }).storage(),
+    bytes = new Uint8Array([1, 2, 3, 4]);
+  await assertFails(
+    uploadBytes(ref(alice, 'orders/order-design-paid/design/design-paid'), bytes, {
+      contentType: 'image/png',
+    }),
+  );
+  await assertFails(
+    uploadBytes(ref(admin, 'orders/order-design-unpaid/design/design-unpaid'), bytes, {
+      contentType: 'image/png',
+    }),
+  );
+  await assertSucceeds(
+    uploadBytes(ref(admin, 'orders/order-design-paid/design/design-paid'), bytes, {
+      contentType: 'image/png',
+    }),
+  );
+  await assertSucceeds(getBytes(ref(alice, 'orders/order-design-paid/design/design-paid')));
 });
 test('real Firestore transactions enforce the complete business flow', async () => {
   await runScenarios(getFirestore(adminApp));

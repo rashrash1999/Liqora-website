@@ -1,19 +1,52 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import { webcrypto } from 'node:crypto';
 import { readFile } from 'node:fs/promises';
 import { build } from 'esbuild';
 import { JSDOM } from 'jsdom';
 const mockClient = `
-const sample={id:'order-test-123456789',ownerUid:'customer-a',ownerName:'عميل اختبار',phone:'+966500000001',packageId:'basic',honorees:'مناسبة اختبار',occasion:'حفل زفاف',eventDate:'2030-10-12',eventTime:'20:00',eventAt:1918069200000,venueName:'قاعة',city:'الرياض',baseAmountHalalas:19900,expectedGuests:2,guestCount:0,acceptedCount:0,declinedCount:0,checkedInCount:0,paymentStatus:'unpaid',status:'pending_payment',designStatus:'none',reminderHours:48,reminderStatus:'not_requested'};
+const sample={id:'order-test-123456789',ownerUid:'customer-a',ownerName:'عميل اختبار',phone:'+966500000001',packageId:'basic',honorees:'مناسبة اختبار',occasion:'حفل زفاف',eventDate:'2030-10-12',eventTime:'20:00',eventAt:1918069200000,venueName:'قاعة',city:'الرياض',mapUrl:'https://maps.google.com',baseAmountHalalas:19900,invitationLimit:2,seatCapacity:6,registrationMode:'private',maxCompanions:2,companionNamesRequired:true,allowWaitlist:false,guestCount:0,acceptedCount:0,acceptedSeats:0,declinedCount:0,checkedInCount:0,checkedInSeats:0,paymentStatus:'unpaid',status:'pending_payment',designStatus:'approved',designVersion:'template:classic:v1',approvedDesignVersion:'template:classic:v1',reminderHours:[48],reminderStatus:'configured',automaticPricing:{subtotalHalalas:19900,items:[{label:'البطاقة الذكية',amountHalalas:19900}]},pricing:{status:'approved',currency:'SAR',items:[{label:'البطاقة الذكية',amountHalalas:19900}],discountHalalas:0,taxHalalas:0,totalHalalas:19900,expiresAt:1918069200000}};
 const user={uid:'customer-a',phoneNumber:'+966500000001'};
-export async function getClient(){return {auth:{currentUser:user},sdk:{getIdTokenResult:async()=>({claims:{admin:true,gate:true}}),onAuthStateChanged:()=>()=>{},signOut:async()=>{},RecaptchaVerifier:class{async render(){}clear(){}},signInWithEmailAndPassword:async()=>({user}),signInWithPhoneNumber:async()=>({confirm:async()=>({user})})}};}
-export async function call(name,data){window.__calls.push({name,data});if(name==='createOrder')return {id:sample.id};if(name==='getGateAssignments')return {orders:[sample]};if(name==='getInvitation')return {event:sample,guest:{displayName:'ضيف اختبار',companionsLimit:2},response:null,ticket:null};return {};}
+export async function getClient(){return {auth:{currentUser:user},sdk:{getIdTokenResult:async()=>({claims:{admin:true,gate:true}}),onAuthStateChanged:()=>()=>{},signOut:async()=>{},updateProfile:async()=>{},RecaptchaVerifier:class{async render(){}clear(){}},signInWithEmailAndPassword:async()=>({user}),signInWithPhoneNumber:async()=>({confirm:async()=>({user})})}};}
+export async function call(name,data){window.__calls.push({name,data});if(name==='createOrder')return {id:sample.id};if(name==='getGateAssignments')return {orders:[sample]};if(name==='getInvitation')return {event:sample,guest:{displayName:'ضيف اختبار',companionsLimit:2,companionNamesRequired:true},response:null,ticket:null};if(name==='getPublicEvent')return {event:sample,registration:{mode:'open',open:true,remainingSeats:6,maxCompanions:2,companionNamesRequired:true,allowWaitlist:false}};return {};}
 export async function getOrder(id,options){window.__fresh=options?.fresh;if(window.__orderFailure)throw Object.assign(new Error('تعذر التحقق'),{code:window.__orderFailure});return {...sample,...window.__orderOverrides};}
 export async function watchOrders(user,admin,fn){fn([sample]);return ()=>{};}
 export async function watchGuests(id,fn){fn([]);return ()=>{};}
 export async function uploadFile(){}export async function privateFileUrl(){return '';}
+export async function getFullOrderReport(){return {order:sample,guests:[]};}
 `;
-async function dom(file, entry, { mock = true, url } = {}) {
+const unconfiguredFirebase = `
+export const firebaseSettings = Object.freeze({
+  enabled: false,
+  firebase: {
+    apiKey: '',
+    authDomain: '',
+    projectId: 'demo-unconfigured',
+    storageBucket: '',
+    messagingSenderId: '',
+    appId: '',
+  },
+  functionsRegion: 'me-central2',
+  appCheckSiteKey: '',
+  useEmulators: false,
+});
+`;
+function virtualModule(name, filter, contents) {
+  return {
+    name,
+    setup(builder) {
+      builder.onResolve({ filter }, () => ({ path: name, namespace: name }));
+      builder.onLoad({ filter: /.*/, namespace: name }, () => ({ contents, loader: 'js' }));
+    },
+  };
+}
+const mockClientPlugin = virtualModule('mock-client', /firebase-client\.js$/, mockClient);
+const unconfiguredFirebasePlugin = virtualModule(
+  'unconfigured-firebase',
+  /firebase-config\.js$/,
+  unconfiguredFirebase,
+);
+async function dom(file, entry, { mock = true, unconfigured = false, url } = {}) {
   const html = await readFile(file, 'utf8');
   const d = new JSDOM(html, {
     url: url || `https://local.test/${file}`,
@@ -21,6 +54,7 @@ async function dom(file, entry, { mock = true, url } = {}) {
     pretendToBeVisual: true,
   });
   d.window.__calls = [];
+  Object.defineProperty(d.window, 'crypto', { value: webcrypto });
   d.window.scrollTo = () => {};
   d.window.URL.createObjectURL = () => 'blob:local';
   d.window.URL.revokeObjectURL = () => {};
@@ -30,23 +64,7 @@ async function dom(file, entry, { mock = true, url } = {}) {
     write: false,
     format: 'iife',
     platform: 'browser',
-    plugins: mock
-      ? [
-          {
-            name: 'mock-client',
-            setup(b) {
-              b.onResolve({ filter: /firebase-client\.js$/ }, () => ({
-                path: 'firebase-client',
-                namespace: 'test',
-              }));
-              b.onLoad({ filter: /.*/, namespace: 'test' }, () => ({
-                contents: mockClient,
-                loader: 'js',
-              }));
-            },
-          },
-        ]
-      : [],
+    plugins: mock ? [mockClientPlugin] : unconfigured ? [unconfiguredFirebasePlugin] : [],
   });
   d.window.eval(bundle.outputFiles[0].text);
   await new Promise((resolve) => setTimeout(resolve, 35));
@@ -67,6 +85,10 @@ test('missing session data and unsafe return URLs fail safely', async () => {
   d.window.eval(bundle.outputFiles[0].text);
   const u = d.window.Utilities;
   assert.deepEqual(u.storageGet('missing', { fallback: true }), { fallback: true });
+  assert.equal(
+    u.errorMessage({ code: 'auth/billing-not-enabled' }),
+    'إرسال رمز التحقق غير متاح مؤقتًا حتى يكتمل تفعيل خدمة الرسائل.',
+  );
   for (const path of [
     '//evil.test',
     'https://evil.test',
@@ -85,8 +107,10 @@ test('form cannot skip later steps and renders HTML payloads as text', async () 
     form = doc.getElementById('order-form');
   assert.ok(doc.body.classList.contains('auth-ready'));
   form.elements.packageId.value = 'basic';
-  form.elements.expectedGuests.value = '2';
-  form.elements.reminderHours.value = '48';
+  form.elements.invitationLimit.value = '2';
+  form.elements.seatCapacity.value = '2';
+  form.elements.registrationMode.value = 'open';
+  doc.querySelector('[name=reminderHours][value="48"]').checked = true;
   form.dispatchEvent(new w.Event('change', { bubbles: true }));
   form.dispatchEvent(new w.Event('submit', { bubbles: true, cancelable: true }));
   assert.equal(doc.querySelector('[data-step="2"]').hidden, false);
@@ -122,16 +146,13 @@ test('form cannot skip later steps and renders HTML payloads as text', async () 
   d.window.close();
 });
 test('all connected page controllers initialize without missing DOM elements', async () => {
-  for (const name of ['checkout', 'dashboard', 'admin', 'invitation', 'checkin']) {
+  for (const name of ['checkout', 'dashboard', 'admin', 'invitation', 'rsvp', 'join', 'checkin']) {
     const d = await dom(`${name}.html`, `js/${name}.js`, {
       url: `https://local.test/${name}.html?order=order-test-123456789#token=${'a'.repeat(43)}`,
     });
     assert.equal(d.window.document.getElementById('page-error').hidden, true, name);
     if (name === 'checkout')
-      assert.equal(
-        d.window.document.getElementById('checkout-status').textContent,
-        'بانتظار استكمال الدفع',
-      );
+      assert.equal(d.window.document.getElementById('checkout-status').textContent, 'جاهز للدفع');
     d.window.close();
   }
 });
@@ -139,6 +160,7 @@ test('unconfigured Firebase shows a useful error and never grants access', async
   for (const name of ['admin', 'dashboard', 'login']) {
     const d = await dom(`${name}.html`, `js/${name === 'login' ? 'login' : name}.js`, {
       mock: false,
+      unconfigured: true,
     });
     const error = d.window.document.getElementById(
       name === 'login' ? 'customerPhoneError' : 'page-error',
@@ -157,14 +179,15 @@ test('checkout ignores URL success flags, reads fresh state, and warns when refr
     w = d.window,
     doc = w.document;
   assert.equal(w.__fresh, true);
-  assert.equal(doc.getElementById('checkout-total').textContent, 'لم يُعتمد بعد');
-  assert.equal(doc.getElementById('checkout-status').textContent, 'بانتظار استكمال الدفع');
-  assert.equal(doc.getElementById('payment-action').disabled, true);
+  assert.ok(doc.getElementById('checkout-total').textContent.includes('١٩٩'));
+  assert.equal(doc.getElementById('checkout-status').textContent, 'جاهز للدفع');
+  assert.equal(doc.getElementById('payment-action').disabled, false);
   w.__orderOverrides = { paymentStatus: 'processing' };
   doc.getElementById('refresh-payment').click();
   await new Promise((r) => setTimeout(r, 10));
   assert.equal(doc.getElementById('checkout-status').textContent, 'الدفع قيد المعالجة');
-  assert.equal(doc.getElementById('payment-action').hidden, true);
+  assert.equal(doc.getElementById('payment-action').hidden, false);
+  assert.equal(doc.getElementById('payment-action').disabled, true);
   w.__orderFailure = 'unavailable';
   doc.getElementById('refresh-payment').click();
   await new Promise((r) => setTimeout(r, 10));
@@ -187,7 +210,7 @@ test('package quantity boundaries and filters lead to suitable choices', async (
     w = d.window,
     doc = w.document,
     input = doc.getElementById('package-guests');
-  input.value = '101';
+  input.value = '251';
   input.dispatchEvent(new w.Event('input'));
   assert.equal(
     doc.querySelector('[data-package-link=basic]').getAttribute('aria-disabled'),
@@ -195,13 +218,13 @@ test('package quantity boundaries and filters lead to suitable choices', async (
   );
   assert.equal(
     doc.querySelector('[data-package-link=advanced]').getAttribute('href'),
-    'order.html?package=advanced&guests=101',
+    'order.html?package=advanced&guests=251',
   );
   assert.equal(doc.querySelector('[data-recommended=advanced]').hidden, false);
-  input.value = '501';
+  input.value = '2001';
   input.dispatchEvent(new w.Event('input'));
   assert.equal(doc.querySelector('[data-package-link=advanced]').hasAttribute('href'), false);
-  assert.equal(doc.querySelector('[data-recommended=premium]').hidden, false);
+  assert.equal(doc.querySelector('[data-recommended=business]').hidden, false);
   input.value = '0';
   input.dispatchEvent(new w.Event('input'));
   assert.equal(doc.getElementById('package-error').hidden, false);
