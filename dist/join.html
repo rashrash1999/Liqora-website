@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="description" content="رابط تسجيل ضيوف medad Al tahaya" />
+    <meta name="referrer" content="no-referrer" />
+    <meta name="theme-color" content="#183c36" />
+    <title>تسجيل الحضور | medad Al tahaya</title>
+    <link rel="icon" href="images/Medad-logo.png" />
+    <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="css/auth.css" />
+    <link rel="stylesheet" href="css/invitation.css" />
+    <link rel="stylesheet" href="css/guest-registration.css" />
+  </head>
+  <body class="guest-page">
+    <a class="skip-link" href="#main">انتقل إلى التسجيل</a>
+    <header class="guest-header">
+      <a class="brand" href="index.html"
+        ><img src="images/Medad-logo.png" alt="شعار medad Al tahaya" width="44" height="44" /><span
+          ><strong>medad Al tahaya</strong><small>دعوة إلكترونية آمنة</small></span
+        ></a
+      >
+    </header>
+    <main id="main" class="guest-layout">
+      <p class="form-alert" id="page-error" role="alert" hidden></p>
+      <section class="guest-invitation theme-classic" id="public-card" hidden>
+        <img
+          class="custom-design-art"
+          id="public-design"
+          alt="التصميم الخاص المعتمد للمناسبة"
+          hidden
+        />
+        <span class="guest-kicker" id="public-occasion">دعوة مناسبة</span>
+        <h1 id="public-honorees"></h1>
+        <p id="public-message"></p>
+        <dl class="guest-event-details">
+          <div>
+            <dt>التاريخ</dt>
+            <dd id="public-date"></dd>
+          </div>
+          <div>
+            <dt>الوقت</dt>
+            <dd id="public-time"></dd>
+          </div>
+          <div>
+            <dt>المكان</dt>
+            <dd id="public-venue"></dd>
+          </div>
+        </dl>
+        <a
+          id="public-map"
+          class="invitation-button outline"
+          target="_blank"
+          rel="noopener noreferrer"
+          >فتح الخريطة</a
+        >
+        <p class="guest-policy" id="public-policy"></p>
+        <small>بدعوة من medad Al tahaya</small>
+      </section>
+
+      <section class="guest-form-card" id="registration-card" hidden>
+        <div class="guest-form-heading">
+          <span class="pill pill-success">تأكيد آمن برقم الجوال</span>
+          <h2>أخبرنا بردّك</h2>
+          <p id="availability-note"></p>
+        </div>
+        <form id="guest-details-form" novalidate>
+          <label class="field"
+            ><span>الاسم الكامل</span
+            ><input id="guest-name" maxlength="100" autocomplete="name" required
+          /></label>
+          <label class="field"
+            ><span>رقم الجوال السعودي</span
+            ><input
+              id="guest-phone"
+              type="tel"
+              inputmode="tel"
+              dir="ltr"
+              autocomplete="tel"
+              placeholder="05xxxxxxxx"
+              required
+          /></label>
+          <fieldset class="field guest-attendance">
+            <legend>هل ستشرفنا بالحضور؟</legend>
+            <label
+              ><input type="radio" name="attendance" value="yes" required /> نعم، بكل سرور</label
+            >
+            <label><input type="radio" name="attendance" value="no" /> أعتذر عن الحضور</label>
+          </fieldset>
+          <div id="guest-companion-section" hidden>
+            <label class="field"
+              ><span>عدد المرافقين</span
+              ><select id="guest-companions"></select
+            ></label>
+            <div id="guest-companion-names"></div>
+          </div>
+          <label class="field"
+            ><span>تهنئة أو اعتذار أو ملاحظة اختيارية</span
+            ><textarea id="guest-message" maxlength="300"></textarea>
+          </label>
+          <label class="consent-row"
+            ><input id="guest-consent" type="checkbox" required /><span
+              >أوافق على استخدام بياناتي لإدارة هذه المناسبة وفق
+              <a href="privacy.html" target="_blank" rel="noopener noreferrer">سياسة الخصوصية</a
+              >.</span
+            ></label
+          >
+          <div id="guest-recaptcha"></div>
+          <p class="form-alert" id="guest-details-error" role="alert" hidden></p>
+          <button class="button button-primary button-block" type="submit">إرسال رمز التحقق</button>
+        </form>
+        <form id="guest-otp-form" hidden novalidate>
+          <p>أرسلنا رمزاً إلى <strong id="guest-verification-phone" dir="ltr"></strong>.</p>
+          <label class="field"
+            ><span>رمز التحقق</span
+            ><input
+              id="guest-otp"
+              class="otp-input"
+              inputmode="numeric"
+              maxlength="6"
+              autocomplete="one-time-code"
+              required
+          /></label>
+          <p class="form-alert" id="guest-otp-error" role="alert" hidden></p>
+          <button class="button button-primary button-block" type="submit">تأكيد وحفظ الرد</button>
+          <button class="text-button" id="guest-change-phone" type="button">تغيير الرقم</button>
+        </form>
+      </section>
+
+      <section class="guest-form-card guest-result" id="guest-result" hidden>
+        <span class="result-mark" aria-hidden="true">✓</span>
+        <h2 id="guest-result-title"></h2>
+        <p id="guest-result-message"></p>
+        <div id="guest-ticket" hidden>
+          <img id="guest-ticket-qr" width="256" height="256" alt="رمز بطاقة الدخول" />
+          <p>احتفظ بهذه البطاقة وأبرزها عند البوابة.</p>
+        </div>
+        <a
+          class="button button-secondary button-block"
+          id="guest-personal-link"
+          href="invitation.html"
+          >فتح دعوتي الشخصية</a
+        >
+      </section>
+    </main>
+    <noscript><p>يلزم تفعيل JavaScript للتسجيل.</p></noscript>
+    <script type="module" src="js/join.js"></script>
+  </body>
+</html>

@@ -1,0 +1,16 @@
+/* Payment-only additions. Shared layout remains in studio.css. */
+.checkout-receipt #payment-action:not([disabled]) {
+  box-shadow: 0 10px 25px rgb(24 60 54 / 18%);
+}
+.checkout-receipt #payment-action[disabled] {
+  cursor: not-allowed;
+  opacity: 0.62;
+}
+.checkout-receipt .receipt-security {
+  border-inline-start: 3px solid var(--success);
+  padding-inline-start: 12px;
+}
+[data-state='quote'] .payment-state {
+  background: #f7f3e9;
+  border-color: #e6dac0;
+}

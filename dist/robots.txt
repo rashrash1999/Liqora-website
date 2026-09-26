@@ -1,0 +1,12 @@
+User-agent: *
+Allow: /
+Disallow: /admin.html
+Disallow: /admin-login.html
+Disallow: /checkin.html
+Disallow: /checkout.html
+Disallow: /dashboard.html
+Disallow: /invitation.html
+Disallow: /login.html
+Disallow: /rsvp.html
+
+Sitemap: https://medadtahaya.com/sitemap.xml

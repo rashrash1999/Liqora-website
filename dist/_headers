@@ -1,0 +1,46 @@
+/*
+  Content-Security-Policy: default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'none'; form-action 'self'; script-src 'self' https://www.google.com https://www.gstatic.com https://www.recaptcha.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob: https:; connect-src 'self' https://*.googleapis.com https://*.firebaseio.com wss://*.firebaseio.com https://*.firebaseapp.com https://*.cloudfunctions.net https://www.google.com https://www.gstatic.com https://www.recaptcha.net; frame-src https://*.firebaseapp.com https://www.google.com https://recaptcha.google.com https://www.recaptcha.net; media-src 'self' blob:; worker-src 'self' blob:; upgrade-insecure-requests
+  Permissions-Policy: camera=(self), geolocation=(), microphone=(), payment=()
+  Referrer-Policy: no-referrer
+  Strict-Transport-Security: max-age=31536000
+  X-Content-Type-Options: nosniff
+  X-Frame-Options: DENY
+
+/checkout.html
+  Cache-Control: no-store
+
+/order.html
+  Cache-Control: no-store
+
+/dashboard.html
+  Cache-Control: no-store
+
+/admin.html
+  Cache-Control: no-store
+
+/checkin.html
+  Cache-Control: no-store
+
+/invitation.html
+  Cache-Control: no-store
+
+/join.html
+  Cache-Control: no-store
+
+/rsvp.html
+  Cache-Control: no-store
+
+/login.html
+  Cache-Control: no-store
+
+/admin-login.html
+  Cache-Control: no-store
+
+/js/firebase-config.js
+  Cache-Control: no-cache
+
+/js/vendor/*
+  Cache-Control: public, max-age=604800
+
+/images/*
+  Cache-Control: public, max-age=604800
