@@ -104,6 +104,7 @@ export function safeReturn(value, fallback = 'dashboard.html') {
     const base = new URL('.', location.href),
       url = new URL(value || fallback, base);
     const pages = new Set([
+      'index.html',
       'order.html',
       'checkout.html',
       'dashboard.html',

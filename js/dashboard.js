@@ -19,6 +19,7 @@ import {
   showError,
   downloadCsv,
 } from './platform.js';
+import { splitOrders } from './dashboard-model.js';
 let orders = [],
   current = null,
   guests = [],
@@ -27,6 +28,50 @@ let orders = [],
   designObjectUrl,
   selection = 0,
   loadedDesignVersion = null;
+
+function activatePanel(name) {
+  document.querySelectorAll('[data-dashboard-tab]').forEach((button) => {
+    const active = button.dataset.dashboardTab === name;
+    button.setAttribute('aria-selected', String(active));
+    button.tabIndex = active ? 0 : -1;
+  });
+  document.querySelectorAll('[data-dashboard-panel]').forEach((panel) => {
+    panel.hidden = panel.dataset.dashboardPanel !== name;
+  });
+}
+
+document.querySelectorAll('[data-dashboard-tab]').forEach((button) => {
+  button.addEventListener('click', () => activatePanel(button.dataset.dashboardTab));
+});
+
+function renderPastOrders(items) {
+  $('empty-past-orders').hidden = items.length > 0;
+  const cards = items.map((order) => {
+    const article = document.createElement('article');
+    article.className = 'app-card past-order-card';
+    const title = document.createElement('h3');
+    title.textContent = order.honorees || 'مناسبة';
+    const details = document.createElement('p');
+    details.textContent = `${formatDate(order.eventDate)} · ${order.venueName || order.city || 'الموقع غير محدد'}`;
+    const meta = document.createElement('div');
+    meta.className = 'past-order-meta';
+    for (const value of [
+      STATUS_LABELS[order.status] || 'مكتمل',
+      PACKAGES[order.packageId]?.name || 'باقة مخصصة',
+      `${order.guestCount || 0} مدعو`,
+    ]) {
+      const badge = document.createElement('span');
+      badge.className = 'pill';
+      badge.textContent = value;
+      meta.append(badge);
+    }
+    const reference = document.createElement('small');
+    reference.textContent = `رقم الطلب: ${order.id}`;
+    article.append(title, details, meta, reference);
+    return article;
+  });
+  $('past-orders-list').replaceChildren(...cards);
+}
 function renderGuests(items) {
   guests = items;
   const rows = items.map((g) => {
@@ -216,13 +261,18 @@ async function select(id) {
 }
 async function receive(items) {
   orders = items;
-  $('empty-orders').hidden = items.length > 0;
-  if (!items.length) {
+  const grouped = splitOrders(items);
+  renderPastOrders(grouped.past);
+  $('empty-orders').hidden = grouped.current.length > 0;
+  $('customer-orders-field').hidden = grouped.current.length === 0;
+  if (!grouped.current.length) {
     current = null;
+    stopGuests?.();
+    stopGuests = null;
     $('order-content').hidden = true;
     return;
   }
-  const options = items.map((o) => {
+  const options = grouped.current.map((o) => {
     const n = document.createElement('option');
     n.value = o.id;
     n.textContent = `${o.honorees} — ${o.id}`;
@@ -230,11 +280,11 @@ async function receive(items) {
   });
   $('customer-orders').replaceChildren(...options);
   const requested = new URLSearchParams(location.search).get('order');
-  const id = items.some((o) => o.id === current?.id)
+  const id = grouped.current.some((o) => o.id === current?.id)
     ? current.id
-    : items.some((o) => o.id === requested)
+    : grouped.current.some((o) => o.id === requested)
       ? requested
-      : items[0].id;
+      : grouped.current[0].id;
   await select(id);
 }
 $('customer-orders').addEventListener('change', (event) =>
@@ -347,6 +397,26 @@ $('export-guests').addEventListener('click', () =>
 (async () => {
   const session = await requireUser();
   if (!session) return;
+  $('profile-name').value = session.user.displayName || '';
+  $('profile-phone').value = session.user.phoneNumber || '';
+  $('profile-form').addEventListener('submit', (event) => {
+    event.preventDefault();
+    if (!event.currentTarget.reportValidity()) return;
+    const name = $('profile-name').value.trim();
+    if (name.length < 3 || name.length > 100) {
+      setText('profile-status', 'اكتب الاسم الكامل من 3 إلى 100 حرف.');
+      return;
+    }
+    busy(event.currentTarget.querySelector('[type=submit]'), async () => {
+      try {
+        await session.sdk.updateProfile(session.user, { displayName: name });
+        await session.user.getIdToken(true);
+        setText('profile-status', 'تم حفظ معلوماتك بنجاح.');
+      } catch (error) {
+        showError(error, 'profile-status');
+      }
+    });
+  });
   stopOrders = await watchOrders(
     session.user,
     false,

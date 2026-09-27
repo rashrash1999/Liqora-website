@@ -7,7 +7,7 @@ let pendingName = '';
 function destination(claims) {
   return safeReturn(
     params.get('return'),
-    isAdmin ? (claims.admin ? 'admin.html' : 'checkin.html') : 'dashboard.html',
+    isAdmin ? (claims.admin ? 'admin.html' : 'checkin.html') : 'index.html',
   );
 }
 async function finish(user, sdk, auth) {

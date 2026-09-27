@@ -98,6 +98,7 @@ test('missing session data and unsafe return URLs fail safely', async () => {
   ])
     assert.equal(u.safeReturn(path), 'dashboard.html');
   assert.equal(u.safeReturn('order.html?package=basic'), 'order.html?package=basic');
+  assert.equal(u.safeReturn('index.html', 'dashboard.html'), 'index.html');
   d.window.close();
 });
 test('form cannot skip later steps and renders HTML payloads as text', async () => {
@@ -153,8 +154,26 @@ test('all connected page controllers initialize without missing DOM elements', a
     assert.equal(d.window.document.getElementById('page-error').hidden, true, name);
     if (name === 'checkout')
       assert.equal(d.window.document.getElementById('checkout-status').textContent, 'جاهز للدفع');
+    if (name === 'dashboard') {
+      const tabs = d.window.document.querySelectorAll('[data-dashboard-tab]');
+      assert.equal(tabs.length, 3);
+      tabs[2].click();
+      assert.equal(d.window.document.getElementById('profile-panel').hidden, false);
+      assert.equal(d.window.document.getElementById('current-orders-panel').hidden, true);
+    }
     d.window.close();
   }
+});
+
+test('homepage provides a direct route to the customer dashboard', async () => {
+  const html = await readFile('index.html', 'utf8');
+  const d = new JSDOM(html);
+  const link = [...d.window.document.querySelectorAll('a')].find(
+    (item) => item.getAttribute('href') === 'dashboard.html',
+  );
+  assert.ok(link);
+  assert.ok(link.textContent.includes('لوحة التحكم'));
+  d.window.close();
 });
 test('unconfigured Firebase shows a useful error and never grants access', async () => {
   for (const name of ['admin', 'dashboard', 'login']) {
