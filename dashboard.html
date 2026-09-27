@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="css/flow.css" />
     <link rel="stylesheet" href="css/auth.css" />
     <link rel="stylesheet" href="css/studio.css" />
+    <link rel="stylesheet" href="css/customer-dashboard.css" />
   </head>
   <body class="app-body" data-auth="customer">
     <a class="skip-link" href="#main">انتقل إلى المحتوى</a>
@@ -43,158 +44,224 @@
           <a class="button button-primary" href="order.html">إنشاء طلب</a>
         </div>
         <div id="protected-content">
-          <section class="app-card" id="empty-orders" hidden>
-            <h2>لا توجد طلبات بعد</h2>
-            <p>أنشئ طلبك الأول لبدء تجهيز مناسبتك.</p>
-          </section>
-          <label class="field"
-            ><span>اختر الطلب — آخر 100 طلب</span
-            ><select id="customer-orders" aria-label="اختر الطلب"></select
-          ></label>
-          <div id="order-content" hidden>
-            <div class="page-intro">
-              <div>
-                <h2 id="dashboard-title"></h2>
-                <small id="order-id"></small>
-              </div>
-              <div>
-                <span class="pill pill-warning" id="payment-status"></span>
-                <span class="pill" id="dashboard-status"></span>
-              </div>
-            </div>
-            <section class="metric-grid">
-              <article class="app-card metric-card">
-                <span>الدعوات</span><strong id="guest-total">0</strong>
-              </article>
-              <article class="app-card metric-card">
-                <span>المقاعد المحجوزة</span><strong id="guest-accepted">0</strong>
-              </article>
-              <article class="app-card metric-card">
-                <span>اعتذروا</span><strong id="guest-declined">0</strong>
-              </article>
-              <article class="app-card metric-card">
-                <span>دخلوا البوابة</span><strong id="guest-checked">0</strong>
-              </article>
+          <nav class="customer-tabs" aria-label="أقسام لوحة التحكم" role="tablist">
+            <button type="button" role="tab" aria-selected="true" data-dashboard-tab="current">
+              الطلبات الحالية
+            </button>
+            <button type="button" role="tab" aria-selected="false" data-dashboard-tab="past">
+              الطلبات السابقة
+            </button>
+            <button type="button" role="tab" aria-selected="false" data-dashboard-tab="profile">
+              المعلومات الشخصية
+            </button>
+          </nav>
+          <section class="dashboard-panel" id="current-orders-panel" data-dashboard-panel="current">
+            <section class="app-card" id="empty-orders" hidden>
+              <h2>لا توجد طلبات حالية</h2>
+              <p>أنشئ طلبًا جديدًا لبدء تجهيز مناسبتك.</p>
             </section>
-            <p>
-              دعوات بانتظار الرد: <strong id="guest-pending">0</strong>. الأعداد تخص أصحاب الدعوات،
-              والمرافقون مبينون في الجدول.
-            </p>
-            <div class="dashboard-grid">
-              <section class="app-card panel">
-                <h2>بيانات المناسبة</h2>
-                <p id="event-date"></p>
-                <p id="event-venue"></p>
-                <p id="package-name"></p>
-                <p>المبلغ المبدئي: <strong id="order-total"></strong></p>
-                <a class="button button-secondary" id="checkout-link" href="checkout.html"
-                  >تفاصيل الدفع</a
-                >
-                <a
-                  class="button button-secondary"
-                  id="contact-admin"
-                  href="https://wa.me/966537933514"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  >التواصل مع الإدارة</a
-                >
+            <label class="field" id="customer-orders-field"
+              ><span>اختر الطلب الحالي</span
+              ><select id="customer-orders" aria-label="اختر الطلب الحالي"></select
+            ></label>
+            <div id="order-content" hidden>
+              <div class="page-intro">
+                <div>
+                  <h2 id="dashboard-title"></h2>
+                  <small id="order-id"></small>
+                </div>
+                <div>
+                  <span class="pill pill-warning" id="payment-status"></span>
+                  <span class="pill" id="dashboard-status"></span>
+                </div>
+              </div>
+              <section class="metric-grid">
+                <article class="app-card metric-card">
+                  <span>الدعوات</span><strong id="guest-total">0</strong>
+                </article>
+                <article class="app-card metric-card">
+                  <span>المقاعد المحجوزة</span><strong id="guest-accepted">0</strong>
+                </article>
+                <article class="app-card metric-card">
+                  <span>اعتذروا</span><strong id="guest-declined">0</strong>
+                </article>
+                <article class="app-card metric-card">
+                  <span>دخلوا البوابة</span><strong id="guest-checked">0</strong>
+                </article>
               </section>
-              <section class="app-card panel">
-                <h2>رابط المناسبة</h2>
-                <p id="share-help">يتاح الرابط بعد تأكيد الدفع واعتماد التصميم.</p>
-                <label class="field"
-                  ><span>رابط المشاركة</span
-                  ><input id="share-link" type="url" dir="ltr" readonly placeholder="لم يُنشر بعد"
-                /></label>
-                <div class="panel-actions">
-                  <button class="button button-primary" id="publish-event" type="button">
-                    نشر المناسبة
-                  </button>
-                  <button
+              <p>
+                دعوات بانتظار الرد: <strong id="guest-pending">0</strong>. الأعداد تخص أصحاب
+                الدعوات، والمرافقون مبينون في الجدول.
+              </p>
+              <div class="dashboard-grid">
+                <section class="app-card panel">
+                  <h2>بيانات المناسبة</h2>
+                  <p id="event-date"></p>
+                  <p id="event-venue"></p>
+                  <p id="package-name"></p>
+                  <p>المبلغ المبدئي: <strong id="order-total"></strong></p>
+                  <a class="button button-secondary" id="checkout-link" href="checkout.html"
+                    >تفاصيل الدفع</a
+                  >
+                  <a
                     class="button button-secondary"
-                    id="copy-share-link"
+                    id="contact-admin"
+                    href="https://wa.me/966537933514"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    >التواصل مع الإدارة</a
+                  >
+                </section>
+                <section class="app-card panel">
+                  <h2>رابط المناسبة</h2>
+                  <p id="share-help">يتاح الرابط بعد تأكيد الدفع واعتماد التصميم.</p>
+                  <label class="field"
+                    ><span>رابط المشاركة</span
+                    ><input
+                      id="share-link"
+                      type="url"
+                      dir="ltr"
+                      readonly
+                      placeholder="لم يُنشر بعد"
+                  /></label>
+                  <div class="panel-actions">
+                    <button class="button button-primary" id="publish-event" type="button">
+                      نشر المناسبة
+                    </button>
+                    <button
+                      class="button button-secondary"
+                      id="copy-share-link"
+                      type="button"
+                      disabled
+                    >
+                      نسخ الرابط
+                    </button>
+                  </div>
+                  <p id="share-status" role="status"></p>
+                </section>
+                <section class="app-card panel">
+                  <h2>السعة والحضور</h2>
+                  <p><strong id="capacity-value">0 / 0</strong> مقعد محجوز.</p>
+                  <progress id="capacity-progress" max="100" value="0">0%</progress>
+                  <p id="capacity-note"></p>
+                </section>
+                <section class="app-card panel">
+                  <h2>اعتماد التصميم</h2>
+                  <p id="design-status"></p>
+                  <img
+                    id="design-preview"
+                    class="design-preview"
+                    alt="التصميم المطلوب اعتماده"
+                    hidden
+                  /><button
+                    class="button button-primary"
+                    id="approve-design"
                     type="button"
                     disabled
                   >
-                    نسخ الرابط
+                    اعتماد هذا التصميم
                   </button>
+                </section>
+                <section class="app-card panel">
+                  <h2>ملف مرجعي للتصميم</h2>
+                  <label class="field"
+                    ><span>صورة أو PDF حتى 10MB، بحد أقصى ثلاثة ملفات</span
+                    ><input
+                      id="reference-file"
+                      type="file"
+                      accept="image/png,image/jpeg,image/webp,application/pdf" /></label
+                  ><button class="button button-secondary" id="upload-reference" type="button">
+                    رفع الملف
+                  </button>
+                  <p id="reference-status" role="status"></p>
+                </section>
+                <section class="app-card panel">
+                  <h2>جدول التذكيرات</h2>
+                  <p>اختر مواعيد الإرسال. يلزم ربط مزود WhatsApp Business قبل التنفيذ الفعلي.</p>
+                  <div class="radio-row" id="dashboard-reminders">
+                    <label class="radio-pill"
+                      ><input type="checkbox" value="72" /><span>72 ساعة</span></label
+                    >
+                    <label class="radio-pill"
+                      ><input type="checkbox" value="48" /><span>48 ساعة</span></label
+                    >
+                    <label class="radio-pill"
+                      ><input type="checkbox" value="24" /><span>24 ساعة</span></label
+                    >
+                  </div>
+                  <button class="button button-primary" id="save-reminder" type="button">
+                    حفظ طلب التذكير
+                  </button>
+                  <p id="reminder-status" role="status"></p>
+                </section>
+              </div>
+              <section class="app-card panel">
+                <div class="panel-head">
+                  <h2>الضيوف والردود</h2>
+                  <button type="button" id="export-guests">تنزيل التقرير الكامل</button>
                 </div>
-                <p id="share-status" role="status"></p>
-              </section>
-              <section class="app-card panel">
-                <h2>السعة والحضور</h2>
-                <p><strong id="capacity-value">0 / 0</strong> مقعد محجوز.</p>
-                <progress id="capacity-progress" max="100" value="0">0%</progress>
-                <p id="capacity-note"></p>
-              </section>
-              <section class="app-card panel">
-                <h2>اعتماد التصميم</h2>
-                <p id="design-status"></p>
-                <img
-                  id="design-preview"
-                  class="design-preview"
-                  alt="التصميم المطلوب اعتماده"
-                  hidden
-                /><button class="button button-primary" id="approve-design" type="button" disabled>
-                  اعتماد هذا التصميم
-                </button>
-              </section>
-              <section class="app-card panel">
-                <h2>ملف مرجعي للتصميم</h2>
-                <label class="field"
-                  ><span>صورة أو PDF حتى 10MB، بحد أقصى ثلاثة ملفات</span
-                  ><input
-                    id="reference-file"
-                    type="file"
-                    accept="image/png,image/jpeg,image/webp,application/pdf" /></label
-                ><button class="button button-secondary" id="upload-reference" type="button">
-                  رفع الملف
-                </button>
-                <p id="reference-status" role="status"></p>
-              </section>
-              <section class="app-card panel">
-                <h2>جدول التذكيرات</h2>
-                <p>اختر مواعيد الإرسال. يلزم ربط مزود WhatsApp Business قبل التنفيذ الفعلي.</p>
-                <div class="radio-row" id="dashboard-reminders">
-                  <label class="radio-pill"
-                    ><input type="checkbox" value="72" /><span>72 ساعة</span></label
-                  >
-                  <label class="radio-pill"
-                    ><input type="checkbox" value="48" /><span>48 ساعة</span></label
-                  >
-                  <label class="radio-pill"
-                    ><input type="checkbox" value="24" /><span>24 ساعة</span></label
-                  >
+                <div class="table-scroll">
+                  <table class="order-table">
+                    <thead>
+                      <tr>
+                        <th>الاسم</th>
+                        <th>الجوال المخفي</th>
+                        <th>الرد</th>
+                        <th>المرافقون</th>
+                        <th>الدخول</th>
+                        <th>الرسالة</th>
+                        <th>الإجراء</th>
+                      </tr>
+                    </thead>
+                    <tbody id="guests-body"></tbody>
+                  </table>
                 </div>
-                <button class="button button-primary" id="save-reminder" type="button">
-                  حفظ طلب التذكير
-                </button>
-                <p id="reminder-status" role="status"></p>
               </section>
             </div>
-            <section class="app-card panel">
-              <div class="panel-head">
-                <h2>الضيوف والردود</h2>
-                <button type="button" id="export-guests">تنزيل التقرير الكامل</button>
+          </section>
+          <section
+            class="dashboard-panel"
+            id="past-orders-panel"
+            data-dashboard-panel="past"
+            hidden
+          >
+            <div class="panel-heading">
+              <div>
+                <h2>الطلبات السابقة</h2>
+                <p>سجل المناسبات المنتهية والطلبات المكتملة.</p>
               </div>
-              <div class="table-scroll">
-                <table class="order-table">
-                  <thead>
-                    <tr>
-                      <th>الاسم</th>
-                      <th>الجوال المخفي</th>
-                      <th>الرد</th>
-                      <th>المرافقون</th>
-                      <th>الدخول</th>
-                      <th>الرسالة</th>
-                      <th>الإجراء</th>
-                    </tr>
-                  </thead>
-                  <tbody id="guests-body"></tbody>
-                </table>
-              </div>
+            </div>
+            <section class="app-card" id="empty-past-orders" hidden>
+              <h3>لا توجد طلبات سابقة</h3>
+              <p>ستظهر هنا المناسبات بعد انتهائها.</p>
             </section>
-          </div>
+            <div class="past-orders-grid" id="past-orders-list"></div>
+          </section>
+          <section class="dashboard-panel" id="profile-panel" data-dashboard-panel="profile" hidden>
+            <div class="profile-layout">
+              <section class="app-card profile-card">
+                <h2>المعلومات الشخصية</h2>
+                <p>حدّث الاسم الظاهر في حسابك. تغيير رقم الجوال يتطلب تحققًا جديدًا.</p>
+                <form id="profile-form" class="profile-form">
+                  <label class="field"
+                    ><span>الاسم الكامل</span
+                    ><input
+                      id="profile-name"
+                      name="displayName"
+                      minlength="3"
+                      maxlength="100"
+                      required
+                  /></label>
+                  <label class="field"
+                    ><span>رقم الجوال</span><input id="profile-phone" type="tel" dir="ltr" readonly
+                  /></label>
+                  <small>رقم الجوال هو معرّف الدخول، ولذلك لا يتغير دون رمز تحقق.</small>
+                  <button class="button button-primary" type="submit">حفظ المعلومات</button>
+                  <p id="profile-status" role="status"></p>
+                </form>
+              </section>
+            </div>
+          </section>
         </div>
       </div>
     </main>

@@ -35,7 +35,7 @@ export async function requireUser(role = 'customer') {
       }
     }),
   );
-  return { user, claims };
+  return { user, claims, sdk, auth };
 }
 export function authFailure(error) {
   document.body.classList.add('auth-failed');
