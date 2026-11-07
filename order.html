@@ -93,13 +93,18 @@
                 <div class="field field-wide">
                   <label>طريقة استقبال الضيوف <span>*</span></label>
                   <div class="choice-grid compact-grid">
-                    <label class="choice-card"
-                      ><input type="radio" name="registrationMode" value="open" required /><strong
+                    <label class="choice-card choice-card-disabled"
+                      ><input type="radio" name="registrationMode" value="open" disabled /><strong
                         >رابط تسجيل مفتوح</strong
-                      ><span>يشارك العميل رابطًا، ويتحقق كل ضيف من جواله.</span></label
+                      ><span>متوقف مؤقتًا حتى يكتمل ربط مزود تحقق مناسب.</span></label
                     ><label class="choice-card"
-                      ><input type="radio" name="registrationMode" value="private" /><strong
-                        >قائمة خاصة</strong
+                      ><input
+                        type="radio"
+                        name="registrationMode"
+                        value="private"
+                        required
+                        checked
+                      /><strong>قائمة خاصة</strong
                       ><span>ترفع الإدارة الأسماء وتصدر رابطًا شخصيًا لكل ضيف.</span></label
                     >
                   </div>

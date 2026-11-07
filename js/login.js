@@ -1,16 +1,22 @@
 import { getClient } from './firebase-client.js';
-import { $, busy, showError, safeReturn, normalizeSaudiPhone, digits } from './platform.js';
+import { $, busy, showError, safeReturn } from './platform.js';
+
 const params = new URLSearchParams(location.search),
   isAdmin = document.body.dataset.loginPage === 'admin';
-let recaptcha, confirmation;
-let pendingName = '';
+let customerMode = 'login';
+
 function destination(claims) {
   return safeReturn(
     params.get('return'),
     isAdmin ? (claims.admin ? 'admin.html' : 'checkin.html') : 'index.html',
   );
 }
+
 async function finish(user, sdk, auth) {
+  if (!isAdmin && (!user.email || !user.emailVerified))
+    throw Object.assign(new Error('تحقق من بريدك الإلكتروني أولًا، ثم سجّل الدخول مجددًا.'), {
+      code: 'auth/email-not-verified',
+    });
   const { claims } = await sdk.getIdTokenResult(user, true);
   if (isAdmin && !claims.admin && !claims.gate) {
     await sdk.signOut(auth);
@@ -18,9 +24,37 @@ async function finish(user, sdk, auth) {
   }
   location.assign(destination(claims));
 }
+
+function setCustomerMode(mode) {
+  customerMode = mode;
+  const registering = mode === 'register';
+  $('customerNameField').hidden = !registering;
+  $('customerConfirmField').hidden = !registering;
+  $('customerName').required = registering;
+  $('customerPassword').autocomplete = registering ? 'new-password' : 'current-password';
+  $('customerPasswordConfirm').required = registering;
+  $('customerAuthSubmit').textContent = registering ? 'إنشاء الحساب' : 'تسجيل الدخول';
+  $('forgotPassword').hidden = registering;
+  $('resendVerification').hidden = true;
+  $('customerAuthError').hidden = true;
+  $('customerAuthStatus').hidden = true;
+  document.querySelectorAll('[data-auth-mode]').forEach((button) => {
+    const selected = button.dataset.authMode === mode;
+    button.setAttribute('aria-selected', String(selected));
+    button.classList.toggle('is-selected', selected);
+  });
+}
+
 async function start() {
   const { sdk, auth } = await getClient();
-  if (auth.currentUser && (isAdmin || auth.currentUser.phoneNumber)) {
+  if (auth.currentUser && isAdmin) {
+    await finish(auth.currentUser, sdk, auth);
+    return;
+  }
+  if (auth.currentUser && !auth.currentUser.email) {
+    await sdk.signOut(auth);
+  }
+  if (auth.currentUser?.emailVerified) {
     await finish(auth.currentUser, sdk, auth);
     return;
   }
@@ -56,67 +90,107 @@ async function start() {
     });
     return;
   }
-  recaptcha = new sdk.RecaptchaVerifier(auth, 'recaptcha-container', { size: 'normal' });
-  await recaptcha.render();
-  $('customerPhoneForm').addEventListener('submit', (event) => {
+
+  setCustomerMode('login');
+  if (auth.currentUser && !auth.currentUser.emailVerified) {
+    $('customerEmail').value = auth.currentUser.email || '';
+    $('customerAuthStatus').textContent =
+      'الحساب موجود لكنه ينتظر توثيق البريد. افتح رسالة التحقق ثم سجّل الدخول.';
+    $('customerAuthStatus').hidden = false;
+    $('resendVerification').hidden = false;
+  } else if (params.get('verify') === '1') {
+    $('customerAuthStatus').textContent = 'يجب توثيق البريد الإلكتروني قبل فتح لوحة المناسبة.';
+    $('customerAuthStatus').hidden = false;
+  }
+
+  document
+    .querySelectorAll('[data-auth-mode]')
+    .forEach((button) =>
+      button.addEventListener('click', () => setCustomerMode(button.dataset.authMode)),
+    );
+
+  $('customerAuthForm').addEventListener('submit', (event) => {
     event.preventDefault();
-    pendingName = $('customerName').value.trim();
-    if (pendingName.length < 3 || pendingName.length > 100) {
-      showError(new Error('اكتب الاسم الكامل من 3 إلى 100 حرف.'), 'customerPhoneError');
-      return;
-    }
-    const phone = normalizeSaudiPhone($('customerPhone').value);
-    if (!phone) {
-      showError(new Error('أدخل رقم جوال سعودي صحيحًا.'), 'customerPhoneError');
-      return;
-    }
-    busy(event.currentTarget.querySelector('[type=submit]'), async () => {
+    if (!event.currentTarget.reportValidity()) return;
+    const email = $('customerEmail').value.trim().toLowerCase(),
+      password = $('customerPassword').value;
+    busy($('customerAuthSubmit'), async () => {
       try {
-        $('customerPhoneError').hidden = true;
-        confirmation = await sdk.signInWithPhoneNumber(auth, phone, recaptcha);
-        $('verificationPhone').textContent = phone;
-        $('customerPhoneForm').hidden = true;
-        $('customerOtpForm').hidden = false;
-        $('customerOtp').focus();
-      } catch (error) {
-        showError(error, 'customerPhoneError');
-        recaptcha.clear();
-        recaptcha = new sdk.RecaptchaVerifier(auth, 'recaptcha-container', { size: 'normal' });
-        await recaptcha.render();
-      }
-    });
-  });
-  $('customerOtpForm').addEventListener('submit', (event) => {
-    event.preventDefault();
-    if (!confirmation) return;
-    const code = digits($('customerOtp').value).trim();
-    if (!/^\d{6}$/.test(code)) {
-      showError(new Error('أدخل رمز التحقق المكون من ستة أرقام.'), 'customerOtpError');
-      return;
-    }
-    busy(event.currentTarget.querySelector('[type=submit]'), async () => {
-      try {
-        $('customerOtpError').hidden = true;
-        const credential = await confirmation.confirm(code);
-        await sdk.updateProfile(credential.user, { displayName: pendingName });
-        await credential.user.getIdToken(true);
+        $('customerAuthError').hidden = true;
+        $('customerAuthStatus').hidden = true;
+        if (customerMode === 'register') {
+          const name = $('customerName').value.trim();
+          if (name.length < 3 || name.length > 100)
+            throw new Error('اكتب الاسم الكامل من 3 إلى 100 حرف.');
+          if (password !== $('customerPasswordConfirm').value)
+            throw new Error('كلمتا المرور غير متطابقتين.');
+          const credential = await sdk.createUserWithEmailAndPassword(auth, email, password);
+          await sdk.updateProfile(credential.user, { displayName: name });
+          await sdk.sendEmailVerification(credential.user);
+          await sdk.signOut(auth);
+          setCustomerMode('login');
+          $('customerEmail').value = email;
+          $('customerPassword').value = '';
+          $('customerPasswordConfirm').value = '';
+          $('customerAuthStatus').textContent =
+            'أنشئ الحساب بنجاح. أرسلنا رابط التحقق إلى بريدك؛ افتحه ثم عد لتسجيل الدخول.';
+          $('customerAuthStatus').hidden = false;
+          return;
+        }
+        const credential = await sdk.signInWithEmailAndPassword(auth, email, password);
+        $('customerPassword').value = '';
+        if (!credential.user.emailVerified) {
+          $('resendVerification').hidden = false;
+          throw Object.assign(new Error('تحقق من بريدك الإلكتروني أولًا، ثم سجّل الدخول مجددًا.'), {
+            code: 'auth/email-not-verified',
+          });
+        }
         await finish(credential.user, sdk, auth);
       } catch (error) {
-        showError(error, 'customerOtpError');
+        showError(error, 'customerAuthError');
       }
     });
   });
-  $('changePhone').addEventListener('click', () => {
-    confirmation = null;
-    $('customerOtp').value = '';
-    $('customerOtpForm').hidden = true;
-    $('customerPhoneForm').hidden = false;
-    $('customerPhone').focus();
+
+  $('forgotPassword').addEventListener('click', () => {
+    const email = $('customerEmail').value.trim().toLowerCase();
+    if (!$('customerEmail').checkValidity() || !email) {
+      showError(new Error('اكتب بريدك الإلكتروني الصحيح أولًا.'), 'customerAuthError');
+      $('customerEmail').focus();
+      return;
+    }
+    busy($('forgotPassword'), async () => {
+      try {
+        await sdk.sendPasswordResetEmail(auth, email);
+        $('customerAuthError').hidden = true;
+        $('customerAuthStatus').textContent =
+          'أرسلنا رابط إعادة تعيين كلمة المرور إذا كان البريد مسجلًا لدينا.';
+        $('customerAuthStatus').hidden = false;
+      } catch (error) {
+        showError(error, 'customerAuthError');
+      }
+    });
   });
+
+  $('resendVerification').addEventListener('click', () =>
+    busy($('resendVerification'), async () => {
+      try {
+        const user = auth.currentUser;
+        if (!user) throw new Error('سجّل الدخول أولًا لإعادة إرسال رسالة التحقق.');
+        await sdk.sendEmailVerification(user);
+        $('customerAuthError').hidden = true;
+        $('customerAuthStatus').textContent = 'أعدنا إرسال رسالة التحقق إلى بريدك.';
+        $('customerAuthStatus').hidden = false;
+      } catch (error) {
+        showError(error, 'customerAuthError');
+      }
+    }),
+  );
 }
+
 start().catch((error) => {
-  showError(error, isAdmin ? 'adminLoginError' : 'customerPhoneError');
-  document.querySelectorAll('button[type=submit]').forEach((b) => {
-    b.disabled = true;
+  showError(error, isAdmin ? 'adminLoginError' : 'customerAuthError');
+  document.querySelectorAll('button[type=submit]').forEach((button) => {
+    button.disabled = true;
   });
 });

@@ -137,7 +137,7 @@ function renderReview() {
     ['المكان', `${d.venueName}، ${d.city}`],
     ['أرقام الدعوات', d.invitationLimit],
     ['السعة الفعلية', d.seatCapacity],
-    ['طريقة التسجيل', d.registrationMode === 'open' ? 'رابط مفتوح مع تحقق الجوال' : 'قائمة خاصة'],
+    ['طريقة التسجيل', d.registrationMode === 'open' ? 'رابط عام قديم' : 'قائمة خاصة'],
     ['المرافقون لكل دعوة', d.maxCompanions],
     ['التذكيرات', d.reminderHours.map((hour) => `قبل ${hour} ساعة`).join('، ')],
     ['الإضافات', d.addons.length],
@@ -225,7 +225,7 @@ form.addEventListener('submit', (event) => {
   busy(submit, async () => {
     try {
       const payload = data();
-      normalizeOrder(payload, user.phoneNumber);
+      normalizeOrder(payload, null);
       const key = `medad.order.request.${user.uid}`;
       let pending = storageGet(key);
       const fingerprint = JSON.stringify(payload);
@@ -276,8 +276,8 @@ form.addEventListener('submit', (event) => {
         : Boolean(value);
     else if (value != null) field.value = value;
   }
-  form.elements.phone.value = user.phoneNumber;
-  form.elements.phone.readOnly = true;
+  if (!form.elements.phone.value && user.phoneNumber) form.elements.phone.value = user.phoneNumber;
+  form.elements.phone.readOnly = false;
   if (!form.elements.ownerName.value && user.displayName)
     form.elements.ownerName.value = user.displayName;
   form.elements.termsAccepted.checked = false;
@@ -299,8 +299,8 @@ form.addEventListener('submit', (event) => {
   const pkg = params.get('package');
   if (Object.hasOwn(PACKAGES, pkg || ''))
     form.querySelector(`[name=packageId][value="${pkg}"]`).checked = true;
-  if (!form.elements.registrationMode.value)
-    form.querySelector('[name=registrationMode][value="open"]').checked = true;
+  form.querySelector('[name=registrationMode][value="open"]').checked = false;
+  form.querySelector('[name=registrationMode][value="private"]').checked = true;
   updateSummary();
   goToStep(1);
   next.disabled = false;

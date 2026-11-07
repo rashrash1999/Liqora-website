@@ -124,7 +124,7 @@ function setShareLink(token, mode) {
   setText(
     'share-help',
     mode === 'open'
-      ? 'شارك هذا الرابط؛ يتحقق الضيف من جواله ثم يسجل رده ومرافقيه.'
+      ? 'التسجيل العام لهذا الطلب القديم متوقف مؤقتًا. استخدم الروابط الشخصية للضيوف.'
       : 'هذا رابط تعريف بالمناسبة فقط. استخدم الروابط الشخصية للضيوف الموجودين في قائمتك.',
   );
 }
@@ -398,7 +398,7 @@ $('export-guests').addEventListener('click', () =>
   const session = await requireUser();
   if (!session) return;
   $('profile-name').value = session.user.displayName || '';
-  $('profile-phone').value = session.user.phoneNumber || '';
+  $('profile-email').value = session.user.email || '';
   $('profile-form').addEventListener('submit', (event) => {
     event.preventDefault();
     if (!event.currentTarget.reportValidity()) return;

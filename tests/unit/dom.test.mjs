@@ -6,8 +6,8 @@ import { build } from 'esbuild';
 import { JSDOM } from 'jsdom';
 const mockClient = `
 const sample={id:'order-test-123456789',ownerUid:'customer-a',ownerName:'عميل اختبار',phone:'+966500000001',packageId:'basic',honorees:'مناسبة اختبار',occasion:'حفل زفاف',eventDate:'2030-10-12',eventTime:'20:00',eventAt:1918069200000,venueName:'قاعة',city:'الرياض',mapUrl:'https://maps.google.com',baseAmountHalalas:19900,invitationLimit:2,seatCapacity:6,registrationMode:'private',maxCompanions:2,companionNamesRequired:true,allowWaitlist:false,guestCount:0,acceptedCount:0,acceptedSeats:0,declinedCount:0,checkedInCount:0,checkedInSeats:0,paymentStatus:'unpaid',status:'pending_payment',designStatus:'approved',designVersion:'template:classic:v1',approvedDesignVersion:'template:classic:v1',reminderHours:[48],reminderStatus:'configured',automaticPricing:{subtotalHalalas:19900,items:[{label:'البطاقة الذكية',amountHalalas:19900}]},pricing:{status:'approved',currency:'SAR',items:[{label:'البطاقة الذكية',amountHalalas:19900}],discountHalalas:0,taxHalalas:0,totalHalalas:19900,expiresAt:1918069200000}};
-const user={uid:'customer-a',phoneNumber:'+966500000001'};
-export async function getClient(){return {auth:{currentUser:user},sdk:{getIdTokenResult:async()=>({claims:{admin:true,gate:true}}),onAuthStateChanged:()=>()=>{},signOut:async()=>{},updateProfile:async()=>{},RecaptchaVerifier:class{async render(){}clear(){}},signInWithEmailAndPassword:async()=>({user}),signInWithPhoneNumber:async()=>({confirm:async()=>({user})})}};}
+const user={uid:'customer-a',email:'customer@example.sa',emailVerified:true,displayName:'عميل اختبار',phoneNumber:null,getIdToken:async()=>''};
+export async function getClient(){return {auth:{currentUser:user},sdk:{getIdTokenResult:async()=>({claims:{admin:true,gate:true}}),onAuthStateChanged:()=>()=>{},signOut:async()=>{},updateProfile:async()=>{},signInWithEmailAndPassword:async()=>({user}),createUserWithEmailAndPassword:async()=>({user}),sendEmailVerification:async()=>{},sendPasswordResetEmail:async()=>{}}};}
 export async function call(name,data){window.__calls.push({name,data});if(name==='createOrder')return {id:sample.id};if(name==='getGateAssignments')return {orders:[sample]};if(name==='getInvitation')return {event:sample,guest:{displayName:'ضيف اختبار',companionsLimit:2,companionNamesRequired:true},response:null,ticket:null};if(name==='getPublicEvent')return {event:sample,registration:{mode:'open',open:true,remainingSeats:6,maxCompanions:2,companionNamesRequired:true,allowWaitlist:false}};return {};}
 export async function getOrder(id,options){window.__fresh=options?.fresh;if(window.__orderFailure)throw Object.assign(new Error('تعذر التحقق'),{code:window.__orderFailure});return {...sample,...window.__orderOverrides};}
 export async function watchOrders(user,admin,fn){fn([sample]);return ()=>{};}
@@ -86,8 +86,8 @@ test('missing session data and unsafe return URLs fail safely', async () => {
   const u = d.window.Utilities;
   assert.deepEqual(u.storageGet('missing', { fallback: true }), { fallback: true });
   assert.equal(
-    u.errorMessage({ code: 'auth/billing-not-enabled' }),
-    'إرسال رمز التحقق غير متاح مؤقتًا حتى يكتمل تفعيل خدمة الرسائل.',
+    u.errorMessage({ code: 'auth/email-already-in-use' }),
+    'هذا البريد مرتبط بحساب موجود. استخدم تسجيل الدخول.',
   );
   for (const path of [
     '//evil.test',
@@ -98,6 +98,7 @@ test('missing session data and unsafe return URLs fail safely', async () => {
   ])
     assert.equal(u.safeReturn(path), 'dashboard.html');
   assert.equal(u.safeReturn('order.html?package=basic'), 'order.html?package=basic');
+  assert.equal(u.safeReturn('order?package=basic'), 'order.html?package=basic');
   assert.equal(u.safeReturn('index.html', 'dashboard.html'), 'index.html');
   d.window.close();
 });
@@ -110,7 +111,7 @@ test('form cannot skip later steps and renders HTML payloads as text', async () 
   form.elements.packageId.value = 'basic';
   form.elements.invitationLimit.value = '2';
   form.elements.seatCapacity.value = '2';
-  form.elements.registrationMode.value = 'open';
+  form.elements.registrationMode.value = 'private';
   doc.querySelector('[name=reminderHours][value="48"]').checked = true;
   form.dispatchEvent(new w.Event('change', { bubbles: true }));
   form.dispatchEvent(new w.Event('submit', { bubbles: true, cancelable: true }));
@@ -119,6 +120,7 @@ test('form cannot skip later steps and renders HTML payloads as text', async () 
   const attack = '<img src=x onerror="window.hacked=1">';
   const values = {
     ownerName: attack,
+    phone: '0500000001',
     occasion: 'حفل زفاف',
     honorees: 'مناسبة اختبار',
     eventDate: '2030-10-12',
@@ -182,7 +184,7 @@ test('unconfigured Firebase shows a useful error and never grants access', async
       unconfigured: true,
     });
     const error = d.window.document.getElementById(
-      name === 'login' ? 'customerPhoneError' : 'page-error',
+      name === 'login' ? 'customerAuthError' : 'page-error',
     );
     assert.equal(error.hidden, false);
     assert.ok(error.textContent.includes('قيد الإعداد'));

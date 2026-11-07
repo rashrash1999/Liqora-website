@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <meta name="description" content="دخول عملاء medad Al tahaya برقم الجوال." />
+    <meta name="description" content="دخول عملاء medad Al tahaya بالبريد الإلكتروني." />
     <meta name="theme-color" content="#10243f" />
     <title>دخول العميل | medad Al tahaya</title>
     <link rel="icon" href="images/Medad-logo.png" type="image/png" />
@@ -23,18 +23,34 @@
         <div>
           <span class="eyebrow light"><i></i> مناسبتك بين يديك</span>
           <h1>تابع طلبك وردود ضيوفك بسهولة</h1>
-          <p>ادخل برقم الجوال المسجل في الطلب، ثم تحقق من الرمز للوصول الآمن إلى لوحة مناسبتك.</p>
+          <p>ادخل ببريدك الموثّق للوصول إلى طلباتك الحالية والسابقة ومعلومات حسابك.</p>
         </div>
-        <small>لن نطلب منك كلمة مرور. يصلك رمز تحقق برسالة SMS إلى رقمك.</small>
+        <small>نستخدم توثيق البريد الآن، ولن نطلب رمز SMS أو اختبار CAPTCHA مرئيًا.</small>
       </section>
       <section class="auth-form-panel">
         <div class="auth-form-wrap">
           <a class="auth-back" href="index.html">العودة للرئيسية</a>
-          <span class="pill pill-success">دخول العميل</span>
-          <h1>أهلًا بك مجددًا</h1>
-          <p>استخدم رقم الجوال نفسه الذي سجلت به الطلب.</p>
-          <form id="customerPhoneForm" class="auth-form" novalidate>
-            <label class="field"
+          <span class="pill pill-success">حساب العميل</span>
+          <h1>أهلًا بك</h1>
+          <p>سجّل الدخول، أو أنشئ حسابًا جديدًا ثم وثّق بريدك الإلكتروني.</p>
+
+          <div class="auth-mode-switch" role="tablist" aria-label="اختيار طريقة الدخول">
+            <button
+              class="is-selected"
+              type="button"
+              role="tab"
+              aria-selected="true"
+              data-auth-mode="login"
+            >
+              لدي حساب
+            </button>
+            <button type="button" role="tab" aria-selected="false" data-auth-mode="register">
+              إنشاء حساب
+            </button>
+          </div>
+
+          <form id="customerAuthForm" class="auth-form" novalidate>
+            <label class="field" id="customerNameField" hidden
               ><span>الاسم الكامل</span
               ><input
                 id="customerName"
@@ -44,52 +60,60 @@
                 minlength="3"
                 maxlength="100"
                 placeholder="مثال: رجا العرادي"
-                required
             /></label>
             <label class="field"
-              ><span>رقم الجوال السعودي</span
+              ><span>البريد الإلكتروني</span
               ><input
-                id="customerPhone"
-                name="phone"
-                type="tel"
-                inputmode="tel"
+                id="customerEmail"
+                name="email"
+                type="email"
+                autocomplete="email"
+                maxlength="254"
                 dir="ltr"
-                autocomplete="tel"
-                required
-              /><small>مثال: 05xxxxxxxx</small></label
-            >
-            <div id="recaptcha-container"></div>
-            <p id="customerPhoneError" class="form-alert" role="alert" hidden></p>
-            <button class="button button-primary button-block" type="submit">
-              إرسال رمز التحقق
-            </button>
-          </form>
-          <form id="customerOtpForm" class="auth-form" novalidate hidden>
-            <div class="verification-target">
-              <span>أرسلنا الرمز إلى</span><strong id="verificationPhone">—</strong
-              ><button id="changePhone" type="button">تغيير الرقم</button>
-            </div>
-            <label class="field"
-              ><span>رمز التحقق</span
-              ><input
-                id="customerOtp"
-                name="otp"
-                class="otp-input"
-                type="text"
-                inputmode="numeric"
-                maxlength="6"
-                autocomplete="one-time-code"
-                placeholder="••••••"
+                placeholder="name@example.com"
                 required
             /></label>
-            <p id="customerOtpError" class="form-alert" role="alert" hidden></p>
-            <button class="button button-primary button-block" type="submit">
-              دخول لوحة المناسبة
+            <label class="field"
+              ><span>كلمة المرور</span
+              ><input
+                id="customerPassword"
+                name="password"
+                type="password"
+                autocomplete="current-password"
+                minlength="8"
+                maxlength="128"
+                required
+            /></label>
+            <label class="field" id="customerConfirmField" hidden
+              ><span>تأكيد كلمة المرور</span
+              ><input
+                id="customerPasswordConfirm"
+                name="passwordConfirm"
+                type="password"
+                autocomplete="new-password"
+                minlength="8"
+                maxlength="128"
+            /></label>
+            <p id="customerAuthError" class="form-alert" role="alert" hidden></p>
+            <p id="customerAuthStatus" class="form-status" role="status" hidden></p>
+            <button
+              class="button button-primary button-block"
+              id="customerAuthSubmit"
+              type="submit"
+            >
+              تسجيل الدخول
+            </button>
+            <button class="auth-inline-action" id="forgotPassword" type="button">
+              نسيت كلمة المرور؟
+            </button>
+            <button class="auth-inline-action" id="resendVerification" type="button" hidden>
+              إعادة إرسال رسالة توثيق البريد
             </button>
           </form>
+
           <p class="auth-security-note">
-            بالاستمرار توافق على استخدام رقمك للتحقق من الهوية عبر SMS. قد تنطبق رسوم الرسائل
-            المعتادة. راجع <a href="privacy.html">سياسة الخصوصية</a>.
+            توثيق البريد يحمي حسابك. رقم الجوال الذي تدخله في الطلب مخصص للتواصل ولا يُستخدم لتسجيل
+            الدخول. راجع <a href="privacy.html">سياسة الخصوصية</a>.
           </p>
           <a class="switch-login" href="admin-login.html">دخول فريق الإدارة</a>
         </div>

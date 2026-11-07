@@ -172,6 +172,8 @@ function endpoint(name, { publicAccess = false, secrets = [] } = {}) {
                 ...request.auth.token,
                 admin: user.customClaims?.admin === true,
                 gate: user.customClaims?.gate === true,
+                email: user.email || '',
+                email_verified: user.emailVerified === true,
                 phone_number: user.phoneNumber || '',
               },
             },

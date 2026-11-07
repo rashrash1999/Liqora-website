@@ -202,7 +202,7 @@ export function calculateOrderPricing({ packageId, invitationLimit, theme, addon
   };
 }
 
-export function normalizeOrder(input, verifiedPhone, now = Date.now()) {
+export function normalizeOrder(input, _verifiedPhone, now = Date.now()) {
   demand(input && typeof input === 'object' && !Array.isArray(input), 'بيانات الطلب غير صحيحة.');
   demand(
     Object.keys(input).every((k) => ORDER_FIELDS.has(k)),
@@ -211,11 +211,7 @@ export function normalizeOrder(input, verifiedPhone, now = Date.now()) {
   const pkg = Object.hasOwn(PACKAGES, input.packageId) ? PACKAGES[input.packageId] : null;
   demand(pkg, 'اختر باقة صحيحة.');
   const phone = normalizeSaudiPhone(input.phone);
-  demand(
-    phone && phone === normalizeSaudiPhone(verifiedPhone),
-    'رقم الطلب يجب أن يطابق رقم الجوال الذي سجلت الدخول به.',
-    'permission-denied',
-  );
+  demand(phone, 'أدخل رقم جوال سعودي صحيحًا.');
   demand(input.termsAccepted === true, 'الموافقة على الشروط وصحة البيانات مطلوبة.');
   const at = eventTimestamp(input.eventDate, input.eventTime);
   demand(at > now, 'يجب أن يكون موعد المناسبة في المستقبل بتوقيت الرياض.');

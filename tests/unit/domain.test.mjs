@@ -79,8 +79,9 @@ test('individual additions are priced automatically while business requires a qu
     }),
   );
 });
-test('ownership phone, consent and all required form fields are enforced', () => {
-  assert.throws(() => normalizeOrder(baseOrder(), '+966500000002', now));
+test('contact phone, consent and all required form fields are enforced', () => {
+  const order = normalizeOrder({ ...baseOrder(), phone: '0500000002' }, null, now);
+  assert.equal(order.phone, '+966500000002');
   assert.throws(() => normalizeOrder({ ...baseOrder(), termsAccepted: 'on' }, phone, now));
   for (const field of [
     'ownerName',
