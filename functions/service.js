@@ -39,6 +39,15 @@ export function createService({
     demand(request.auth?.uid, 'سجل الدخول أولًا.', 'unauthenticated');
     return request.auth.uid;
   };
+  const customerUid = (request) => {
+    const id = uid(request);
+    demand(
+      request.auth.token?.email_verified === true || Boolean(request.auth.token?.phone_number),
+      'أكّد بريدك الإلكتروني قبل إنشاء الطلب.',
+      'permission-denied',
+    );
+    return id;
+  };
   const admin = (request) => {
     uid(request);
     demand(request.auth.token?.admin === true, 'هذه العملية للإدارة فقط.', 'permission-denied');
@@ -465,10 +474,10 @@ export function createService({
   }
   const handlers = {
     async createOrder(request) {
-      const ownerUid = uid(request);
+      const ownerUid = customerUid(request);
       const input = request.data || {};
       const key = requestId(input.requestId);
-      const order = normalizeOrder(input.order, request.auth.token?.phone_number, clock());
+      const order = normalizeOrder(input.order, null, clock());
       const contentHash = hash(JSON.stringify(order));
       const id = hash(`${ownerUid}:${key}`).slice(0, 28),
         ref = orderRef(id);

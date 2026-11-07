@@ -57,6 +57,11 @@ export function errorMessage(error) {
   const messages = {
     'auth/invalid-credential': 'تعذر تسجيل الدخول. تحقق من بياناتك.',
     'auth/invalid-login-credentials': 'تعذر تسجيل الدخول. تحقق من بياناتك.',
+    'auth/email-already-in-use': 'هذا البريد مرتبط بحساب موجود. استخدم تسجيل الدخول.',
+    'auth/email-not-verified': 'تحقق من بريدك الإلكتروني أولًا، ثم سجّل الدخول مجددًا.',
+    'auth/invalid-email': 'أدخل بريدًا إلكترونيًا صحيحًا.',
+    'auth/weak-password': 'اختر كلمة مرور أقوى لا تقل عن 8 أحرف.',
+    'auth/user-disabled': 'هذا الحساب موقوف. تواصل مع إدارة الموقع.',
     'auth/invalid-verification-code': 'رمز التحقق غير صحيح.',
     'auth/code-expired': 'انتهت صلاحية الرمز؛ اطلب رمزًا جديدًا.',
     'auth/too-many-requests': 'محاولات كثيرة. انتظر قليلًا ثم أعد المحاولة.',
@@ -102,18 +107,25 @@ export async function busy(button, action) {
 export function safeReturn(value, fallback = 'dashboard.html') {
   try {
     const base = new URL('.', location.href),
-      url = new URL(value || fallback, base);
-    const pages = new Set([
-      'index.html',
-      'order.html',
-      'checkout.html',
-      'dashboard.html',
-      'admin.html',
-      'checkin.html',
-    ]);
-    const file = url.pathname.slice(base.pathname.length);
-    return url.origin === base.origin && url.pathname.startsWith(base.pathname) && pages.has(file)
-      ? file + url.search
+      url = new URL(value || fallback, base),
+      pages = [
+        'index.html',
+        'order.html',
+        'checkout.html',
+        'dashboard.html',
+        'admin.html',
+        'checkin.html',
+      ],
+      aliases = new Map(
+        pages.flatMap((page) => [
+          [page, page],
+          [page.replace(/\.html$/, ''), page],
+        ]),
+      );
+    const file = url.pathname.slice(base.pathname.length).replace(/\/$/, ''),
+      page = aliases.get(file);
+    return url.origin === base.origin && url.pathname.startsWith(base.pathname) && page
+      ? page + url.search
       : fallback;
   } catch {
     return fallback;

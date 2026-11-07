@@ -5,8 +5,8 @@
 ## 1. المتطلبات
 
 - Node.js 22 وJava 21 أو أحدث.
-- Firebase على خطة تدعم Cloud Functions وCloud Scheduler وPhone Authentication، مع تنبيه ميزانية.
-- Authentication: فعّل Phone للعملاء وEmail/Password للموظفين.
+- Firebase على خطة تدعم Cloud Functions وCloud Scheduler، مع تنبيه ميزانية.
+- Authentication: فعّل Email/Password للعملاء والموظفين. لا تعتمد Phone Auth في هذه المرحلة.
 - Firestore وStorage وWeb App وApp Check عبر reCAPTCHA Enterprise.
 - حساب Moyasar تجريبي، وحساب Meta Business مع رقم WhatsApp Cloud API وقالبين عربيين معتمدين.
 
@@ -65,7 +65,7 @@ npx firebase deploy --only firestore:rules,firestore:indexes,storage,functions -
 
 تحقق بعد النشر من وجود العمليات الأساسية، خصوصًا:
 
-- `createOrder`, `publishEvent`, `registerPublicGuest`
+- `createOrder`, `publishEvent`، و`registerPublicGuest` كمسار قديم غير ظاهر في الواجهة
 - `createPaymentSession`, `syncPaymentSession`, `moyasarInvoiceCallback`
 - `sendInvitations`, `dispatchScheduledReminders`
 - `getOrderReport`, `checkInTicket`
@@ -106,11 +106,11 @@ node scripts/assign-gate.mjs medadaltahaya GATE_UID ORDER_ID grant
 
 ## 8. اختبار ما قبل الإنتاج
 
-1. عميل: SMS، إنشاء طلب، محاولة إرسال هاتف مختلف وحقول مزورة.
+1. عميل: إنشاء حساب، توثيق البريد، تسجيل الدخول، استعادة كلمة المرور، وإنشاء طلب برقم تواصل صالح.
 2. السعر: حدود كل باقة والزيادات والإضافات وعرض الأعمال.
 3. الدفع: نجاح وفشل وإلغاء وانتهاء ورجوع وCallback مكرر عبر Sandbox.
 4. التصميم: رفع واعتماد ثم ظهور الصورة للضيف، ورفض نسخة قديمة.
-5. التسجيل المفتوح: رقم جديد، رقم مكرر، مرافقان، امتلاء المقاعد والانتظار، وامتلاء حد الأرقام.
+5. التسجيل العام: تأكد أنه معطل في الواجهة ولا يجمع أرقامًا؛ اختبر بدلًا منه روابط القائمة الخاصة.
 6. القائمة الخاصة: CSV فيه أرقام مكررة وغير صحيحة ثم إصدار وتدوير الروابط.
 7. WhatsApp: نجاح وفشل وإعادة محاولة وعدم تكرار الناجح.
 8. التذكيرات: 72/48/24 ساعة مع ساعة اختبار ومراقبة سجل Scheduler.

@@ -3,10 +3,10 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <meta name="description" content="رابط تسجيل ضيوف medad Al tahaya" />
+    <meta name="description" content="تفاصيل مناسبة medad Al tahaya." />
     <meta name="referrer" content="no-referrer" />
     <meta name="theme-color" content="#183c36" />
-    <title>تسجيل الحضور | medad Al tahaya</title>
+    <title>تفاصيل المناسبة | medad Al tahaya</title>
     <link rel="icon" href="images/Medad-logo.png" />
     <link rel="stylesheet" href="css/style.css" />
     <link rel="stylesheet" href="css/auth.css" />
@@ -14,7 +14,7 @@
     <link rel="stylesheet" href="css/guest-registration.css" />
   </head>
   <body class="guest-page">
-    <a class="skip-link" href="#main">انتقل إلى التسجيل</a>
+    <a class="skip-link" href="#main">انتقل إلى تفاصيل المناسبة</a>
     <header class="guest-header">
       <a class="brand" href="index.html"
         ><img src="images/Medad-logo.png" alt="شعار medad Al tahaya" width="44" height="44" /><span
@@ -59,92 +59,17 @@
         <small>بدعوة من medad Al tahaya</small>
       </section>
 
-      <section class="guest-form-card" id="registration-card" hidden>
-        <div class="guest-form-heading">
-          <span class="pill pill-success">تأكيد آمن برقم الجوال</span>
-          <h2>أخبرنا بردّك</h2>
-          <p id="availability-note"></p>
-        </div>
-        <form id="guest-details-form" novalidate>
-          <label class="field"
-            ><span>الاسم الكامل</span
-            ><input id="guest-name" maxlength="100" autocomplete="name" required
-          /></label>
-          <label class="field"
-            ><span>رقم الجوال السعودي</span
-            ><input
-              id="guest-phone"
-              type="tel"
-              inputmode="tel"
-              dir="ltr"
-              autocomplete="tel"
-              placeholder="05xxxxxxxx"
-              required
-          /></label>
-          <fieldset class="field guest-attendance">
-            <legend>هل ستشرفنا بالحضور؟</legend>
-            <label
-              ><input type="radio" name="attendance" value="yes" required /> نعم، بكل سرور</label
-            >
-            <label><input type="radio" name="attendance" value="no" /> أعتذر عن الحضور</label>
-          </fieldset>
-          <div id="guest-companion-section" hidden>
-            <label class="field"
-              ><span>عدد المرافقين</span
-              ><select id="guest-companions"></select
-            ></label>
-            <div id="guest-companion-names"></div>
-          </div>
-          <label class="field"
-            ><span>تهنئة أو اعتذار أو ملاحظة اختيارية</span
-            ><textarea id="guest-message" maxlength="300"></textarea>
-          </label>
-          <label class="consent-row"
-            ><input id="guest-consent" type="checkbox" required /><span
-              >أوافق على استخدام بياناتي لإدارة هذه المناسبة وفق
-              <a href="privacy.html" target="_blank" rel="noopener noreferrer">سياسة الخصوصية</a
-              >.</span
-            ></label
-          >
-          <div id="guest-recaptcha"></div>
-          <p class="form-alert" id="guest-details-error" role="alert" hidden></p>
-          <button class="button button-primary button-block" type="submit">إرسال رمز التحقق</button>
-        </form>
-        <form id="guest-otp-form" hidden novalidate>
-          <p>أرسلنا رمزاً إلى <strong id="guest-verification-phone" dir="ltr"></strong>.</p>
-          <label class="field"
-            ><span>رمز التحقق</span
-            ><input
-              id="guest-otp"
-              class="otp-input"
-              inputmode="numeric"
-              maxlength="6"
-              autocomplete="one-time-code"
-              required
-          /></label>
-          <p class="form-alert" id="guest-otp-error" role="alert" hidden></p>
-          <button class="button button-primary button-block" type="submit">تأكيد وحفظ الرد</button>
-          <button class="text-button" id="guest-change-phone" type="button">تغيير الرقم</button>
-        </form>
-      </section>
-
-      <section class="guest-form-card guest-result" id="guest-result" hidden>
-        <span class="result-mark" aria-hidden="true">✓</span>
-        <h2 id="guest-result-title"></h2>
-        <p id="guest-result-message"></p>
-        <div id="guest-ticket" hidden>
-          <img id="guest-ticket-qr" width="256" height="256" alt="رمز بطاقة الدخول" />
-          <p>احتفظ بهذه البطاقة وأبرزها عند البوابة.</p>
-        </div>
-        <a
-          class="button button-secondary button-block"
-          id="guest-personal-link"
-          href="invitation.html"
-          >فتح دعوتي الشخصية</a
-        >
+      <section class="guest-form-card guest-result" id="registration-unavailable" hidden>
+        <span class="result-mark" aria-hidden="true">i</span>
+        <span class="pill pill-warning">تحديث أمني مؤقت</span>
+        <h2 id="registration-unavailable-title">التسجيل العام متوقف مؤقتًا</h2>
+        <p id="registration-unavailable-message"></p>
+        <p>
+          إذا وصلك رابط شخصي من صاحب المناسبة، افتحه مباشرة لتأكيد حضورك أو اعتذارك دون تسجيل عام.
+        </p>
       </section>
     </main>
-    <noscript><p>يلزم تفعيل JavaScript للتسجيل.</p></noscript>
+    <noscript><p>يلزم تفعيل JavaScript لعرض تفاصيل المناسبة.</p></noscript>
     <script type="module" src="js/join.js"></script>
   </body>
 </html>

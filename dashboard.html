@@ -241,7 +241,7 @@
             <div class="profile-layout">
               <section class="app-card profile-card">
                 <h2>المعلومات الشخصية</h2>
-                <p>حدّث الاسم الظاهر في حسابك. تغيير رقم الجوال يتطلب تحققًا جديدًا.</p>
+                <p>حدّث الاسم الظاهر في حسابك، وراجع بريد الدخول الموثّق.</p>
                 <form id="profile-form" class="profile-form">
                   <label class="field"
                     ><span>الاسم الكامل</span
@@ -253,9 +253,10 @@
                       required
                   /></label>
                   <label class="field"
-                    ><span>رقم الجوال</span><input id="profile-phone" type="tel" dir="ltr" readonly
+                    ><span>البريد الإلكتروني الموثّق</span
+                    ><input id="profile-email" type="email" dir="ltr" readonly
                   /></label>
-                  <small>رقم الجوال هو معرّف الدخول، ولذلك لا يتغير دون رمز تحقق.</small>
+                  <small>البريد هو معرّف الدخول. رقم التواصل يُحفظ داخل كل طلب ويمكن تعديله.</small>
                   <button class="button button-primary" type="submit">حفظ المعلومات</button>
                   <p id="profile-status" role="status"></p>
                 </form>
