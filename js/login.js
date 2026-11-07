@@ -96,14 +96,15 @@ async function start() {
     $('customerAuthStatus').hidden = false;
     $('resendVerification').hidden = false;
   } else if (params.get('verify') === '1') {
-    $('customerAuthStatus').textContent =
-      'يجب توثيق البريد الإلكتروني قبل فتح لوحة المناسبة.';
+    $('customerAuthStatus').textContent = 'يجب توثيق البريد الإلكتروني قبل فتح لوحة المناسبة.';
     $('customerAuthStatus').hidden = false;
   }
 
-  document.querySelectorAll('[data-auth-mode]').forEach((button) =>
-    button.addEventListener('click', () => setCustomerMode(button.dataset.authMode)),
-  );
+  document
+    .querySelectorAll('[data-auth-mode]')
+    .forEach((button) =>
+      button.addEventListener('click', () => setCustomerMode(button.dataset.authMode)),
+    );
 
   $('customerAuthForm').addEventListener('submit', (event) => {
     event.preventDefault();
@@ -137,10 +138,9 @@ async function start() {
         $('customerPassword').value = '';
         if (!credential.user.emailVerified) {
           $('resendVerification').hidden = false;
-          throw Object.assign(
-            new Error('تحقق من بريدك الإلكتروني أولًا، ثم سجّل الدخول مجددًا.'),
-            { code: 'auth/email-not-verified' },
-          );
+          throw Object.assign(new Error('تحقق من بريدك الإلكتروني أولًا، ثم سجّل الدخول مجددًا.'), {
+            code: 'auth/email-not-verified',
+          });
         }
         await finish(credential.user, sdk, auth);
       } catch (error) {

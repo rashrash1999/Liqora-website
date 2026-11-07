@@ -1,12 +1,5 @@
 import { call } from './firebase-client.js';
-import {
-  $,
-  formatDate,
-  safeHttpsUrl,
-  setText,
-  showError,
-  tokenFromUrl,
-} from './platform.js';
+import { $, formatDate, safeHttpsUrl, setText, showError, tokenFromUrl } from './platform.js';
 
 function renderEvent(record) {
   const { event, registration } = record;

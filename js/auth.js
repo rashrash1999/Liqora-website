@@ -21,9 +21,7 @@ export async function requireUser(role = 'customer') {
     throw new Error('هذا الحساب لا يملك صلاحية الاستقبال.');
   if (role === 'customer' && (!user.email || !user.emailVerified)) {
     await sdk.signOut(auth);
-    location.replace(
-      'login.html?return=' + encodeURIComponent(returnTarget) + '&verify=1',
-    );
+    location.replace('login.html?return=' + encodeURIComponent(returnTarget) + '&verify=1');
     return null;
   }
   document.body.classList.add('auth-ready');

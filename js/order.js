@@ -276,8 +276,7 @@ form.addEventListener('submit', (event) => {
         : Boolean(value);
     else if (value != null) field.value = value;
   }
-  if (!form.elements.phone.value && user.phoneNumber)
-    form.elements.phone.value = user.phoneNumber;
+  if (!form.elements.phone.value && user.phoneNumber) form.elements.phone.value = user.phoneNumber;
   form.elements.phone.readOnly = false;
   if (!form.elements.ownerName.value && user.displayName)
     form.elements.ownerName.value = user.displayName;
