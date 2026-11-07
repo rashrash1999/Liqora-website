@@ -55,12 +55,35 @@ test('Firestore rules isolate customers and prohibit browser authority writes', 
     await setDoc(doc(db, 'orders/order-a/guestContacts/guest-a'), { phone: '+966500000001' });
     await setDoc(doc(db, 'inviteTokens/secret-hash'), { guestId: 'guest-a' });
   });
-  const alice = env.authenticatedContext('alice').firestore(),
-    bob = env.authenticatedContext('bob').firestore(),
+  const alice = env
+      .authenticatedContext('alice', {
+        email: 'alice@example.com',
+        email_verified: true,
+      })
+      .firestore(),
+    bob = env
+      .authenticatedContext('bob', {
+        email: 'bob@example.com',
+        email_verified: true,
+      })
+      .firestore(),
+    unverifiedAlice = env
+      .authenticatedContext('alice', {
+        email: 'alice@example.com',
+        email_verified: false,
+      })
+      .firestore(),
+    legacyAlice = env
+      .authenticatedContext('alice', {
+        phone_number: '+966500000001',
+      })
+      .firestore(),
     admin = env.authenticatedContext('admin', { admin: true }).firestore(),
     gate = env.authenticatedContext('gate', { gate: true }).firestore(),
     publicDb = env.unauthenticatedContext().firestore();
   await assertSucceeds(getDoc(doc(alice, 'orders/order-a')));
+  await assertSucceeds(getDoc(doc(legacyAlice, 'orders/order-a')));
+  await assertFails(getDoc(doc(unverifiedAlice, 'orders/order-a')));
   await assertFails(getDoc(doc(bob, 'orders/order-a')));
   await assertFails(getDoc(doc(publicDb, 'orders/order-a')));
   await assertSucceeds(

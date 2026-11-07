@@ -51,6 +51,9 @@ async function start() {
     await finish(auth.currentUser, sdk, auth);
     return;
   }
+  if (auth.currentUser && !auth.currentUser.email) {
+    await sdk.signOut(auth);
+  }
   if (auth.currentUser?.emailVerified) {
     await finish(auth.currentUser, sdk, auth);
     return;
